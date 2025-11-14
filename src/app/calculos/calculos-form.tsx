@@ -33,8 +33,8 @@ export function CalculosForm() {
         const day = parseInt(parts.find(p => p.type === 'day')?.value || String(now.getDate()));
         return new Date(year, month, day);
     };
-    const form = useForm<CalculosFormValues>({
-        resolver: zodResolver(calculosFormSchema),
+  const form = useForm<CalculosFormValues>({
+    resolver: zodResolver(calculosFormSchema) as any,
         defaultValues: {
             filial: 'TRIELO CD SIMÕES FILHO BA',
             dataRegistro: getBahiaTodayDate(),
@@ -152,7 +152,7 @@ export function CalculosForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit as any)} className="space-y-8">
                 <div className="grid gap-8 lg:grid-cols-3">
                     <div className="lg:col-span-2 space-y-8">
                         {/* PARTE 1 & 2 */}

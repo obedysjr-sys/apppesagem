@@ -3,7 +3,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from 'xlsx';
 import { format } from "date-fns";
-import logoBase64 from '/logo.png'; // Importando a logo como um data URL
+import logoBase64 from '/logo.png'; // Import da logo via pasta public
 
 // Função para exportar dados para XLSX
 export const exportToXlsx = (data: RegistroPeso[], fileName: string) => {
@@ -80,8 +80,8 @@ export const exportToPdf = (data: RegistroPeso[], title: string) => {
         item.pesoLiquidoReal.toFixed(2),
         item.perdaKg.toFixed(2),
         item.perdaCx.toFixed(2),
-        item.fornecedor.substring(0, 10),
-        item.notaFiscal,
+        (item.fornecedor ?? '').substring(0, 10),
+        item.notaFiscal ?? '',
     ]);
 
     autoTable(doc, {

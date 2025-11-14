@@ -40,7 +40,7 @@ interface RuleDialogProps {
 
 export function RuleDialog({ isOpen, onOpenChange, onSave, initialData }: RuleDialogProps) {
   const form = useForm<RuleFormValues>({
-    resolver: zodResolver(ruleSchema),
+    resolver: zodResolver(ruleSchema) as any,
     defaultValues: {
       min: 1,
       max: 1,
@@ -72,7 +72,7 @@ export function RuleDialog({ isOpen, onOpenChange, onSave, initialData }: RuleDi
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit as any)}>
             <DialogHeader>
               <DialogTitle>{initialData ? "Editar Regra" : "Adicionar Nova Regra"}</DialogTitle>
               <DialogDescription>
@@ -81,7 +81,7 @@ export function RuleDialog({ isOpen, onOpenChange, onSave, initialData }: RuleDi
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <FormField
-                control={form.control}
+                control={form.control as any}
                 name="min"
                 render={({ field }) => (
                   <FormItem>
@@ -94,7 +94,7 @@ export function RuleDialog({ isOpen, onOpenChange, onSave, initialData }: RuleDi
                 )}
               />
               <FormField
-                control={form.control}
+                control={form.control as any}
                 name="max"
                 render={({ field }) => (
                   <FormItem>
@@ -107,7 +107,7 @@ export function RuleDialog({ isOpen, onOpenChange, onSave, initialData }: RuleDi
                 )}
               />
               <FormField
-                control={form.control}
+                control={form.control as any}
                 name="sample"
                 render={({ field }) => (
                   <FormItem>

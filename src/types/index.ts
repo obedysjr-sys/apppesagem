@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const calculosFormSchema = z.object({
   filial: z.string().min(1, 'Filial é obrigatória.'),
-  dataRegistro: z.date({ required_error: 'Data é obrigatória.' }),
+  dataRegistro: z.date(),
   quantidadeRecebida: z.coerce.number().min(1, 'Quantidade deve ser maior que 0.'),
   pesoLiquidoPorCaixa: z.coerce.number().min(0.001, 'Peso deve ser maior que 0.'),
   modeloTabela: z.string(),
@@ -23,6 +23,7 @@ export interface CalculosResultados {
     perdaKg: number;
     perdaCx: number;
     perdaPercentual: number;
+    quantidadeTabela: number;
 }
 
 // Tipo de Registro de Peso (desacoplado de dados simulados)
