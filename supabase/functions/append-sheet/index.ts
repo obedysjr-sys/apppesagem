@@ -15,7 +15,8 @@ function getCorsHeaders(origin: string | null): Record<string, string> {
 type AppendBody = {
   spreadsheetId: string;
   range: string; // e.g. "Registros!A:Z"
-  record: Record<string, unknown>;
+  record?: Record<string, unknown>;
+  action?: "append" | "sync_headers";
 };
 
 // Utilitário: encaminha requisição para Apps Script, se configurado
@@ -63,7 +64,15 @@ Deno.serve(async (req: Request) => {
 
   try {
     const body = (await req.json()) as AppendBody;
-    if (!body?.spreadsheetId || !body?.range || !body?.record) {
+    if (!body?.spreadsheetId || !body?.range) {
+      return new Response(JSON.stringify({ ok: false, error: "Parâmetros inválidos" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", ...getCorsHeaders(origin) },
+      });
+    }
+
+    // Para action=sync_headers, não exigimos record. Para append, record é obrigatório.
+    if ((body.action ?? "append") === "append" && !body.record) {
       return new Response(JSON.stringify({ ok: false, error: "Parâmetros inválidos" }), {
         status: 400,
         headers: { "Content-Type": "application/json", ...getCorsHeaders(origin) },

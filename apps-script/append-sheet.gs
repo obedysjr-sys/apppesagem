@@ -41,14 +41,14 @@ function doPost(e) {
 
     if (action === 'sync_headers') {
       ensureHeaders(sheet, SUPABASE_HEADERS);
-      return json({ ok: true, synced: true });
+      return json({ ok: true, synced: true, sheet: sheet.getName(), headers: SUPABASE_HEADERS });
     }
 
     const record = body.record || {};
     ensureHeaders(sheet, SUPABASE_HEADERS);
     const row = SUPABASE_HEADERS.map((k) => (record[k] != null ? record[k] : ''));
     sheet.appendRow(row);
-    return json({ ok: true });
+    return json({ ok: true, appended: true, sheet: sheet.getName(), lastRow: sheet.getLastRow() });
   } catch (err) {
     return json({ ok: false, error: String(err) }, 500);
   }

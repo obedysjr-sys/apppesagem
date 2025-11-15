@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test:e2e": "node scripts/test-register.mjs"
+    "test:e2e": "node scripts/test-register.mjs",
+    "test:sync": "node scripts/sync-headers-and-append.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.10",
