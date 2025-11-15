@@ -1,0 +1,14 @@
+{
+  "name": "CHECKPESO - GDM",
+  "short_name": "CheckPeso",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#16a34a",
+  "description": "Sistema de controle e cálculo de pesagens de cargas.",
+  "icons": [
+    { "src": "/logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/logo.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

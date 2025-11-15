@@ -5,20 +5,40 @@ import * as XLSX from 'xlsx';
 import { format } from "date-fns";
 import logoBase64 from '/logo.png'; // Import da logo via pasta public
 
+// Remove acentos e caracteres especiais problemáticos
+const normalizeText = (value: string | undefined | null): string => {
+  const s = (value ?? '').toString();
+  return s
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // remove diacríticos
+    .replace(/[^\w\s\-./]/g, ''); // remove especiais mantendo letras, números, espaço, -, ., /
+};
+
 // Função para exportar dados para XLSX
 export const exportToXlsx = (data: RegistroPeso[], fileName: string) => {
-    const worksheet = XLSX.utils.json_to_sheet(data.map(item => ({
-        'Data': format(item.dataRegistro, 'dd/MM/yyyy'),
-        'Filial': item.filial,
-        'Modelo Tabela': item.modeloTabela,
-        'Qtd. Recebida': item.quantidadeRecebida,
-        'Peso Analisado (KG)': item.pesoLiquidoAnalise.toFixed(3),
-        'Peso Real (KG)': item.pesoLiquidoReal.toFixed(3),
-        'Perda (KG)': item.perdaKg.toFixed(3),
-        'Perda (CX)': item.perdaCx.toFixed(2),
-        'Fornecedor': item.fornecedor,
-        'NF': item.notaFiscal,
-    })));
+    const worksheet = XLSX.utils.json_to_sheet(data.map(item => {
+        const taraTotal = (item.quantidadeTabela ?? 0) * (item.taraCaixa ?? 0);
+        return {
+            'Data': format(item.dataRegistro, 'dd/MM/yyyy'),
+            'Filial': normalizeText(item.filial),
+            'Modelo Tabela': normalizeText(item.modeloTabela),
+            'Peso Programado (KG)': item.pesoLiquidoProgramado.toFixed(3),
+            'Qtd. Recebida': item.quantidadeRecebida,
+            'Qtd. Tabela': item.quantidadeTabela,
+            'Tara por Caixa (KG)': item.taraCaixa.toFixed(3),
+            'Tara Total (KG)': taraTotal.toFixed(3),
+            'Qtd. Baixo Peso': item.quantidadebaixopeso,
+            'Peso Bruto Analise (KG)': item.pesoBrutoAnalise.toFixed(3),
+            'Peso Liquido por Caixa (KG)': item.pesoLiquidoPorCaixa.toFixed(3),
+            'Peso Analisado (KG)': item.pesoLiquidoAnalise.toFixed(3),
+            'Peso Real (KG)': item.pesoLiquidoReal.toFixed(3),
+            'Perda (KG)': item.perdaKg.toFixed(3),
+            'Perda (CX)': item.perdaCx.toFixed(2),
+            'Perda (%)': item.perdaPercentual.toFixed(2),
+            'Fornecedor': normalizeText(item.fornecedor),
+            'NF': normalizeText(item.notaFiscal),
+        };
+    }));
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Relatório");
     XLSX.writeFile(workbook, `${fileName}.xlsx`);
@@ -70,18 +90,29 @@ export const exportToPdf = (data: RegistroPeso[], title: string) => {
     kpiCard(152, 44, "Perda Média", `${mediaPerdaPercentual.toFixed(2)}%`);
 
     // Tabela
-    const tableColumn = ["Data", "Filial", "Modelo", "Qtd Rec.", "Peso Anls.", "Peso Real", "Perda KG", "Perda CX", "Forn.", "NF"];
+    const tableColumn = [
+        "Data",
+        "Filial",
+        "Modelo",
+        "Qtd Rec.",
+        "Peso Analise (KG)",
+        "Peso Real (KG)",
+        "Perda KG",
+        "Perda CX",
+        "Forn.",
+        "NF"
+    ];
     const tableRows: (string | number)[][] = data.map(item => [
         format(item.dataRegistro, 'dd/MM/yy'),
-        item.filial.substring(0, 15),
-        item.modeloTabela,
+        normalizeText(item.filial).substring(0, 15),
+        normalizeText(item.modeloTabela),
         item.quantidadeRecebida,
         item.pesoLiquidoAnalise.toFixed(2),
         item.pesoLiquidoReal.toFixed(2),
         item.perdaKg.toFixed(2),
         item.perdaCx.toFixed(2),
-        (item.fornecedor ?? '').substring(0, 10),
-        item.notaFiscal ?? '',
+        normalizeText(item.fornecedor)?.substring(0, 10),
+        normalizeText(item.notaFiscal),
     ]);
 
     autoTable(doc, {

@@ -46,7 +46,7 @@ export function calcularResultados(data: Partial<CalculosFormValues>): CalculosR
     const pesoLiquidoAnalise = pesoBrutoAnalise - taraTotal;
 
     // 4. Peso Líquido Total da Análise e Peso Real
-    const pesoLiquidoTotalAnalise = pesoLiquidoAnalise * quantidadeRecebida / 10 ;
+    const pesoLiquidoTotalAnalise = pesoLiquidoAnalise * quantidadeRecebida / 1000 ;
 
     const pesoLiquidoReal = pesoLiquidoProgramado - pesoLiquidoTotalAnalise;
 
@@ -57,7 +57,12 @@ export function calcularResultados(data: Partial<CalculosFormValues>): CalculosR
     // 6. Perda em CX
     let perdaCx = 0;
     if (pesoLiquidoPorCaixa > 0) {
-        perdaCx = perdaKg / pesoLiquidoPorCaixa;
+        const perdaCxBruta = perdaKg / pesoLiquidoPorCaixa;
+        const sinal = Math.sign(perdaCxBruta);
+        const abs = Math.abs(perdaCxBruta);
+        const fracao = abs % 1;
+        const arredondado = fracao >= 0.5 ? Math.ceil(abs) : Math.floor(abs);
+        perdaCx = sinal * arredondado;
     }
 
     // 7. Perda Percentual (%)

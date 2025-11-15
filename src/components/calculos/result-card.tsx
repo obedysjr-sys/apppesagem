@@ -22,9 +22,15 @@ export function ResultCard({ title, value, unit, className, severity = null }: R
         <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
       </CardHeader>
       <CardContent className="pb-4">
-        <div className="text-2xl font-bold">
-          {value}
-          {unit && <span className="ml-1 text-base font-normal text-muted-foreground">{unit}</span>}
+        <div className="flex items-baseline justify-center gap-1 leading-tight tracking-tight">
+          <span className="text-lg sm:text-xl md:text-2xl font-bold">
+            {value}
+          </span>
+          {unit && (
+            <span className="text-xs sm:text-sm md:text-base font-normal text-muted-foreground">
+              {unit}
+            </span>
+          )}
         </div>
       </CardContent>
     </Card>

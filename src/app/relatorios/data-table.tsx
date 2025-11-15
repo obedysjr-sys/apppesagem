@@ -23,8 +23,8 @@ export function DataTable<TData>({
 }: DataTableProps<TData>) {
 
   return (
-    <div className="rounded-md border">
-      <Table>
+    <div className="rounded-md border overflow-x-auto w-full">
+      <Table className="min-w-max">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

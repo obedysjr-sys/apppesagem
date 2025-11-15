@@ -68,7 +68,7 @@ export function CalculosForm() {
     async function onSubmit(data: CalculosFormValues) {
         // Persistência no Supabase
         try {
-            const { supabase } = await import('../../lib/supabase');
+            const { supabase, hasSupabaseEnv } = await import('../../lib/supabase');
             const payload = {
                 data_registro: format(data.dataRegistro, 'yyyy-MM-dd'),
                 filial: data.filial,
@@ -90,40 +90,64 @@ export function CalculosForm() {
                 observacoes: data.observacoes || null,
             };
 
-            const { error } = await supabase
-                .from('registros_peso')
-                .insert(payload);
-
-            if (error) {
-                throw error;
+            if (!hasSupabaseEnv) {
+                toast.warning('Supabase não configurado.', { description: 'Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no .env.' });
+            } else {
+                const { error } = await supabase
+                    .from('registros_peso')
+                    .insert(payload);
+                if (error) throw error;
             }
 
-            // Google Sheets: tentar enviar via Edge Function se configurado
+            // Google Sheets: tentar via Edge Function (SDK) e, se falhar, usar fallback Apps Script
             try {
                 const { config } = await import('../../lib/config');
-                const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
-                const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+                const body = {
+                    spreadsheetId: config.sheets.spreadsheetId,
+                    range: config.sheets.range,
+                    record: {
+                        ...payload,
+                        data_registro: format(data.dataRegistro, 'dd/MM/yyyy'),
+                    },
+                };
+                let sent = false;
+                if (config.sheets.spreadsheetId && config.sheets.range && hasSupabaseEnv) {
+                    const { data: fnData, error: fnError } = await supabase.functions.invoke('append-sheet', { body });
+                    if (fnError) {
+                        console.warn('Edge Function append-sheet erro:', fnError);
+                    } else if (fnData && (fnData.ok === false || fnData.success === false)) {
+                        console.warn('Edge Function retornou falha lógica:', fnData);
+                    } else {
+                        sent = true;
+                    }
+                }
 
-                if (config.sheets.spreadsheetId && config.sheets.range) {
-                    await fetch(`${SUPABASE_URL}/functions/v1/append-sheet`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        },
-                        body: JSON.stringify({
-                            spreadsheetId: config.sheets.spreadsheetId,
-                            range: config.sheets.range,
-                            record: {
-                                ...payload,
-                                // Ajuste de formato de data para Sheets (dd/MM/yyyy)
-                                data_registro: format(data.dataRegistro, 'dd/MM/yyyy'),
-                            },
-                        }),
+                if (!sent && config.sheets.appsScriptUrl) {
+                    try {
+                        const resp = await fetch(config.sheets.appsScriptUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(body),
+                        });
+                        if (!resp.ok) {
+                            const text = await resp.text();
+                            console.warn('Apps Script respondeu com erro:', text);
+                        } else {
+                            sent = true;
+                        }
+                    } catch (appsErr) {
+                        console.warn('Falha no fallback Apps Script:', appsErr);
+                    }
+                }
+
+                if (!sent) {
+                    toast.warning('Registro salvo, mas envio ao Google Sheets falhou.', {
+                        description: 'Verifique a função append-sheet ou configure VITE_APPS_SCRIPT_URL para fallback.',
                     });
                 }
             } catch (err) {
                 console.warn('Falha ao enviar para Google Sheets:', err);
+                toast.warning('Registro salvo, mas houve erro ao enviar para o Google Sheets.');
             }
 
             toast.success('Registro salvo com sucesso!', {
@@ -145,8 +169,8 @@ export function CalculosForm() {
     }
     
     const getSeverity = (perda: number): 'ok' | 'attention' | 'critical' => {
-        if (isNaN(perda) || perda <= 3) return 'ok';
-        if (perda > 3 && perda <= 7) return 'attention';
+        if (isNaN(perda) || perda < 3) return 'ok';
+        if (perda >= 3 && perda <= 5) return 'attention';
         return 'critical';
     };
 
