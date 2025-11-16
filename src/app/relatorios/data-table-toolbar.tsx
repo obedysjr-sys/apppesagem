@@ -47,15 +47,15 @@ export function DataTableToolbar<TData>({
   }
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex flex-1 items-center space-x-2">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div className="flex flex-1 items-center flex-wrap gap-2">
         <Input
           placeholder="Filtrar por código..."
           value={(table.getColumn("codigo")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("codigo")?.setFilterValue(event.target.value)
           }
-          className="h-8 w-[120px] lg:w-[160px]"
+          className="h-8 w-full sm:w-[140px] lg:w-[160px]"
         />
         <Input
           placeholder="Filtrar por filial..."
@@ -63,7 +63,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn("filial")?.setFilterValue(event.target.value)
           }
-          className="h-8 w-[150px] lg:w-[200px]"
+          className="h-8 w-full sm:w-[150px] lg:w-[200px]"
         />
         <Input
           placeholder="Filtrar por produto..."
@@ -71,7 +71,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn("produto")?.setFilterValue(event.target.value)
           }
-          className="h-8 w-[150px] lg:w-[200px] hidden md:block"
+          className="h-8 w-full sm:w-[150px] lg:w-[200px] hidden md:block"
         />
         <Input
           placeholder="Filtrar por categoria..."
@@ -79,7 +79,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn("categoria")?.setFilterValue(event.target.value)
           }
-          className="h-8 w-[150px] lg:w-[200px] hidden md:block"
+          className="h-8 w-full sm:w-[150px] lg:w-[200px] hidden md:block"
         />
         <Input
           placeholder="Filtrar por fornecedor..."
@@ -87,7 +87,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn("fornecedor")?.setFilterValue(event.target.value)
           }
-          className="h-8 w-[150px] lg:w-[200px] hidden md:block"
+          className="h-8 w-full sm:w-[150px] lg:w-[200px] hidden md:block"
         />
         <Input
           placeholder="Filtrar por família..."
@@ -95,7 +95,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn("familia")?.setFilterValue(event.target.value)
           }
-          className="h-8 w-[150px] lg:w-[200px] hidden lg:block"
+          className="h-8 w-full sm:w-[150px] lg:w-[200px] hidden lg:block"
         />
         <Input
           placeholder="Filtrar por grupo produto..."
@@ -103,7 +103,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn("grupoProduto")?.setFilterValue(event.target.value)
           }
-          className="h-8 w-[150px] lg:w-[200px] hidden lg:block"
+          className="h-8 w-full sm:w-[150px] lg:w-[200px] hidden lg:block"
         />
       </div>
       <div className="flex items-center space-x-2">

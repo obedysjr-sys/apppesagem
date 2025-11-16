@@ -66,14 +66,14 @@ export const exportToXlsx = async (data: RegistroPeso[], fileName: string) => {
                 normalizeText(item.modeloTabela),
                 item.quantidadeRecebida,
                 item.quantidadeTabela,
-                Number(item.pesoLiquidoPorCaixa.toFixed(3)),
-                Number(item.taraCaixa.toFixed(3)),
-                Number(taraTotal.toFixed(3)),
+      Number(item.pesoLiquidoPorCaixa.toFixed(2)),
+      Number(item.taraCaixa.toFixed(2)),
+      Number(taraTotal.toFixed(2)),
                 item.quantidadebaixopeso,
-                Number(item.pesoBrutoAnalise.toFixed(3)),
-                Number(item.pesoLiquidoAnalise.toFixed(3)),
-                Number(item.pesoLiquidoReal.toFixed(3)),
-                Number(item.perdaKg.toFixed(3)),
+      Number(item.pesoBrutoAnalise.toFixed(2)),
+      Number(item.pesoLiquidoAnalise.toFixed(2)),
+      Number(item.pesoLiquidoReal.toFixed(2)),
+      Number(item.perdaKg.toFixed(2)),
                 Number(item.perdaCx.toFixed(2)),
                 Number(item.perdaPercentual.toFixed(2)),
                 normalizeText(item.fornecedor),
@@ -111,17 +111,17 @@ export const exportToXlsx = async (data: RegistroPeso[], fileName: string) => {
             'Filial': normalizeText(item.filial),
             'Categoria': normalizeText(item.categoria),
             'Modelo Tabela': normalizeText(item.modeloTabela),
-            'Peso Programado (KG)': item.pesoLiquidoProgramado.toFixed(3),
+      'Peso Programado (KG)': item.pesoLiquidoProgramado.toFixed(2),
             'Qtd. Recebida': item.quantidadeRecebida,
             'Qtd. Tabela': item.quantidadeTabela,
-            'Tara por Caixa (KG)': item.taraCaixa.toFixed(3),
-            'Tara Total (KG)': taraTotal.toFixed(3),
+      'Tara por Caixa (KG)': item.taraCaixa.toFixed(2),
+      'Tara Total (KG)': taraTotal.toFixed(2),
             'Qtd. Baixo Peso': item.quantidadebaixopeso,
-            'Peso Bruto Analise (KG)': item.pesoBrutoAnalise.toFixed(3),
-            'Peso Liquido por Caixa (KG)': item.pesoLiquidoPorCaixa.toFixed(3),
-            'Peso Analisado (KG)': item.pesoLiquidoAnalise.toFixed(3),
-            'Peso Real (KG)': item.pesoLiquidoReal.toFixed(3),
-            'Perda (KG)': item.perdaKg.toFixed(3),
+      'Peso Bruto Analise (KG)': item.pesoBrutoAnalise.toFixed(2),
+      'Peso Liquido por Caixa (KG)': item.pesoLiquidoPorCaixa.toFixed(2),
+      'Peso Analisado (KG)': item.pesoLiquidoAnalise.toFixed(2),
+      'Peso Real (KG)': item.pesoLiquidoReal.toFixed(2),
+      'Perda (KG)': item.perdaKg.toFixed(2),
             'Perda (CX)': item.perdaCx.toFixed(2),
             'Perda (%)': item.perdaPercentual.toFixed(2),
             'Fornecedor': normalizeText(item.fornecedor),
@@ -194,8 +194,8 @@ export const exportToPdf = async (data: RegistroPeso[], title: string) => {
         "Filial",
         "Categoria",
         "Produto",
-        "Modelo",
-        "Qtd Rec.",
+        "Qtd Rec. (CX)",
+        "Peso Prog. (KG)",
         "Peso Analise (KG)",
         "Peso Real (KG)",
         "Perda KG",
@@ -208,8 +208,8 @@ export const exportToPdf = async (data: RegistroPeso[], title: string) => {
         normalizeText(item.filial).substring(0, 15),
         normalizeText(item.categoria)?.substring(0, 12),
         normalizeText(item.produto)?.substring(0, 18),
-        normalizeText(item.modeloTabela),
         item.quantidadeRecebida,
+        Number(item.pesoLiquidoProgramado?.toFixed?.(2) ?? (item.pesoLiquidoProgramado ?? 0)),
         item.pesoLiquidoAnalise.toFixed(2),
         item.pesoLiquidoReal.toFixed(2),
         item.perdaKg.toFixed(2),
@@ -228,7 +228,7 @@ export const exportToPdf = async (data: RegistroPeso[], title: string) => {
         columnStyles: {
             0: { cellWidth: 16 },
             3: { cellWidth: 28 },
-            6: { textColor: [239, 68, 68] }, // Coluna Perda KG em vermelho
+            8: { textColor: [239, 68, 68] }, // Coluna Perda KG em vermelho
         },
         didDrawPage: (data) => {
             doc.setFontSize(10);
@@ -291,6 +291,7 @@ export const exportToHtml = async (data: RegistroPeso[]) => {
         <meta charset="utf-8" />
         <title>Relatorio de Pesagem - CHECKPESO</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
         <style>
           :root { --primary: #10b981; --muted: #111827; --bg: #0b0f12; --card: #111827; --border: #1f2937; --accent: #f59e0b; }
           body { font-family: system-ui, -apple-system, Segoe UI, Roboto; margin: 0; background-color: var(--bg); color: #e5e7eb; }
@@ -304,7 +305,7 @@ export const exportToHtml = async (data: RegistroPeso[]) => {
           .card h3 { margin:0; font-size:12px; color:#94a3b8; }
           .card .value { margin-top:4px; font-size:18px; font-weight:700; }
           .section { margin-top: 20px; }
-          .section h2 { font-size: 18px; margin-bottom: 8px; display:flex; align-items:center; gap:8px; }
+          .section h2 { font-size: 16px; margin-bottom: 8px; display:flex; align-items:center; gap:8px; }
           .grid-2 { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
           .table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius: 10px; }
           table { width:100%; border-collapse: collapse; min-width: 900px; }
@@ -357,7 +358,7 @@ export const exportToHtml = async (data: RegistroPeso[]) => {
               <table>
                 <thead>
                   <tr>
-                    <th>Data</th><th>Filial</th><th>Produto</th><th>Categoria</th><th>Modelo</th><th>Qtd Recebida</th><th>Peso Analise (KG)</th><th>Peso Real (KG)</th><th>Perda (KG)</th><th>Perda (CX)</th><th>Fornecedor</th><th>NF</th>
+                    <th>Data</th><th>Filial</th><th>Produto</th><th>Categoria</th><th>Qtd Rec. (CX)</th><th>Peso Prog. (KG)</th><th>Peso Analise (KG)</th><th>Peso Real (KG)</th><th>Perda (KG)</th><th>Perda (CX)</th><th>Fornecedor</th><th>NF</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -367,11 +368,11 @@ export const exportToHtml = async (data: RegistroPeso[]) => {
                       <td>${normalizeText(item.filial)}</td>
                       <td>${normalizeText(item.produto)}</td>
                       <td>${normalizeText(item.categoria)}</td>
-                      <td>${normalizeText(item.modeloTabela)}</td>
                       <td>${item.quantidadeRecebida}</td>
-                      <td>${item.pesoLiquidoAnalise.toFixed(3)}</td>
-                      <td>${item.pesoLiquidoReal.toFixed(3)}</td>
-                      <td>${item.perdaKg.toFixed(3)}</td>
+            <td>${Number(item.pesoLiquidoProgramado.toFixed(2))}</td>
+            <td>${item.pesoLiquidoAnalise.toFixed(2)}</td>
+            <td>${item.pesoLiquidoReal.toFixed(2)}</td>
+            <td>${item.perdaKg.toFixed(2)}</td>
                       <td>${item.perdaCx.toFixed(2)}</td>
                       <td>${normalizeText(item.fornecedor)}</td>
                       <td>${normalizeText(item.notaFiscal)}</td>
@@ -393,13 +394,13 @@ export const exportToHtml = async (data: RegistroPeso[]) => {
           new Chart(document.getElementById('dailyLoss'), {
             type: 'line',
             data: { labels: dailyLabels, datasets: [{ label: 'Perda (KG)', data: dailyValues, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.2)' }] },
-            options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#9ca3af' } }, y: { ticks: { color: '#9ca3af' } } } }
+            options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#9ca3af', font: { size: 11 } } }, y: { ticks: { color: '#9ca3af', font: { size: 11 } } } } }
           });
 
           new Chart(document.getElementById('lossByBranch'), {
             type: 'bar',
             data: { labels: branchLabels, datasets: [{ label: 'Perda (KG)', data: branchValues, backgroundColor: '#f59e0b' }] },
-            options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#9ca3af' } }, y: { ticks: { color: '#9ca3af' } } } }
+            options: { plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', color: '#93c5fd', font: { size: 11 }, formatter: (v) => Number(v).toFixed(2) } }, scales: { x: { ticks: { color: '#9ca3af', font: { size: 11 } } }, y: { ticks: { color: '#9ca3af', font: { size: 11 } } } } }
           });
         </script>
       </body>
@@ -412,23 +413,76 @@ export const exportToHtml = async (data: RegistroPeso[]) => {
 
 // Função para compartilhar via WhatsApp
 export const shareViaWhatsApp = (data: RegistroPeso[]) => {
+    if (!data || data.length === 0) {
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent('Sem dados para compartilhar.')}`);
+        return;
+    }
+
+    // Período
+    const sortedByDate = [...data].sort((a, b) => new Date(a.dataRegistro).getTime() - new Date(b.dataRegistro).getTime());
+    const inicio = sortedByDate[0].dataRegistro;
+    const fim = sortedByDate[sortedByDate.length - 1].dataRegistro;
+
+    // Totais
     const totalRegistros = data.length;
-    const totalPerdaKg = data.reduce((sum, item) => sum + item.perdaKg, 0);
-    const mediaPerdaPercentual = totalRegistros > 0 ? data.reduce((sum, item) => sum + item.perdaPercentual, 0) / totalRegistros : 0;
-    
-    let mensagem = `*CHECKPESO - Relatório Resumido*%0A%0A`;
-    mensagem += `*Período Analisado*%0A`;
-    mensagem += `*Total de Registros:* ${totalRegistros}%0A`;
-    mensagem += `*Perda Total:* ${totalPerdaKg.toFixed(2)} KG%0A`;
-    mensagem += `*Perda Média:* ${mediaPerdaPercentual.toFixed(2)}%%0A%0A`;
-    mensagem += `*Top 5 Registros com Maior Perda:*%0A`;
+    const totalPerdaKg = data.reduce((sum, item) => sum + (item.perdaKg || 0), 0);
+    const totalPerdaCx = data.reduce((sum, item) => sum + (item.perdaCx || 0), 0);
+    const mediaPerdaPercentual = totalRegistros > 0 ? data.reduce((sum, item) => sum + (item.perdaPercentual || 0), 0) / totalRegistros : 0;
 
-    data.sort((a, b) => b.perdaKg - a.perdaKg)
+    // Top 5 por registro (maior perda)
+    const topRegistros = [...data]
+        .sort((a, b) => (b.perdaKg || 0) - (a.perdaKg || 0))
         .slice(0, 5)
-        .forEach((item, index) => {
-            mensagem += `${index + 1}. *${item.filial.split(' ')[1]}* - ${format(item.dataRegistro, 'dd/MM')}: ${item.perdaKg.toFixed(2)} KG de perda%0A`;
-        });
+        .map((item) => `🏢 *${(item.filial || '').toString()}* - ${format(item.dataRegistro, 'dd/MM/yyyy')}: ${Number(item.perdaKg || 0).toFixed(2)} KG de perda`);
 
-    const link = `https://api.whatsapp.com/send?text=${mensagem}`;
+    // Top 5 fornecedor
+    const fornecedorAgg = Object.values(
+        data.reduce((acc, item) => {
+            const key = (item.fornecedor || 'N/I').toString();
+            if (!acc[key]) acc[key] = { fornecedor: key, perdaKg: 0, ultimaData: item.dataRegistro };
+            acc[key].perdaKg += (item.perdaKg || 0);
+            if (new Date(item.dataRegistro).getTime() > new Date(acc[key].ultimaData).getTime()) acc[key].ultimaData = item.dataRegistro;
+            return acc;
+        }, {} as Record<string, { fornecedor: string, perdaKg: number, ultimaData: Date }>)
+    )
+    .sort((a, b) => b.perdaKg - a.perdaKg)
+    .slice(0, 5)
+    .map((it) => `🚚 *${it.fornecedor}* - ${format(it.ultimaData, 'dd/MM/yyyy')}: ${Number(it.perdaKg).toFixed(2)} KG de perda`);
+
+    // Top 5 produto
+    const produtoAgg = Object.values(
+        data.reduce((acc, item) => {
+            const key = (item.produto || 'N/I').toString();
+            if (!acc[key]) acc[key] = { produto: key, perdaKg: 0, ultimaData: item.dataRegistro };
+            acc[key].perdaKg += (item.perdaKg || 0);
+            if (new Date(item.dataRegistro).getTime() > new Date(acc[key].ultimaData).getTime()) acc[key].ultimaData = item.dataRegistro;
+            return acc;
+        }, {} as Record<string, { produto: string, perdaKg: number, ultimaData: Date }>)
+    )
+    .sort((a, b) => b.perdaKg - a.perdaKg)
+    .slice(0, 5)
+    .map((it) => `📦 *${it.produto}* - ${format(it.ultimaData, 'dd/MM/yyyy')}: ${Number(it.perdaKg).toFixed(2)} KG de perda`);
+
+    let message = '';
+    message += '📟🍍*RESUMOS DOS RECEBIMENTOS*🍍📟\n\n';
+    message += '*-- PERÍODO E TOTAIS --*\n';
+    message += `🗓️ *Período Analisado:* ${format(inicio, 'dd/MM/yyyy')} a ${format(fim, 'dd/MM/yyyy')}\n`;
+    message += `🧮 *Total de Registros:* ${totalRegistros}\n`;
+    message += `🔴 *Perda Total em (KG):* ${totalPerdaKg.toFixed(2)}\n`;
+    message += `🔴 *Perda Total em (CX):* ${totalPerdaCx.toFixed(2)}\n`;
+    message += `💲 *% Perda Média:* ${mediaPerdaPercentual.toFixed(2)}%\n\n`;
+
+    message += '*-- TOP 5 REGISTROS DE MAIOR PERDA --*\n';
+    message += topRegistros.join('\n') + '\n\n';
+
+    message += '*-- TOP 5 FORNECEDOR DE MAIOR PERDA --*\n';
+    message += fornecedorAgg.join('\n') + '\n\n';
+
+    message += '*-- TOP 5 PRODUTO DE MAIOR PERDA --*\n';
+    message += produtoAgg.join('\n') + '\n\n';
+
+    message += '📟🥝APP CHECKPESO - GDM🍎📟';
+
+    const link = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
     window.open(link, '_blank');
 };

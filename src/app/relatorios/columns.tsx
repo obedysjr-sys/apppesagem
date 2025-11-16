@@ -36,12 +36,12 @@ export const columns: ColumnDef<RegistroPeso>[] = [
   {
     accessorKey: "pesoLiquidoAnalise",
     header: "Peso Analisado (KG)",
-    cell: ({ row }) => <div>{row.original.pesoLiquidoAnalise.toFixed(3)}</div>
+    cell: ({ row }) => <div>{row.original.pesoLiquidoAnalise.toFixed(2)}</div>
   },
   {
     accessorKey: "pesoLiquidoReal",
     header: "Peso Real (KG)",
-    cell: ({ row }) => <div>{row.original.pesoLiquidoReal.toFixed(3)}</div>
+    cell: ({ row }) => <div>{row.original.pesoLiquidoReal.toFixed(2)}</div>
   },
   {
     accessorKey: "perdaKg",
@@ -50,7 +50,7 @@ export const columns: ColumnDef<RegistroPeso>[] = [
         Perda (KG) <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <div className="font-medium text-red-400">{row.original.perdaKg.toFixed(3)}</div>
+    cell: ({ row }) => <div className="font-medium text-red-400">{row.original.perdaKg.toFixed(2)}</div>
   },
   {
     accessorKey: "perdaCx",

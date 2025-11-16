@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { DateRange } from 'react-day-picker';
 import { addDays, format, startOfDay, subDays } from 'date-fns';
-import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell, LabelList } from 'recharts';
 import { Box, Boxes, CalendarClock, TrendingDown, TrendingUp, Weight, Scale } from 'lucide-react';
 
 import { PageContent } from "@/components/layout/page-content";
@@ -241,41 +241,54 @@ export default function DashboardPage() {
         }
     }
 
-    return (
-        <PageContent title="Dashboard" subtitle="Visão geral dos registros e performance.">
-            <div className="flex flex-col gap-4">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                    <Tabs defaultValue="30d" className="space-y-4" onValueChange={handleTabChange}>
-                        <TabsList>
-                            <TabsTrigger value="7d">7 Dias</TabsTrigger>
-                            <TabsTrigger value="30d">30 Dias</TabsTrigger>
-                            <TabsTrigger value="90d">90 Dias</TabsTrigger>
-                        </TabsList>
-                    </Tabs>
-                    <DateRangePicker date={dateRange} onDateChange={setDateRange} />
-                </div>
+return (
+    <PageContent 
+        title="Dashboard" 
+        subtitle="Visão geral dos registros e performance."
+    >
+        <div className="flex flex-col gap-4 w-full max-w-full overflow-hidden">
 
-                {/* Filtros avançados */}
-                <div className="grid gap-2 md:grid-cols-3 lg:grid-cols-6">
-                    <div>
-                        <Input className="w-full" placeholder="Filial" value={filialQuery} onChange={e => setFilialQuery(e.target.value)} />
-                    </div>
-                    <div>
-                        <Input className="w-full" placeholder="Fornecedor" value={fornecedorQuery} onChange={e => setFornecedorQuery(e.target.value)} />
-                    </div>
-                    <div>
-                        <Input className="w-full" placeholder="Produto" value={produtoQuery} onChange={e => setProdutoQuery(e.target.value)} />
-                    </div>
-                    <div>
-                        <Input className="w-full" placeholder="Categoria" value={categoriaQuery} onChange={e => setCategoriaQuery(e.target.value)} />
-                    </div>
-                    <div>
-                        <Input className="w-full" placeholder="Família" value={familiaQuery} onChange={e => setFamiliaQuery(e.target.value)} />
-                    </div>
-                    <div>
-                        <Input className="w-full" placeholder="Grupo Produto" value={grupoProdutoQuery} onChange={e => setGrupoProdutoQuery(e.target.value)} />
-                    </div>
-                </div>
+            {/* Header */}
+            <div className="flex flex-col gap-3 w-full max-w-full 
+                            sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+
+                <Tabs defaultValue="30d" className="space-y-4" onValueChange={handleTabChange}>
+                    <TabsList className="flex flex-wrap w-full max-w-full">
+                        <TabsTrigger value="7d">7 Dias</TabsTrigger>
+                        <TabsTrigger value="30d">30 Dias</TabsTrigger>
+                        <TabsTrigger value="90d">90 Dias</TabsTrigger>
+                    </TabsList>
+                </Tabs>
+
+                <DateRangePicker 
+                    date={dateRange} 
+                    onDateChange={setDateRange}
+                    className="w-full sm:w-auto"
+                />
+            </div>
+
+            {/* Filtros */}
+            <div className="grid grid-cols-1 gap-2 w-full max-w-full 
+                            sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+
+                <Input className="w-full min-w-0" placeholder="Filial" value={filialQuery}
+                    onChange={e => setFilialQuery(e.target.value)} />
+
+                <Input className="w-full min-w-0" placeholder="Fornecedor" value={fornecedorQuery}
+                    onChange={e => setFornecedorQuery(e.target.value)} />
+
+                <Input className="w-full min-w-0" placeholder="Produto" value={produtoQuery}
+                    onChange={e => setProdutoQuery(e.target.value)} />
+
+                <Input className="w-full min-w-0" placeholder="Categoria" value={categoriaQuery}
+                    onChange={e => setCategoriaQuery(e.target.value)} />
+
+                <Input className="w-full min-w-0" placeholder="Família" value={familiaQuery}
+                    onChange={e => setFamiliaQuery(e.target.value)} />
+
+                <Input className="w-full min-w-0" placeholder="Grupo Produto" value={grupoProdutoQuery}
+                    onChange={e => setGrupoProdutoQuery(e.target.value)} />
+            </div>
 
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                     <KpiCard title="Perda Média" value={`${kpiData.perdaPercentualMedia.toFixed(2)}%`} icon={<TrendingDown />} description="Média de perda no período" />
@@ -293,10 +306,10 @@ export default function DashboardPage() {
                             <ResponsiveContainer width="100%" height={350}>
                                 <LineChart data={chartData.dailyLoss}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="date" tickFormatter={(str) => format(new Date(str), 'dd/MM')} />
-                                    <YAxis />
-                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} />
-                                    <Legend />
+                                    <XAxis dataKey="date" tickFormatter={(str) => format(new Date(str), 'dd/MM')} tick={{ fontSize: 11 }} />
+                                    <YAxis tick={{ fontSize: 11 }} />
+                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} contentStyle={{ fontSize: 12 }} />
+                                    <Legend wrapperStyle={{ fontSize: 12 }} />
                                     <Line type="monotone" dataKey="perda_kg" name="Perda em KG" stroke="var(--color-primary)" strokeWidth={2} />
                                 </LineChart>
                             </ResponsiveContainer>
@@ -309,13 +322,29 @@ export default function DashboardPage() {
                         <CardContent>
                             <ResponsiveContainer width="100%" height={350}>
                                 <PieChart>
-                                    <Pie data={chartData.lossByBranch} dataKey="volume" nameKey="name" cx="50%" cy="50%" outerRadius={120} labelLine={false} label={({ name, percent }) => `${name.split(' ')[1]}: ${(percent * 100).toFixed(0)}%`}>
+                                    <Pie
+                                        data={chartData.lossByBranch}
+                                        dataKey="volume"
+                                        nameKey="name"
+                                        cx="50%"
+                                        cy="50%"
+                                        outerRadius={120}
+                                        labelLine={false}
+                                        label={(props: any) => {
+                                            const { name, percent, x, y } = props;
+                                            return (
+                                                <text x={x} y={y} fontSize={11} textAnchor="middle" fill="#64748b">
+                                                    {`${String(name).split(' ')[1]}: ${(percent * 100).toFixed(0)}%`}
+                                                </text>
+                                            );
+                                        }}
+                                    >
                                         {chartData.lossByBranch.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
-                                    <Tooltip formatter={(value: number) => `${value.toLocaleString('pt-BR')} caixas`} />
-                                    <Legend />
+                                    <Tooltip formatter={(value: number) => `${value.toLocaleString('pt-BR')} caixas`} contentStyle={{ fontSize: 12 }} />
+                                    <Legend wrapperStyle={{ fontSize: 12 }} />
                                 </PieChart>
                             </ResponsiveContainer>
                         </CardContent>
@@ -332,11 +361,13 @@ export default function DashboardPage() {
                             <ResponsiveContainer width="100%" height={350}>
                                 <BarChart data={chartData.topCategories}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="name" />
-                                    <YAxis />
-                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} />
-                                    <Legend />
-                                    <Bar dataKey="perda_kg" name="Perda (KG)" fill="var(--color-secondary)" />
+                                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                                    <YAxis tick={{ fontSize: 11 }} />
+                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} contentStyle={{ fontSize: 12 }} />
+                                    <Legend wrapperStyle={{ fontSize: 12 }} />
+                                    <Bar dataKey="perda_kg" name="Perda (KG)" fill="var(--color-primary)">
+                                        <LabelList dataKey="perda_kg" position="top" formatter={(val: number) => Number(val).toFixed(2)} />
+                                    </Bar>
                                 </BarChart>
                             </ResponsiveContainer>
                         </CardContent>
@@ -349,11 +380,13 @@ export default function DashboardPage() {
                             <ResponsiveContainer width="100%" height={350}>
                                 <BarChart data={chartData.topBranches}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="name" />
-                                    <YAxis />
-                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} />
-                                    <Legend />
-                                    <Bar dataKey="perda_kg" name="Perda (KG)" fill="var(--color-primary)" />
+                                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                                    <YAxis tick={{ fontSize: 11 }} />
+                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} contentStyle={{ fontSize: 12 }} />
+                                    <Legend wrapperStyle={{ fontSize: 12 }} />
+                                    <Bar dataKey="perda_kg" name="Perda (KG)" fill="var(--color-primary)">
+                                        <LabelList dataKey="perda_kg" position="top" formatter={(val: number) => Number(val).toFixed(2)} />
+                                    </Bar>
                                 </BarChart>
                             </ResponsiveContainer>
                         </CardContent>
@@ -391,9 +424,9 @@ export default function DashboardPage() {
                                             <td className="p-2">{(r as any).categoria ?? ''}</td>
                                             <td className="p-2 text-right">{r.quantidadeRecebida}</td>
                                             <td className="p-2 text-right">{r.quantidadeTabela}</td>
-                                            <td className="p-2 text-right">{r.pesoLiquidoAnalise.toFixed(3)}</td>
-                                            <td className="p-2 text-right">{r.pesoLiquidoReal.toFixed(3)}</td>
-                                            <td className="p-2 text-right">{r.perdaKg.toFixed(3)}</td>
+                  <td className="p-2 text-right">{r.pesoLiquidoAnalise.toFixed(2)}</td>
+                  <td className="p-2 text-right">{r.pesoLiquidoReal.toFixed(2)}</td>
+                  <td className="p-2 text-right">{r.perdaKg.toFixed(2)}</td>
                                             <td className="p-2 text-right">{r.perdaCx.toFixed(2)}</td>
                                             <td className="p-2">{(r as any).fornecedor ?? ''}</td>
                                             <td className="p-2">{(r as any).notaFiscal ?? ''}</td>
@@ -418,11 +451,13 @@ export default function DashboardPage() {
                         <ResponsiveContainer width="100%" height={350}>
                             <BarChart data={chartData.lossByBranch}>
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" tickFormatter={(str) => str.split(' ')[1]} />
-                                <YAxis />
-                                <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} />
-                                <Legend />
-                                <Bar dataKey="perda_kg" name="Perda em KG" fill="var(--color-secondary)" />
+                                <XAxis dataKey="name" tickFormatter={(str) => str.split(' ')[1]} tick={{ fontSize: 11 }} />
+                                <YAxis tick={{ fontSize: 11 }} />
+                                <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} contentStyle={{ fontSize: 12 }} />
+                                <Legend wrapperStyle={{ fontSize: 12 }} />
+                                <Bar dataKey="perda_kg" name="Perda em KG" fill="var(--color-primary)">
+                                    <LabelList dataKey="perda_kg" position="top" formatter={(val: number) => Number(val).toFixed(2)} />
+                                </Bar>
                             </BarChart>
                         </ResponsiveContainer>
                     </CardContent>

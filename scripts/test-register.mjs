@@ -51,11 +51,11 @@ async function main() {
   const taraCaixa = 0.22;
   const pesoBrutoAnalise = 13.5;
 
-  const pesoProgramado = Number((quantidadeRecebida * pesoLiquidoPorCaixa).toFixed(3));
-  const pesoAnalise = Number((pesoBrutoAnalise - quantidadeRecebida * taraCaixa).toFixed(3));
+const pesoProgramado = Number((quantidadeRecebida * pesoLiquidoPorCaixa).toFixed(2));
+const pesoAnalise = Number((pesoBrutoAnalise - quantidadeRecebida * taraCaixa).toFixed(2));
   const pesoReal = pesoAnalise;
-  const perdaKg = Number((pesoProgramado - pesoReal).toFixed(3));
-  const perdaCx = Number((perdaKg / pesoLiquidoPorCaixa).toFixed(3));
+const perdaKg = Number((pesoProgramado - pesoReal).toFixed(2));
+const perdaCx = Number((perdaKg / pesoLiquidoPorCaixa).toFixed(2));
   const perdaPercentual = Number(((perdaKg / (pesoProgramado || 1)) * 100).toFixed(2));
 
   const payload = {

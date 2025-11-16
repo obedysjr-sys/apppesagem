@@ -68,77 +68,140 @@ export function ProductDialog({ isOpen, onOpenChange }: { isOpen: boolean; onOpe
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[520px]">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit as any)}>
-            <DialogHeader>
-              <DialogTitle>Cadastro de Produto</DialogTitle>
-              <DialogDescription>Inclua um novo produto no catálogo (Supabase).</DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <FormField name="cod_produto" control={form.control as any} render={({ field }) => (
-                <FormItem>
+  <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <DialogContent 
+      className="
+        w-[95vw] 
+        max-w-full 
+        sm:max-w-[520px] 
+        p-4 sm:p-6 
+        overflow-hidden
+      "
+    >
+      <Form {...form}>
+        <form 
+          onSubmit={form.handleSubmit(onSubmit as any)} 
+          className="w-full max-w-full"
+        >
+          <DialogHeader>
+            <DialogTitle>Cadastro de Produto</DialogTitle>
+            <DialogDescription>
+              Inclua um novo produto no catálogo (Supabase).
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-4 py-4 w-full max-w-full">
+
+            <FormField
+              name="cod_produto"
+              control={form.control as any}
+              render={({ field }) => (
+                <FormItem className="w-full max-w-full">
                   <FormLabel>Código do Produto</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className="w-full min-w-0" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
-              <FormField name="descricao" control={form.control as any} render={({ field }) => (
-                <FormItem>
+              )}
+            />
+
+            <FormField
+              name="descricao"
+              control={form.control as any}
+              render={({ field }) => (
+                <FormItem className="w-full max-w-full">
                   <FormLabel>Descrição</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className="w-full min-w-0" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
-              <FormField name="unid" control={form.control as any} render={({ field }) => (
-                <FormItem>
+              )}
+            />
+
+            <FormField
+              name="unid"
+              control={form.control as any}
+              render={({ field }) => (
+                <FormItem className="w-full max-w-full">
                   <FormLabel>Unid</FormLabel>
                   <FormControl>
-                    <Input placeholder="ex.: 5 (opcional)" {...field} />
+                    <Input
+                      placeholder="ex.: 5 (opcional)"
+                      {...field}
+                      className="w-full min-w-0"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
-              <FormField name="categoria" control={form.control as any} render={({ field }) => (
-                <FormItem>
+              )}
+            />
+
+            <FormField
+              name="categoria"
+              control={form.control as any}
+              render={({ field }) => (
+                <FormItem className="w-full max-w-full">
                   <FormLabel>Categoria</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className="w-full min-w-0" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
-              <FormField name="familia" control={form.control as any} render={({ field }) => (
-                <FormItem>
+              )}
+            />
+
+            <FormField
+              name="familia"
+              control={form.control as any}
+              render={({ field }) => (
+                <FormItem className="w-full max-w-full">
                   <FormLabel>Família</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className="w-full min-w-0" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
-              <FormField name="grupo_produto" control={form.control as any} render={({ field }) => (
-                <FormItem>
+              )}
+            />
+
+            <FormField
+              name="grupo_produto"
+              control={form.control as any}
+              render={({ field }) => (
+                <FormItem className="w-full max-w-full">
                   <FormLabel>Grupo Produto</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className="w-full min-w-0" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
-            </div>
-            <DialogFooter>
-              <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancelar</Button>
-              <Button type="submit">Salvar</Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
-  );
+              )}
+            />
+
+          </div>
+
+          <DialogFooter className="w-full max-w-full flex justify-between">
+            <Button 
+              type="button" 
+              variant="ghost"
+              className="w-full sm:w-auto"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancelar
+            </Button>
+
+            <Button 
+              type="submit"
+              className="w-full sm:w-auto"
+            >
+              Salvar
+            </Button>
+          </DialogFooter>
+        </form>
+      </Form>
+    </DialogContent>
+  </Dialog>
+);
 }

@@ -201,16 +201,38 @@ export default function RelatoriosPage() {
         getSortedRowModel: getSortedRowModel(),
       })
 
-    return (
-        <PageContent title="Relatórios" subtitle="Filtre, analise e exporte relatórios detalhados.">
-                <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <DataTableToolbar table={table} />
-                    <DateRangePicker date={dateRange} onDateChange={setDateRange} />
-                </div>
+return (
+    <PageContent 
+        title="Relatórios" 
+        subtitle="Filtre, analise e exporte relatórios detalhados."
+    >
+        <div className="space-y-4 w-full max-w-full overflow-hidden">
+
+            {/* Header */}
+            <div className="
+                flex flex-col gap-3 w-full max-w-full
+                sm:flex-row sm:flex-wrap sm:items-center sm:justify-between
+            ">
+                <DataTableToolbar 
+                    table={table}
+                    className="w-full sm:w-auto max-w-full"
+                />
+
+                <DateRangePicker 
+                    date={dateRange} 
+                    onDateChange={setDateRange}
+                    className="w-full sm:w-auto max-w-full"
+                />
+            </div>
+
+            {/* Tabela */}
+            <div className="w-full max-w-full overflow-x-auto">
                 <DataTable table={table} />
-                <DataTablePagination table={table} />
-                </div>
-        </PageContent>
-    );
+            </div>
+
+            <DataTablePagination table={table} />
+        </div>
+    </PageContent>
+);
+
 }

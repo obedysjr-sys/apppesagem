@@ -1,6 +1,6 @@
 // Usage:
 //   SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/import-produtos-from-csv.mjs
-// Reads `Pasta1.csv` in workspace root and upserts rows into `produtos` table
+// Reads a CSV and upserts rows into `produtos` table
 // Columns expected in CSV (semicolon `;` delimited):
 //   Cód. Produto;Descrição;Unid.;Categoria;Família;Grupo Produto
 
@@ -18,7 +18,11 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-const csvPath = path.resolve(process.cwd(), 'Pasta1.csv');
+// CSV path priority: CLI arg > env CSV_PATH > default 'Pasta3.csv' in workspace root
+const csvArg = process.argv[2];
+const csvEnv = process.env.CSV_PATH;
+const csvDefault = path.resolve(process.cwd(), 'Pasta3.csv');
+const csvPath = path.resolve(csvArg || csvEnv || csvDefault);
 
 function parseNumber(str) {
   if (str == null) return null;
@@ -62,7 +66,7 @@ async function main() {
   }
 
   // Parse rows
-  const rows = lines.slice(1).map((line) => {
+  const parsed = lines.slice(1).map((line) => {
     const cols = line.split(';');
     const cod_produto = normalize(cols[idx.cod_produto]);
     const descricao = normalize(cols[idx.descricao]);
@@ -73,6 +77,13 @@ async function main() {
     const grupo_produto = normalize(cols[idx.grupo_produto]);
     return { cod_produto, descricao, unid, categoria, familia, grupo_produto };
   }).filter(r => r.cod_produto != null);
+
+  // Deduplicate by cod_produto (keep last occurrence)
+  const byCode = new Map();
+  for (const r of parsed) {
+    byCode.set(r.cod_produto, r);
+  }
+  const rows = Array.from(byCode.values());
 
   console.log(`Parsed ${rows.length} rows. Upserting in chunks...`);
   const chunkSize = 500;

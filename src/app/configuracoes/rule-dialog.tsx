@@ -70,7 +70,7 @@ export function RuleDialog({ isOpen, onOpenChange, onSave, initialData }: RuleDi
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="w-[95vw] sm:max-w-[425px] p-4 sm:p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit as any)}>
             <DialogHeader>

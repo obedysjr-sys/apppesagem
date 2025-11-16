@@ -23,12 +23,12 @@ import {
     table,
   }: DataTablePaginationProps<TData>) {
     return (
-      <div className="flex items-center justify-between px-2">
-        <div className="flex-1 text-sm text-muted-foreground">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-2">
+        <div className="text-sm text-muted-foreground w-full sm:w-auto text-center sm:text-left">
           {table.getFilteredSelectedRowModel().rows.length} de{" "}
           {table.getFilteredRowModel().rows.length} linha(s) selecionada(s).
         </div>
-        <div className="flex items-center space-x-6 lg:space-x-8">
+        <div className="flex items-center flex-wrap gap-3 sm:gap-6 lg:gap-8">
           <div className="flex items-center space-x-2">
             <p className="text-sm font-medium">Linhas por página</p>
             <Select
@@ -49,7 +49,7 @@ import {
               </SelectContent>
             </Select>
           </div>
-          <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+          <div className="flex w-full sm:w-[100px] items-center justify-center text-sm font-medium">
             Página {table.getState().pagination.pageIndex + 1} de{" "}
             {table.getPageCount()}
           </div>

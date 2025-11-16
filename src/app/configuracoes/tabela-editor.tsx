@@ -219,63 +219,124 @@ export function TabelaEditor() {
     const columns = getColumns({ onEdit: handleEditRule, onDelete: (id) => setDeletingRuleId(id) });
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Editor de Tabelas de Amostragem</CardTitle>
-                <CardDescription>Gerencie as regras para os planos de amostragem S1, S2, S3 e S4.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as TabelaKey)}>
-                    <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                        <TabsList>
-                            <TabsTrigger value="S1">S1</TabsTrigger>
-                            <TabsTrigger value="S2">S2</TabsTrigger>
-                            <TabsTrigger value="S3">S3</TabsTrigger>
-                            <TabsTrigger value="S4">S4</TabsTrigger>
-                        </TabsList>
-                        <div className="flex gap-2">
-                            <Button variant="outline" size="sm" onClick={handleAddRule}><PlusCircle /> Adicionar Regra</Button>
-                            {activeTab === 'S4' && (
-                                <Button variant="secondary" size="sm" onClick={handleRestoreS4}><RefreshCw /> Restaurar S4</Button>
-                            )}
-                            <Button variant="default" size="sm" onClick={() => setIsProductDialogOpen(true)}>Cadastro de Produto</Button>
-                             <Button variant="outline" size="sm" disabled><Download /> Exportar</Button>
-                             <Button variant="outline" size="sm" disabled><Upload /> Importar</Button>
-                        </div>
-                    </div>
-                    {Object.keys(tabelas).map(key => (
-                        <TabsContent key={key} value={key}>
-                            <TabelaConfig columns={columns} data={tabelas[key as TabelaKey]} />
-                        </TabsContent>
-                    ))}
-                </Tabs>
-            </CardContent>
+  <Card className="w-full max-w-full overflow-hidden">
+    <CardHeader>
+      <CardTitle>Editor de Tabelas de Amostragem</CardTitle>
+      <CardDescription>
+        Gerencie as regras para os planos de amostragem S1, S2, S3 e S4.
+      </CardDescription>
+    </CardHeader>
 
-            <RuleDialog 
-                isOpen={isDialogOpen}
-                onOpenChange={setIsDialogOpen}
-                onSave={handleSaveRule}
-                initialData={editingRule}
-            />
+    <CardContent className="w-full max-w-full">
 
-            <AlertDialog open={!!deletingRuleId} onOpenChange={() => setDeletingRuleId(null)}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                    <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        Esta ação não pode ser desfeita. Isso excluirá permanentemente a regra da tabela.
-                    </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setDeletingRuleId(null)}>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => handleDeleteRule(deletingRuleId!)}>
-                        Confirmar Exclusão
-                    </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+      <Tabs 
+        value={activeTab} 
+        onValueChange={value => setActiveTab(value as TabelaKey)}
+        className="w-full max-w-full"
+      >
 
-            <ProductDialog isOpen={isProductDialogOpen} onOpenChange={setIsProductDialogOpen} />
-        </Card>
+        {/* Header dos Tabs + Botões */}
+        <div
+          className="
+            flex flex-col gap-4 mb-4 w-full max-w-full
+            sm:flex-row sm:flex-wrap sm:items-center sm:justify-between
+          "
+        >
+          {/* Tabs */}
+          <TabsList className="w-full sm:w-auto flex flex-wrap">
+            <TabsTrigger value="S1">S1</TabsTrigger>
+            <TabsTrigger value="S2">S2</TabsTrigger>
+            <TabsTrigger value="S3">S3</TabsTrigger>
+            <TabsTrigger value="S4">S4</TabsTrigger>
+          </TabsList>
+
+          {/* Botões */}
+          <div 
+            className="
+              flex flex-wrap gap-2 w-full sm:w-auto 
+              justify-start sm:justify-end
+            "
+          >
+            <Button variant="outline" size="sm" onClick={handleAddRule}>
+              <PlusCircle className="mr-1" /> Adicionar Regra
+            </Button>
+
+            {activeTab === "S4" && (
+              <Button variant="secondary" size="sm" onClick={handleRestoreS4}>
+                <RefreshCw className="mr-1" /> Restaurar S4
+              </Button>
+            )}
+
+            <Button 
+              variant="default" 
+              size="sm" 
+              onClick={() => setIsProductDialogOpen(true)}
+            >
+              Cadastro de Produto
+            </Button>
+
+            <Button variant="outline" size="sm" disabled>
+              <Download className="mr-1" /> Exportar
+            </Button>
+
+            <Button variant="outline" size="sm" disabled>
+              <Upload className="mr-1" /> Importar
+            </Button>
+          </div>
+        </div>
+
+        {/* Conteúdo das Tabelas */}
+        <div className="w-full max-w-full overflow-x-auto">
+          {Object.keys(tabelas).map(key => (
+            <TabsContent key={key} value={key}>
+              <TabelaConfig columns={columns} data={tabelas[key as TabelaKey]} />
+            </TabsContent>
+          ))}
+        </div>
+      </Tabs>
+    </CardContent>
+
+    {/* Dialog de edição de regra */}
+    <RuleDialog
+      isOpen={isDialogOpen}
+      onOpenChange={setIsDialogOpen}
+      onSave={handleSaveRule}
+      initialData={editingRule}
+    />
+
+    {/* Alert para excluir */}
+    <AlertDialog
+      open={!!deletingRuleId}
+      onOpenChange={() => setDeletingRuleId(null)}
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Esta ação não pode ser desfeita. Isso excluirá permanentemente a
+            regra da tabela.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => setDeletingRuleId(null)}>
+            Cancelar
+          </AlertDialogCancel>
+
+          <AlertDialogAction
+            onClick={() => handleDeleteRule(deletingRuleId!)}
+          >
+            Confirmar Exclusão
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
+    {/* Dialog de cadastro de produto */}
+    <ProductDialog 
+      isOpen={isProductDialogOpen} 
+      onOpenChange={setIsProductDialogOpen} 
+    />
+  </Card>
     );
 }

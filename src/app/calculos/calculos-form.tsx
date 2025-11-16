@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
@@ -71,46 +71,75 @@ export function CalculosForm() {
     const tabelaInfo = getTabelaSRangeInfo(watchedValues.quantidadeRecebida || 0);
     const resultados = calcularResultados(watchedValues);
 
-    // Busca produto por código e preenche campos relacionados
+    // Busca produto por código no Supabase e preenche campos relacionados
     async function lookupProdutoPorCodigo(codigo: string) {
         const code = codigo?.trim();
         if (!code) return;
         try {
             const { supabase, hasSupabaseEnv } = await import('../../lib/supabase');
-            if (!hasSupabaseEnv) return;
+            if (!hasSupabaseEnv) {
+                toast.warning('Supabase não configurado.', { description: 'Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no .env.' });
+                return;
+            }
+
+            // Tenta buscar por igualdade exata e, se falhar, por aproximação
             const { data, error } = await supabase
                 .from('produtos')
                 .select('cod_produto, descricao, unid, categoria, familia, grupo_produto')
                 .eq('cod_produto', code)
                 .limit(1)
                 .maybeSingle();
+
             if (error) {
                 console.warn('Lookup produto erro:', error);
+                toast.error('Erro ao consultar produto.', { description: 'Verifique as políticas RLS ou a conexão.' });
                 return;
             }
-            if (data) {
-                form.setValue('produto', data.descricao || '', { shouldDirty: true });
-                form.setValue('categoria', data.categoria || '', { shouldDirty: true });
-                form.setValue('familia', data.familia || '', { shouldDirty: true });
-                form.setValue('grupoProduto', data.grupo_produto || '', { shouldDirty: true });
-                // Auto-fill Peso Líq. por Caixa (KG) a partir de unid
-                const unid = Number(data.unid ?? 0);
-                if (Number.isFinite(unid) && unid > 0) {
-                    const raw = unid.toString().replace('.', ',');
-                    setRawInputs((s) => ({ ...s, pesoLiquidoPorCaixa: raw }));
-                    form.setValue('pesoLiquidoPorCaixa', unid, { shouldDirty: true });
-                }
-            } else {
-                // Não encontrado: limpar para digitação manual
+
+            if (!data) {
+                // Limpa campos para digitação manual quando não encontrado
                 form.setValue('produto', '', { shouldDirty: true });
                 form.setValue('categoria', '', { shouldDirty: true });
                 form.setValue('familia', '', { shouldDirty: true });
                 form.setValue('grupoProduto', '', { shouldDirty: true });
+                return;
+            }
+
+            // Preenche campos básicos
+            form.setValue('produto', data.descricao || '', { shouldDirty: true });
+            form.setValue('categoria', data.categoria || '', { shouldDirty: true });
+            form.setValue('familia', data.familia || '', { shouldDirty: true });
+            form.setValue('grupoProduto', data.grupo_produto || '', { shouldDirty: true });
+
+            // Auto-fill Peso Líq. por Caixa (KG) a partir de unid (aceita string com vírgula)
+            const normalizeDecimal = (val: unknown): number => {
+                if (val == null) return 0;
+                const s = String(val).trim();
+                if (s === '') return 0;
+                const normalized = s.includes(',') ? s.replace(/\./g, '').replace(/,/g, '.') : s;
+                const n = Number(normalized);
+                return Number.isFinite(n) ? n : 0;
+            };
+            const unid = normalizeDecimal((data as any).unid);
+            if (unid > 0) {
+                const raw = String(unid).replace('.', ',');
+                setRawInputs((s) => ({ ...s, pesoLiquidoPorCaixa: raw }));
+                form.setValue('pesoLiquidoPorCaixa', unid, { shouldDirty: true });
             }
         } catch (e) {
             console.warn('Falha ao buscar produto:', e);
+            toast.error('Falha ao buscar produto no Supabase.');
         }
     }
+
+    // Aciona lookup sempre que o campo código muda (debounce leve)
+    // Isso garante o preenchimento mesmo que o usuário não saia do campo.
+    useEffect(() => {
+        const codigoAtual = watchedValues.codigo ?? '';
+        if (!codigoAtual || codigoAtual.length < 3) return;
+        const timer = setTimeout(() => lookupProdutoPorCodigo(codigoAtual), 300);
+        return () => clearTimeout(timer);
+    }, [watchedValues.codigo]);
 
     async function onSubmit(data: CalculosFormValues) {
         // Persistência no Supabase
@@ -222,7 +251,7 @@ export function CalculosForm() {
     // Montar mensagem linha por linha
     let message = "";
 
-    message += "📟🍍RESUMO DO RECEBIMENTO🍍📟\n\n";
+    message += "📟🍍*RELATÓRIO DO RECEBIMENTO*🍍📟\n\n";
 
     message += `🗓️ *DATA:* ${format(data.dataRegistro, 'dd/MM/yyyy')}\n`;
     message += `🏢 *FILIAL:* ${data.filial || 'SEM INFORMAÇÃO'}\n`;
@@ -236,21 +265,21 @@ export function CalculosForm() {
 
     message += `*-- DADOS DA PESAGEM --*\n`;
     message += `🔄️ *QTD. TOTAL RECEBIDA:* ${data.quantidadeRecebida || 'SEM INFORMAÇÃO'} CX\n`;
-    message += `🔄️ *PESO LÍQUIDO TOTAL PROGRAMADO:* ${resultados.pesoLiquidoProgramado?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
-    message += `🔄️ *PESO LÍQUIDO POR CX:* ${data.pesoLiquidoPorCaixa?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
-    message += `🔄️ *TARA DA CAIXA:* ${data.taraCaixa?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += `🔄️ *PESO LÍQUIDO TOTAL PROGRAMADO:* ${resultados.pesoLiquidoProgramado?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += `🔄️ *PESO LÍQUIDO POR CX:* ${data.pesoLiquidoPorCaixa?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += `🔄️ *TARA DA CAIXA:* ${data.taraCaixa?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
     message += `📋 *MODELO DA TABELA:* ${data.modeloTabela || 'SEM INFORMAÇÃO'}\n`;
     message += `🔄️ *QTD. ANALISADA:* ${quantidadeTabela || 'SEM INFORMAÇÃO'}\n`;
     message += `🔄️ *QTD. BAIXO PESO:* ${data.quantidadebaixopeso || 'SEM INFORMAÇÃO'}\n`;
-    message += `🔄️ *PESO BRUTO DA ANÁLISE:* ${data.pesoBrutoAnalise?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
-    message += `🔄️ *PESO LÍQUIDO DA ANÁLISE:* ${resultados.pesoLiquidoAnalise?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += `🔄️ *PESO BRUTO DA ANÁLISE:* ${data.pesoBrutoAnalise?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += `🔄️ *PESO LÍQUIDO DA ANÁLISE:* ${resultados.pesoLiquidoAnalise?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
     message += "-----\n";
 
     message += `*-- RESULTADOS --*\n`;
-    message += `📟 *PESO LÍQUIDO REAL DA CARGA:* ${resultados.pesoLiquidoReal?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
-    message += `🔴 *PERDA EM KG:* ${resultados.perdaKg?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += `📟 *PESO LÍQUIDO REAL DA CARGA:* ${resultados.pesoLiquidoReal?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += `🔴 *PERDA EM KG:* ${resultados.perdaKg?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
     message += `🔴 *PERDA EM CX:* ${resultados.perdaCx?.toFixed(2) || 'SEM INFORMAÇÃO'} CX\n`;
-    message += `💲 *% PERDA DA CARGA:* ${resultados.perdaPercentual.toFixed(3) || 'SEM INFORMAÇÃO'} %\n`;
+    message += `💲 *% PERDA DA CARGA:* ${resultados.perdaPercentual.toFixed(2) || 'SEM INFORMAÇÃO'} %\n`;
     message += "-----\n";
 
     message += `💬 *OBSERVAÇÕES:* ${data.observacoes || 'SEM INFORMAÇÃO'}\n\n`;
@@ -520,7 +549,22 @@ window.open(link, "_blank");
                                 <CardDescription>Informações opcionais para enriquecer o registro.</CardDescription>
                             </CardHeader>
                             <CardContent className="grid gap-6 sm:grid-cols-2">
-                                <FormField control={form.control} name="fornecedor" render={({ field }) => (<FormItem><FormLabel>Fornecedor</FormLabel><FormControl><Input {...field} /></FormControl></FormItem>)} />
+                                <FormField
+                                  control={form.control}
+                                  name="fornecedor"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Fornecedor</FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          className="uppercase"
+                                          value={(field.value ?? '').toUpperCase()}
+                                          onChange={(e) => field.onChange(e.currentTarget.value.toUpperCase())}
+                                        />
+                                      </FormControl>
+                                    </FormItem>
+                                  )}
+                                />
                                 <FormField control={form.control} name="notaFiscal" render={({ field }) => (<FormItem><FormLabel>Nota Fiscal</FormLabel><FormControl><Input {...field} /></FormControl></FormItem>)} />
                                 {/* NOVOS CAMPOS: Código / Produto / Categoria (opcionais) */}
                                 <FormField control={form.control} name="codigo" render={({ field }) => (
@@ -566,11 +610,11 @@ window.open(link, "_blank");
                             </CardHeader>
                             <CardContent className="grid grid-cols-2 gap-4">
                                 <ResultCard title="Perda (%)" value={resultados.perdaPercentual.toFixed(2)} unit="%" severity={getSeverity(resultados.perdaPercentual)} className="col-span-2"/>
-                                <ResultCard title="Perda (KG)" value={resultados.perdaKg.toFixed(3)} unit="KG" />
+      <ResultCard title="Perda (KG)" value={resultados.perdaKg.toFixed(2)} unit="KG" />
                                 <ResultCard title="Perda (CX)" value={resultados.perdaCx.toFixed(2)} unit="CX" />
-                                <ResultCard title="Peso Prg." value={resultados.pesoLiquidoProgramado.toFixed(3)} unit="KG" />
-                                <ResultCard title="Peso Real" value={resultados.pesoLiquidoReal.toFixed(3)} unit="KG" />
-                                <ResultCard title="Peso Líquido Análise" value={resultados.pesoLiquidoAnalise.toFixed(3)} unit="KG" />
+      <ResultCard title="Peso Prg." value={resultados.pesoLiquidoProgramado.toFixed(2)} unit="KG" />
+      <ResultCard title="Peso Real" value={resultados.pesoLiquidoReal.toFixed(2)} unit="KG" />
+      <ResultCard title="Peso Líquido Análise" value={resultados.pesoLiquidoAnalise.toFixed(2)} unit="KG" />
                                 <ResultCard title="Qtd. Análise" value={quantidadeTabela} unit="CX" />
                             </CardContent>
                         </Card>
