@@ -1,0 +1,808 @@
+﻿Cód. Produto;Descrição;Unid.;Categoria;Família;Grupo Produto
+001.001;001.001 - Mamao Formosa Doce Mel 1 Cx Ifco 6424 12kg;12,00;Formosa 1ª;Mamao Formosa;Mamao
+001.003;001.003 - Mamao Formosa Doce Mel Ex Cx 7.5kg;7.5;Formosa Exp;Mamao Formosa;Mamao
+001.004;001.004 - Mamao Formosa Doce Mel Ex Cx 10kg;10,00;Formosa Exp;Mamao Formosa;Mamao
+001.005;001.005 - Mamao Formosa Doce Mel Ex Cx 4.5kg;4.5;Formosa Exp;Mamao Formosa;Mamao
+001.006;001.006 - Mamao Formosa Doce Mel Ex Cx 8.5kg;8.5;Formosa Exp;Mamao Formosa;Mamao
+001.007;001.007 - Mamao Formosa Premium Cx 12kg;12,00;Formosa Extra;Mamao Formosa;Mamao
+001.008;001.008 - Mamao Formosa Doce Mel Extra Tipo 11-12 Cx 12kg;12,00;Formosa Extra;Mamao Formosa;Mamao
+001.009;001.009 - Mamao Formosa Frutana Ex Cx 4.5kg;4.5;Formosa Exp;Mamao Formosa;Mamao
+001.010;001.010 - Mamao Formosa Frutana Ex Cx 8.5kg;8.5;Formosa Exp;Mamao Formosa;Mamao
+001.011;001.011 - Mamao Formosa Levissa Ex Cx 7.5kg;7.5;Formosa Exp;Mamao Formosa;Mamao
+001.012;001.012 - Mamao Formosa Pp Cx 12kg;12,00;Formosa Pp;Mamao Formosa;Mamao
+001.013;001.013 - Mamao Formosa Pp Bim;1,00;Formosa Pp;Mamao Formosa;Mamao
+001.014;001.014 - Mamao Papaya Golden Doce 1 Cal M Cx 20kg;20,00;Papaya Extra;Mamao Papaya;Mamao
+001.015;001.015 - Mamao Papaya Golden Doce Mel 1 Cx 20kg;20,00;Papaya Extra;Mamao Papaya;Mamao
+001.016;001.016 - Mamao Papaya Golden Doce Mel Box 6 Unid Cx 9kg;9,00;Papaya Box;Mamao Papaya;Mamao
+001.017;001.017 - Mamao Papaya Golden Doce Mel Ex Cx 10kg;10,00;Papaya Extra;Mamao Papaya;Mamao
+001.018;001.018 - Mamao Papaya Golden Doce Mel Ex Cx 2,3kg;2,30;Papaya Extra;Mamao Papaya;Mamao
+001.019;001.019 - Mamao Papaya Golden Doce Mel Ex Cx 3.5kg;3.5;Papaya Extra;Mamao Papaya;Mamao
+001.020;001.020 - Mamao Papaya Golden Doce Mel Extra Cx 10kg;10,00;Papaya Extra;Mamao Papaya;Mamao
+001.021;001.021 - Mamao Papaya Golden Doce Mel Extra Cx 12 Kg;12,00;Papaya Extra;Mamao Papaya;Mamao
+001.026;001.026 - Mamao Papaya Golden Frutana Ex Cx 3.5kg;3.5;Papaya Extra;Mamao Papaya;Mamao
+001.027;001.027 - Mamao Papaya Golden Doce Mel Oferta Cx Ifco 12 Kg;12,00;Papaya Extra;Mamao Papaya;Mamao
+001.028;001.028 - Mamao Papaya Golden Pp Cal G Cx 20kg;20,00;Papaya Extra;Mamao Papaya;Mamao
+001.030;001.030 - Mamao Papaya Golden Pp Cal M Cx 20kg;20,00;Papaya Extra;Mamao Papaya;Mamao
+001.031;001.031 - Mamao Papaya Golden Qualita Box 6 Unid Cx Ifco 9kg;9,00;Papaya Box;Mamao Papaya;Mamao
+001.032;001.032 - Mamao Papaya Golden Varejo;1,00;Papaya Extra;Mamao Papaya;Mamao
+001.033;001.033 - Mamao Formosa Exportacao Cx 4,5 Kg Levissa;4,50;Formosa Exp;Mamao Formosa;Mamao
+001.034;001.034 - Mamao Papaya Golden Cx 1,5kg Tipo Export;1,50;Papaya Box;Mamao Papaya;Mamao
+001.036;001.036 - Mamao Papaya Golden Box Doce Mel 6 Und Cx Ifco 9kg;9,00;Papaya Box;Mamao Papaya;Mamao
+001.037;001.037 - Mamao Papaya Golden Pp Cal G Granel;1,00;Papaya Extra;Mamao Papaya;Mamao
+001.038;001.038 - Mamao Papaya Premium Cx 10 Kg;10,00;Papaya Extra;Mamao Papaya;Mamao
+001.038;001.038 - Mamao Papaya Premium Cx 10 Kg Tipo (20-23);10,00;Papaya Extra;Mamao Papaya;Mamao
+001.039;001.039 - Mamao Papaya Golden 1 Cx 15 Kg;15,00;Papaya Extra;Mamao Papaya;Mamao
+001.040;001.040 - Mamao Papaya Extra Cx Ifco 6414 10kg;10,00;Papaya Extra;Mamao Papaya;Mamao
+001.042;001.042 - Mamao Formosa 1 Cx Ifco 10kg;10,00;Formosa 1ª;Mamao Formosa;Mamao
+001.043;001.043 - Mamao Formosa Exp Cx Aldi 4,5 Kg;4,50;Formosa Exp;Mamao Formosa;Mamao
+001.044;001.044 - Mamao Formosa Pp Bim;1,00;Formosa Pp;Mamao Formosa;Mamao
+001.045;001.045 - Mamao Papaya Golden Esquisita Ex Cx 3.5kg;3.5;Papaya Extra;Mamao Papaya;Mamao
+001.046;001.046 - Mamao Formosa Ex Cx Esquisita 4,5kg;4,50;Formosa Exp;Mamao Formosa;Mamao
+001.047;001.047 - Mamao Formosa Exp Reserva Goumert Cx 4,5;4,50;Formosa Exp;Mamao Papaya;Mamao
+001.048;001.048 - Mamao Papaya Alianca Extra Cx 12 Kg;12,00;Papaya Extra;Mamao Papaya;Mamao
+001.049;001.049 - Mamao Papaya Alianca Cx Ifco 18 Kg;18,00;Papaya Extra;Mamao Papaya;Mamao
+001.050;001.050 - Mamao Papaya Golden Doce Mel 1 Cx Plast 20 Kg;20,00;Papaya Extra;Mamao Papaya;Mamao
+001.050;001.050 - Mamao Papaya Golden Doce Mel 1 Cx Plast 20kg;20,00;Papaya Extra;Mamao Papaya;Mamao
+001.051;001.051 - Mamao Formosa Doce Mel 1 Cx Plastica 14kg;14,00;Formosa 1ª;Mamao Formosa;Mamao
+001.052;001.052 - Mamao Formosa M Cx Plastica 14 Kg;14,00;Formosa Pp;Mamao Formosa;Mamao
+001.053;001.053 - Mamao Formosa Doce Mel 1 Cx Ifco 11kg;11,00;Formosa 1ª;Mamao Formosa;Mamao
+001.054;001.054 - Mamao Papaya Duo Reserva Gourmet 660g 12 Und / Cx 7,9 Kg;7,90;Papaya Extra;Mamao Papaya;Mamao
+001.055;001.055 - Mamao Formosa Premium Cx 12 Kg;12,00;Formosa Extra;Mamao Formosa;Mamao
+001.056;001.056 - Mamao Formosa Premium Cx 10 Kg;10,00;Formosa Extra;Mamao Formosa;Mamao
+001.057;001.057 - Mamao Papaya Golden Levissa 1 Cal M Cx 12kg;12,00;Papaya Extra;Mamao Papaya;Mamao
+001.057;001.057 - Mamao Papaya Golden Levissa 1 Cal M Cx 12kg;12,00;Papaya Extra;Mamao Papaya;Mamao
+001.058;001.058 - Mamao Papaya Golden Levissa 1 Cal G Cx 12kg;12,00;Papaya Extra;Mamao Papaya;Mamao
+001.059;001.059 - Mamao Papaya Golden Pp Cal G Cx 12kg;12,00;Papaya Extra;Mamao Papaya;Mamao
+001.060;001.060 - Mamao Papaya Golden Pp Cal M Cx 12kg;12,00;Papaya Extra;Mamao Papaya;Mamao
+001.061;001.061 - Mamao Formosa Ex Cx Frunet 4,5 Kg;4,50;Formosa Extra;Mamao Formosa;Mamao
+001.061;001.061 - Mamao Formosa Exp Cx Frunet 4,5 Kg;4,50;Formosa Extra;Mamao Formosa;Mamao
+001.062;001.062 - Mamao Formosa 1 Cx Ifco 10 Kg;10,00;Formosa 1ª;Mamao Formosa;Mamao
+001.063;001.063 - Mamao Formosa G Cx Plastica 13 Kg;13,00;Formosa Pp;Mamao Formosa;Mamao
+001.065;001.065 - Mamao Papaya Pp M Cx 7kg;7,00;Papaya Extra;Mamao Papaya;Mamao
+001.066;001.066 - Mamao Papaya Golden Levissa Ex Cx 3.5kg;3.5;Papaya Extra;Mamao Papaya;Mamao
+001.067;001.067 - Mamao Formosa Pp Cx 10kg;10,00;Formosa Pp;Mamao Formosa;Mamao
+001.068;001.068 - Mamao Formosa Cx Ifco 15kg;15,00;Formosa 1ª;Mamao Formosa;Mamao
+001.069;001.069 - Mamao Formosa Premium Cx 8,0 Kg;8,00;Formosa Extra;Mamao Formosa;Mamao
+001.071;001.071 - Mamao Papaya Golden Oferta Cal M Cx 10kg;10,00;Papaya Extra;Mamao Papaya;Mamao
+002.006;002.006 - Abacaxi Gold Doce Mel Ex Cx 10 Unid 1.2kg;1.2;Abacaxi Gold Extra;Abacaxi Gold;Abacaxi
+002.007;002.007 - Abacaxi Gold Doce Mel Ex Cx 5 Unid 2.4kg;2.4;Abacaxi Gold Extra;Abacaxi Gold;Abacaxi
+002.008;002.008 - Abacaxi Gold Doce Mel Ex Cx 6 Unid 2.0kg;2,00;Abacaxi Gold Extra;Abacaxi Gold;Abacaxi
+002.009;002.009 - Abacaxi Gold Doce Mel Ex Cx 7 Unid 1.7kg;1.7;Abacaxi Gold Extra;Abacaxi Gold;Abacaxi
+002.010;002.010 - Abacaxi Gold Doce Mel Ex Cx 8 Unid 1.5kg;1.5;Abacaxi Gold Extra;Abacaxi Gold;Abacaxi
+002.011;002.011 - Abacaxi Gold Doce Mel Ex Cx 9 Unid 1.3kg;1.3;Abacaxi Gold Extra;Abacaxi Gold;Abacaxi
+002.013;002.013 - Abacaxi Gold Fabrica;1,00;Abacaxi Gold Pp;Abacaxi Gold;Abacaxi
+002.014;002.014 - Abacaxi Gold Pp Cx Plast 10und;10,00;Abacaxi Gold Pp;Abacaxi Gold;Abacaxi
+002.015;002.015 - Abacaxi Gold Varejo;1,00;Abacaxi Gold Extra;Abacaxi Gold;Abacaxi
+002.016;002.016 - Abacaxi Perola 1 Bim Oferta (1kg A Acima);1,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.017;002.017 - Abacaxi Perola 1 Und Emb Bim;1,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.018;002.018 - Abacaxi Perola Doce Mel 1 Cx Ifco 9 Unid;9,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.019;002.019 - Abacaxi Perola Doce Mel 1 Cx Plast 10 Unid;10,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.021;002.021 - Abacaxi Perola Doce Mel Ex Tipo 8 Cx 11kg;11,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.023;002.023 - Abacaxi Perola Doce Mel Premium Tipo 7 Cx 10kg;10,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.023;002.023 - Abacaxi Perola Doce Mel Premium Tipo 7 Cx 12kg;12,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.024;002.024 - Abacaxi Perola Doce Mel Premium Tipo 8 Cx 10 Kg;10,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.025;002.025 - Abacaxi Perola Fabrica;1,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.026;002.026 - Abacaxi Perola Levissa Extra Cx 10 Unid Cx 12kg;12,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.027;002.027 - Abacaxi Perola Levissa Extra Cx 8 Unid Cx 11kg;11,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.028;002.028 - Abacaxi Perola Levissa Extra Cx 9 Unid Cx 11kg;11,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.029;002.029 - Abacaxi Perola Pp Cx Plast 10und;10,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.030;002.030 - Abacaxi Pp Und Emb Bim;1,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.031;002.031 - Abacaxi Perola Qualita Premium Tipo 7 Cx Ifco 10,5 Kg;10,50;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.032;002.032 - Abacaxi Perola Doce Mel Ex Tipo 7 Cx 12kg;12,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.033;002.033 - Abacaxi Perola Doce Mel Premium Tipo 7 Cx Ifco 10,5kg;10,50;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.034;002.034 - Abacaxi Perola Levissa Ex Tp 9;9,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.035;002.035 - Abacaxi Perola Levissa Ex Tp 10;10,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.036;002.036 - Abacaxi Gold 1 Und Emb Bim;1,00;Abacaxi Gold Extra;Abacaxi Gold;Abacaxi
+002.037;002.037 - Abacaxi Perola Doce Mel 1 Cx Ifco 10 Unid;10,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.038;002.038 - Abacaxi Perola Qualita Premium Tipo 7 Cx 10kg;10,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.039;002.039 - Abacaxi Perola 1 Cx Eurobox 9 Und;9,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.040;002.040 - Abacaxi Perola 1 Cx Eurobox 6 Und;6,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.041;002.041 - Abacaxi Perola Oferta Cx Ifco 10und;10,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+002.042;002.042 - Abacaxi Perola Levissa Ex Tp 11;11,00;Abacaxi Perola Premium;Abacaxi Perola;Abacaxi
+003.001;003.001 - Melao Amarelo Cepi Tipo 4-7 Cx 10kg;10,00;Melao Amarelo Cepi;Melao Amarelo Cepi;Melao
+003.002;003.002 - Melao Amarelo Cepi Tipo 8-12 Cx 10kg;10,00;Melao Amarelo Cepi;Melao Amarelo Cepi;Melao
+003.003;003.003 - Melao Amarelo Cepi Varejo;1,00;Melao Amarelo Cepi;Melao Amarelo Cepi;Melao
+003.004;003.004 - Melao Amarelo Qualita Cepi Tipo 5-8 Cx 10kg;10,00;Melao Amarelo Cepi;Melao Amarelo Cepi;Melao
+003.005;003.005 - Melao Amarelo Rei Tipo 4 Cx 10kg;10,00;Melao Amarelo Rei;Melao Amarelo Rei;Melao
+003.006;003.006 - Melao Amarelo Rei Tipo 5-8 Cx 10kg;10,00;Melao Amarelo Rei;Melao Amarelo Rei;Melao
+003.008;003.008 - Melao Amarelo Rei Varejo;1,00;Melao Amarelo Rei;Melao Amarelo Rei;Melao
+003.009;003.009 - Melao Cantaloupe Cepi Tipo 4-8 Cx 9kg;9,00;Melao Cantaloupe Cepi;Melao Cantaloupe;Melao
+003.010;003.010 - Melao Cantaloupe Cepi Tipo 9-12 Cx 9kg;9,00;Melao Cantaloupe Cepi;Melao Cantaloupe;Melao
+003.011;003.011 - Melao Cantaloupe Levissa Extra Cx 14kg;14,00;Melao Cantaloupe;Melao Cantaloupe;Melao
+003.013;003.013 - Melao Espanhol Doce Mel 1 Bim 300kg;300,00;Melao Espanhol;Melao Espanhol;Melao
+003.014;003.014 - Melao Espanhol Doce Mel 1 Tipo 6-11 Cx Ifco 14kg;14,00;Melao Espanhol;Melao Espanhol;Melao
+003.015;003.015 - Melao Espanhol Doce Mel Extra Tipo 11-12 Cx 15kg;15,00;Melao Espanhol;Melao Espanhol;Melao
+003.016;003.016 - Melao Espanhol Doce Mel Extra Tipo 7-10 Cx 15kg;15,00;Melao Espanhol;Melao Espanhol;Melao
+003.017;003.017 - Melao Espanhol Extra Tipo 10-12 Cx 13kg;13,00;Melao Espanhol;Melao Espanhol;Melao
+003.018;003.018 - Melao Espanhol Extra Tipo 6-9 Cx 13 Kg;13,00;Melao Espanhol;Melao Espanhol;Melao
+003.019;003.019 - Melao Espanhol Pp;1,00;Melao Espanhol;Melao Espanhol;Melao
+003.020;003.020 - Melao Espanhol Varejo;1,00;Melao Espanhol;Melao Espanhol;Melao
+003.021;003.021 - Melao Galia Cepi Tipo 4-8 Cx 8kg;8,00;Melao Galia Cepi;Melao Galia;Melao
+003.022;003.022 - Melao Galia Cepi Tipo 6-8 Cx 9kg;9,00;Melao Galia Cepi;Melao Galia;Melao
+003.023;003.023 - Melao Galia Cepi Tipo 8-12 Cx 8kg;8,00;Melao Galia Cepi;Melao Galia;Melao
+003.024;003.024 - Melao Galia Cepi Varejo;1,00;Melao Galia Cepi;Melao Galia;Melao
+003.025;003.025 - Melao Galia Doce Mel 1 Cx 14kg;14,00;Melao Galia;Melao Galia;Melao
+003.026;003.026 - Melao Galia Levissa Extra Cx 14kg;14,00;Melao Galia;Melao Galia;Melao
+003.028;003.028 - Melao Galia Rei Tipo 7-10 Cx 8kg;8,00;Melao Galia Rei;Melao Galia;Melao
+003.029;003.029 - Melao Galia Rei Tipo 7-8 Cx 9kg;9,00;Melao Galia Rei;Melao Galia;Melao
+003.030;003.030 - Melao Galia Rei Varejo;1,00;Melao Galia Rei;Melao Galia;Melao
+003.031;003.031 - Melao Japones Doce Mel 1 Cx 14kg;14,00;Melao Japones;Melao Japones;Melao
+003.032;003.032 - Melao Japones Levissa Extra Cx 14kg;14,00;Melao Japones;Melao Japones;Melao
+003.033;003.033 - Melao Orange Fresh Doce Mel 1 Cx Ifco 15kg;15,00;Melao Orange;Melao Orange;Melao
+003.034;003.034 - Melao Orange Fresh Levissa Extra Cx 15kg;15,00;Melao Orange;Melao Orange;Melao
+003.036;003.036 - Melao Pele De Sapo Rei Tipo 4-8 Cx 10kg;10,00;Melao Pds Rei;Melao Galia;Melao
+003.037;003.037 - Melao Portugues Doce Mel 1 Bim 300kg;300,00;Melao Portugues;Melao Portugues;Melao
+003.038;003.038 - Melao Portugues Doce Mel Extra Tipo 11 Cx 15kg;15,00;Melao Portugues;Melao Portugues;Melao
+003.039;003.039 - Melao Portugues Doce Mel Extra Tipo 6 Cx 15kg;15,00;Melao Portugues;Melao Portugues;Melao
+003.040;003.040 - Melao Portugues Doce Mel Extra Tipo 7-10 Cx 15kg;15,00;Melao Portugues;Melao Portugues;Melao
+003.041;003.041 - Melao Portugues Extra Tipo 6-9 Cx 13kg;13,00;Melao Portugues;Melao Portugues;Melao
+003.042;003.042 - Melao Portugues Varejo;1,00;Melao Portugues;Melao Portugues;Melao
+003.043;003.043 - Melao Portugues 1 Cx Ifco 15 Kg;15,00;Melao Portugues;Melao Portugues;Melao
+003.045;003.045 - Melao Matisse Cepi Tipo 4-8 Cx 10kg;10,00;Melao Matisse Cepi;Melao Matisse;Melao
+003.046;003.046 - Melao Pele De Sapo Cepi Tipo 4-8 Cx 10kg;10,00;Melao Pds Cepi;Melao Portugues;Melao
+003.047;003.047 - Melao Matisse Cepi Tipo 9-12 Caixa 10 Kg;10,00;Melao Matisse Cepi;Melao Matisse;Melao
+003.051;003.051 - Melao Galia Extra Cx 10kg;10,00;Melao Galia;Melao Galia;Melao
+003.052;003.052 - Melao Cantaloupe Extra Cx 10kg;10,00;Melao Japones;Melao Cantaloupe;Melao
+003.053;003.053 - Melao Espanhol Tipo 04-12 Cx 13kg;13,00;Melao Espanhol;Melao Espanhol;Melao
+003.054;003.054 - Melao Espanhol Doce Mel 1 Tipo 12 Cx Plast 16kg;16,00;Melao Espanhol;Melao Espanhol;Melao
+003.055;003.055 - Melao Espanhol Doce Mel 1 Tipo 6 A 11 Cx 16kg;16,00;Melao Espanhol;Melao Espanhol;Melao
+003.055;003.055 - Melao Espanhol Doce Mel 1 Tipo 6 A 11 Cx Plast 16kg;16,00;Melao Espanhol;Melao Espanhol;Melao
+003.056;003.056 - Melao Orange Doce Mel 1 Cx Plast 16 Kg;16,00;Melao Orange;Melao Orange;Melao
+003.057;003.057 - Melao Portugues Doce Mel 1 Cx Plast 16 Kg;16,00;Melao Portugues;Melao Portugues;Melao
+003.057;003.057 - Melao Portugues Doce Mel 1 Cx Plast 16kg;16,00;Melao Portugues;Melao Portugues;Melao
+003.058;003.058 - Melao Cantaloupe Cepi Tipo 6-8 Cx 7kg;7,00;Melao Cantaloupe Cepi;Melao Cantaloupe;Melao
+003.060;003.060 - Melao Sauro Levissa Extra Cx 15kg;15,00;Melao Sauro;Melao Orange;Melao
+003.062;003.062 - Melao Galia Cepi Tipo 9-12 Cx 7kg;7,00;Melao Galia Cepi;Melao Galia;Melao
+003.063;003.063 - Melao Cantaloupe Cepi Tipo 4-8 Cx 8kg;8,00;Melao Cantaloupe Cepi;Melao Cantaloupe;Melao
+003.064;003.064 - Melao Galia Rei Tipo 8-12 Cx 7kg;7,00;Melao Galia Rei;Melao Galia;Melao
+003.065;003.065 - Melao Amarelo Gaia Tipo 8-12 Cx 13kg;13,00;Melao Espanhol;Melao Espanhol;Melao
+003.066;003.066 - Melao Amarelo Gaia Tipo 4-8 Cx 14kg;14,00;Melao Espanhol;Melao Espanhol;Melao
+003.067;003.067 - Melao Espanhol Doce Mel Oferta Extra Tipo 11-12 Cx 15kg;15,00;Melao Espanhol;Melao Espanhol;Melao
+003.068;003.068 - Melao Espanhol Doce Mel Oferta Extra Tipo 07-10 Cx 15kg;15,00;Melao Espanhol;Melao Espanhol;Melao
+003.071;003.071 - Melao Matisse Rei Tipo 4-8 Cx 10kg;10,00;Melao Matisse Cepi;Melao Matisse;Melao
+003.073;003.073 - Melao Pele De Sapo Rei Tipo 4-8 Cx 14kg;14,00;Melao Pds Rei;Melao Portugues;Melao
+004.002;004.002 - Melancia Magali Turma Da Monica Tipo 4-6 Cx 10kg;10,00;Melancia Turma Da Monica;Melancia S/ Semente;Melancia
+004.003;004.003 - Melancia Mini Cepi Tipo 4-8 Cx 10kg;10,00;Melancia Cepi;Melancia S/ Semente;Melancia
+004.004;004.004 - Melancia Mini Cepi Varejo;1,00;Melancia Cepi;Melancia S/ Semente;Melancia
+004.006;004.006 - Melancia Mini Varejo;1,00;Melancia Cepi;Melancia S/ Semente;Melancia
+004.008;004.008 - Melancia Magali Turma Da Monica Cx 14kg;14,00;Melancia Turma Da Monica;Melancia S/ Semente;Melancia
+004.009;004.009 - Melancia Mini Cepi Tp 4-8 Cx 14kg;14,00;Melancia Cepi;Melancia S/ Semente;Melancia
+004.012;004.012 - Mini Melancia Sem Semente Ex Cx 15kg;15,00;Melancia Sem Semente;Melancia S/ Semente;Melancia
+004.013;004.013 - Melancia Rajada Extra Cx 16kg;16,00;Melancia Sem Semente;Melancia S/ Semente;Melancia
+004.014;004.014 - Melancia Pick & Nicky Tipo 4-8 Cx Plastica 18kg;18,00;Melancia Pick & Nicky;Melancia S/ Semente;Melancia
+004.015;004.015 - Melancia Baby Pick & Nicky Tipo 4-8 Cx 15 Kg;15,00;Melancia Pick & Nicky;Melancia S/ Semente;Melancia
+004.016;004.016 - Melancia Mini Cepi Tipo 4-8 Cx 9kg;9,00;Melancia Cepi;Melancia S/ Semente;Melancia
+004.018;004.018 - Melancia Pick & Nicky Extra Tipo 6-10 Cx 18kg;18,00;Melancia Pick & Nicky;Melancia S/ Semente;Melancia
+004.020;004.020 - Melancia Media Clara Cepi Tp 4-9 Cx 14kg;14,00;Melancia Cepi;Melancia S/ Semente;Melancia
+005.002;005.002 - Manga Palmer Extra Cal G Cx18kg;18,00;Manga Palmer;Manga Palmer;Manga
+005.003;005.003 - Manga Palmer Cx 6kg;6,00;Manga Palmer;Manga Palmer;Manga
+005.004;005.004 - Manga Rosa Cx 5 Kg;5,00;Manga Rosa;Manga Rosa;Manga
+005.005;005.005 - Manga Rosa Cx 18 Kg;18,00;Manga Rosa;Manga Rosa;Manga
+005.006;005.006 - Manga Sem Fibra Agrodan Cx 2 Kg;2,00;Manga Sem Fibra;Manga Sem Fibra;Manga
+005.007;005.007 - Manga Sem Fibra Agrodan Cx 4 Kg;4,00;Manga Sem Fibra;Manga Sem Fibra;Manga
+005.008;005.008 - Manga Tommy Extra Cal G Cx 18 Kg;18,00;Manga Tommy;Manga Tommy;Manga
+005.008;005.008 - Manga Tommy Extra Cx 18 Kg;18,00;Manga Tommy;Manga Tommy;Manga
+005.009;005.009 - Manga Tommy Kg;1,00;Manga Tommy;Manga Tommy;Manga
+005.009;005.009 - Manga Tommy Varejo;1,00;Manga Tommy;Manga Tommy;Manga
+005.010;005.010 - Manga Tommy Cx 4 Kg;4,00;Manga Tommy;Manga Tommy;Manga
+005.014;005.014 - Manga Tommy Extra Cal P Cx 18 Kg;18,00;Manga Tommy;Manga Tommy;Manga
+005.015;005.015 - Manga Tommy Extra Cal M Cx 18 Kg;18,00;Manga Tommy;Manga Tommy;Manga
+005.016;005.016 - Manga Tommy Cat 1/Cal G Cx Plast 20kg;20,00;Manga Tommy;Manga Tommy;Manga
+005.017;005.017 - Manga Keitt/Kent S/ Fibra Extra Cal. G Cx 18 Kg;18,00;Manga Keitt;Manga Sem Fibra;Manga
+005.018;005.018 - Manga Espada Extra Cx 14 Kg;14,00;Manga Espada;Manga Espada;Manga
+005.019;005.019 - Manga Tommy Cat 1 Cal M Cx Plast 20kg;20,00;Manga Tommy;Manga Tommy;Manga
+005.019;005.019 - Manga Tommy Cat 1/Cal M Cx Plast 20kg;20,00;Manga Tommy;Manga Tommy;Manga
+005.019;005.019 - Manga Tommy Cat 1/Cal M Cx Plast 20kg;20,00;Manga Tommy;Manga Tommy;Manga
+005.020;005.020 - Manga Keitt Kent S Fibra Extra Cal M Cx 18kg;18,00;Manga Keitt;Manga Sem Fibra;Manga
+005.021;005.021 - Manga Rosa Cat 1 Cal M Cx Plast 20kg;20,00;Manga Rosa;Manga Rosa;Manga
+005.022;005.022 - Manga Rosa Cat 1 Cal G Cx Plast 20kg;20,00;Manga Rosa;Manga Rosa;Manga
+005.022;005.022 - Manga Rosa Cat 1 Cal G Cx Plast 20kg;20,00;Manga Rosa;Manga Rosa;Manga
+005.023;005.023 - Manga Palmer Extra Cal M Cx 18kg;18,00;Manga Palmer;Manga Palmer;Manga
+005.024;005.024 - Manga Palmer Extra Cx 4kg;4,00;Manga Palmer;Manga Palmer;Manga
+005.025;005.025 - Manga Palmer Extra Cal M Cx 14kg;14,00;Manga Palmer;Manga Palmer;Manga
+005.026;005.026 - Manga Tommy Extra Cal M Cx 17kg;17,00;Manga Tommy;Manga Tommy;Manga
+005.027;005.027 - Manga Rosa Extra Cx 6kg;6,00;Manga Rosa;Manga Rosa;Manga
+005.028;005.028 - Manga Tommy Extra Cal. M Cx 12 Kg;12,00;Manga Tommy;Manga Tommy;Manga
+005.030;005.030 - Manga Keitt/Kent S/ Fibra Extra Cal. M Cx Papelao 12 Kg;12,00;Manga Keitt;Manga Sem Fibra;Manga
+005.031;005.031 - Manga Tommy Extra Cal M Cx 15 Kg;15,00;Manga Tommy;Manga Tommy;Manga
+005.032;005.032 - Manga Palmer Extra Cal P Cx 18 Kg;18,00;Manga Palmer;Manga Tommy;Manga
+005.033;005.033 - Manga Palmer Extra Cal P Cx 16 Kg;16,00;Manga Palmer;Manga Palmer;Manga
+005.034;005.034 - Manga Tommy Extra Cal P Cx 16 Kg;16,00;Manga Tommy;Manga Tommy;Manga
+005.036;005.036 - Manga Keitt Cx 2,7kg;2,70;Manga Keitt;Manga Sem Fibra;Manga
+005.038;005.038 - Manga Tommy Cx 2,7 Kg;2,70;Manga Tommy;Manga Tommy;Manga
+005.039;005.039 - Manga Tommy Cx 4 Kg;4,00;Manga Tommy;Manga Tommy;Manga
+005.040;005.040 - Manga Espada Extra Cx 18 Kg;18,00;Manga Espada;Manga Espada;Manga
+005.046;005.046 - Manga Tommy Cx 6kg;6,00;Manga Tommy;Manga Tommy;Manga
+005.047;005.047 - Manga Keitt Cx 6kg;6,00;Manga Keitt;Manga Sem Fibra;Manga
+006.003;006.003 - Uva Crimson Frutana Cx 10 Und C/500g;5,00;Uva Crimson;Uva Crimson;Uva
+006.010;006.010 - Uva Crimson Levissa Cx 10 Und C/500g;5,00;Uva Crimson;Uva Crimson;Uva
+006.012;006.012 - Uva Crimson Reserva Gourmet Cx 12 Und C/400g;4,80;Uva Crimson;Uva Crimson;Uva
+006.013;006.013 - Uva Da Hora Cx 20 Und C/250g;5,00;Uva Da Hora;Uva Da Hora;Uva
+006.015;006.015 - Uva Italia Frutana Cx 10 Und C/500g;5,00;Uva Italia;Uva Italia;Uva
+006.016;006.016 - Uva Midnight Levissa Cx 10 Und C/500g;5,00;Uva Midnight;Uva Midnight;Uva
+006.017;006.017 - Uva Midnight Imp Cx 22 Und. C/500g;11,00;Uva Midnight Imp;Uva Midnight;Uva
+006.019;006.019 - Uva Midnight Reserva Gourmet Cx 12 Und C/400g;4,80;Uva Midnight;Uva Midnight;Uva
+006.020;006.020 - Uva Mista Levissa Cx 10 Und C/500g;5,00;Uva Mista;Uva Mista;Uva
+006.021;006.021 - Uva Red Globe Levissa Imp Cx 10 Und C/500g;5,00;Uva Red Globe Imp;Uva Red Globe;Uva
+006.023;006.023 - Uva Red Globe Imp Cal L Cx 8,2kg;8,20;Uva Red Globe Imp;Uva Red Globe;Uva
+006.024;006.024 - Uva Red Globe Imp Cal M Cx 8,2kg;8,20;Uva Red Globe Imp;Uva Red Globe;Uva
+006.025;006.025 - Uva Red Globe Imp Cal Xl Cx 8,2kg;8,20;Uva Red Globe Imp;Uva Red Globe;Uva
+006.026;006.026 - Uva Red Globe Levissa Imp 500g X 22und;22,00;Uva Red Globe Imp;Uva Red Globe;Uva
+006.028;006.028 - Uva Red Globe Levissa Cx 10 Und C/500g;5,00;Uva Red Globe;Uva Red Globe;Uva
+006.029;006.029 - Uva Red Globe Nacional 8 Kg;8,00;Uva Red Globe;Uva Red Globe;Uva
+006.029;006.029 - Uva Red Nacional 8 Kg;8,00;Uva Red Globe;Uva Red Globe;Uva
+006.030;006.030 - Uva Red Globe Reserva Gourmet Cx 10 Und C/500g;5,00;Uva Red Globe;Uva Red Globe;Uva
+006.031;006.031 - Uva Thompson Bdj 500g 22uni;22,00;Uva Thompson;Uva Thompson;Uva
+006.033;006.033 - Uva Thompson Imp Cal L Cx 8,2kg;8,20;Uva Thompson Imp;Uva Thompson;Uva
+006.034;006.034 - Uva Thompson Imp. Cal M Cx 8,2kg;8,20;Uva Thompson Imp;Uva Thompson;Uva
+006.036;006.036 - Uva Thompson Frutana Cx 10 Und C/500g;5,00;Uva Thompson;Uva Thompson;Uva
+006.038;006.038 - Uva Thompson Levissa Cx 10 Und C/500g;5,00;Uva Thompson;Uva Thompson;Uva
+006.039;006.039 - Uva Thompson Nacional Cx 8kg;8,00;Uva Thompson;Uva Thompson;Uva
+006.040;006.040 - Uva Thompson Reserva Gourmet Cx 12 Und C/400g;4,80;Uva Thompson;Uva Thompson;Uva
+006.041;006.041 - Uva Vitoria Levissa Cx 10 Und C/500g;5,00;Uva Vitoria;Uva Vitoria;Uva
+006.042;006.042 - Uva Vitoria Reserva Gourmet Cx 12 Und C/400g;4,80;Uva Vitoria;Uva Vitoria;Uva
+006.044;006.044 - Uva Red Globe Imp Reserva Gourmet Cx 10 Und C/500g;5,00;Uva Red Globe Imp;Uva Red Globe;Uva
+006.045;006.045 - Uva Da Hora Bdj 250gr Cx 20 Und;5,00;Uva Da Hora;Uva Da Hora;Uva
+006.046;006.046 - Uva Vitoria Frutana Cx 10 Und C/500g;5,00;Uva Vitoria;Uva Vitoria;Uva
+006.047;006.047 - Uva Pick & Nicky Cx 20 Und C/250g;10,00;Uva Pick & Nicky;Uva Pick Nick;Uva
+006.048;006.048 - Uva Thompson Levissa Imp Cx 10 Und C/500g;5,00;Uva Thompson Imp;Uva Thompson;Uva
+006.049;006.049 - Uva Thompson Frutana Imp Cx 10 Und C/500g;5,00;Uva Thompson Imp;Uva Thompson;Uva
+006.056;006.056 - Uva Midnight Levissa Cx Ifco 20 Und C/ 500g;10,00;Uva Midnight;Uva Midnight;Uva
+006.061;006.061 - Uva Vitoria Reserva Gourmet Cx Ifco 24 Und C/ 400g;9,60;Uva Vitoria;Uva Vitoria;Uva
+006.065;006.065 - Uva Crimson Levissa Imp Cx 10 Und C/500g;5,00;Uva Crimson Imp;Uva Crimson;Uva
+007.001;007.001 - Abacate Cx 20 Kg;20,00;Abacate;Abacate;Abacate
+007.002;007.002 - Abacate Cat 1 Cx 18kg;18,00;Abacate;Abacate;Abacate
+007.004;007.004 - Avocado Baby Jaguacy Cx 8 X 800g;6,40;Avocado;Avocado;Abacate
+007.005;007.005 - Avocado Cat 1 Granel Cx 10kg;10,00;Avocado;Avocado;Abacate
+007.006;007.006 - Avocado No Bowl Jaguacy Cx 8 X 500g;4,00;Avocado;Avocado;Abacate
+007.007;007.007 - Avocado R. Gourmet Bdj 650g;0,65;Avocado;Avocado;Abacate
+007.008;007.008 - Abacate Extra Cx Plastica 20 Kg;20,00;Abacate;Abacate;Abacate
+007.010;007.010 - Avocado Cat 2 Granel Cx 10kg;10,00;Avocado;Avocado;Abacate
+008.002;008.002 - Coco Verde 1;1,00;Coco Verde;Coco Verde;Coco
+008.004;008.004 - Coco Verde Exp Cal 8;8,00;Coco Verde;Coco Verde;Coco
+008.007;008.007 - Coco Verde Natural Descascado Levissa Cx 12 Und;12,00;Coco Verde Levissa;Coco Verde;Coco
+008.007;008.007 - Coco Verde Natural Descascado Levissa Cx 12 Und;12,00;Coco Verde Levissa;Coco Verde;Coco
+008.008;008.008 - Coco Verde Natural Descascado Levissa Cx 11 Und;11,00;Coco Verde Levissa;Coco Verde;Coco
+008.009;008.009 - Coco Verde Natural Descascado Levissa Exp;1,00;Coco Verde Levissa;Coco Verde;Coco
+008.011;008.011 - Coco Verde Natural Descascado Levissa Exp Cal. 12;12,00;Coco Verde Levissa;Coco Verde;Coco
+009.001;009.001 - Pitaya Amarela Cx 3kg;3,00;Pitaya;Pitaya Amarela;Pitaya
+009.002;009.002 - Pitaya Doce Mel Cat 2 Cx 4,0kg;4,00;Pitaya;Pitaya Branca;Pitaya
+009.004;009.004 - Pitaya Doce Mel Cat 1 Cx 4,5kg;4,50;Pitaya;Pitaya Vermelha;Pitaya
+009.006;009.006 - Pitaya Vermelha Doce Mel Ex Cx 4.0kg;4,00;Pitaya;Pitaya Vermelha;Pitaya
+009.007;009.007 - Pitaya Vermelha Cat 1 Cx 6kg;6,00;Pitaya;Pitaya Vermelha;Pitaya
+009.008;009.008 - Pitaya Vermelha Cat 1 Cx 6,5kg;6,50;Pitaya;Pitaya Vermelha;Pitaya
+011.001;011.001 - Goiaba Crocante Cat 1 Cx 3,0 Kg;3,00;Goiaba;Goiaba Crocante;Correntes
+011.002;011.002 - Goiaba Crocante Cat 1 Cx 6 Kg;6,00;Goiaba;Goiaba Crocante;Goiaba
+011.003;011.003 - Goiaba Crocante Cat 1 Cx. 2 Kg;2,00;Goiaba;Goiaba Crocante;Correntes
+011.004;011.004 - Goiaba Crocante Cat 1 Cx. 4,5 Kg;4,50;Goiaba;Goiaba Crocante;Goiaba
+011.005;011.005 - Goiaba Crocante Varejo;1,00;Goiaba;Goiaba Crocante;Goiaba
+011.006;011.006 - Goiaba Vermelha;1,00;Goiaba;Goiaba Vermelha;Goiaba
+012.001;012.001 - Banana Da Terra;1,00;Banana;Banana Da Terra;Banana
+012.005;012.005 - Banana Prata;1,00;Banana;Banana Prata;Banana
+014.002;014.002 - Maracuja Amarelo Cx 13 Kg;13,00;Maracuja;Maracuja;Maracuja
+019.003;019.003 - Atemoia Cx 3kg;3,00;Atemoia;Atemoia;Frutas Exoticas
+019.005;019.005 - Caju Extra Cx 1,4 Kg;1,40;Caju;Caju;Frutas Exoticas
+019.006;019.006 - Carambola;1,00;Carambola;Carambola;Frutas Exoticas
+019.007;019.007 - Carambola Extra Cx 1,5 Kg;1,50;Carambola;Carambola;Frutas Exoticas
+019.010;019.010 - Figo Extra Cx 1,5 Kg;1,50;Figo;Figo;Frutas Exoticas
+019.012;019.012 - Mangostin Cx 1kg;1,00;Mangostin;Exoticos;Frutas Exoticas
+019.014;019.014 - Maracuja Doce Cx 1,2kg 3 Bdj 400g;1,20;Maracuja;Maracuja;Frutas Exoticas
+019.015;019.015 - Mirtilo Cx 12 Bdj 100g;1,20;Mirtilo;Frutas Vermelhas;Frutas Exoticas
+019.016;019.016 - Morango Bdj 250 Gr;0,25;Morango;Exoticos;Frutas Exoticas
+019.017;019.017 - Morango Cx 1,16kg / 4 Bdj 290g;1,16;Morango;Exoticos;Frutas Exoticas
+019.020;019.020 - Physalis Cx 8 Und 100g;0,80;Physalis;Physalis;Frutas Exoticas
+019.024;019.024 - Roma Rubi Cx 2,2kg;2,20;Roma;Roma;Frutas Exoticas
+019.027;019.027 - Morango 4 Bdj X 250 G Cx 1,0 Kg Premium;1,00;Morango;Exoticos;Frutas Exoticas
+019.029;019.029 - Roma Importada Eleg Cx 4kg;4,00;Roma Imp;Roma;Frutas Exoticas
+019.031;019.031 - Cereja Imp Reserva Gourmet Cx 4.5kg Emb 18 Und;4,50;Cereja Imp;Frutas Vermelhas;Frutas Exoticas
+019.033;019.033 - Roma Importada Eleg Cx 3,5kg;3,50;Roma Imp;Roma;Frutas Exoticas
+019.034;019.034 - Roma Importada Eleg Cx 5kg;5,00;Roma Imp;Roma;Frutas Exoticas
+019.035;019.035 - Mirtilo Cx 1,5 Kg / 12x 125g;125,00;Mirtilo;Frutas Vermelhas;Frutas Exoticas
+019.036;019.036 - Amora Cx 2,04 Kg/ 12x170g;2,04;Amora;Frutas Vermelhas;Frutas Exoticas
+019.037;019.037 - Mix De Frutas Vermelhas;1,00;Mix De Frutas Vermelhas;Frutas Vermelhas;Frutas Exoticas
+019.038;019.038 - Morango Natural Da Horta Cx 720gr / 04 X 180gr;0,72;Morango;Exoticos;Frutas Exoticas
+019.039;019.039 - Roma Importada Eleg Cx 9kg;9,00;Roma Imp;Roma;Frutas Exoticas
+019.041;019.041 - Morango 6 Bdj X 200 G Cx 1,2 Kg;1,20;Morango;Exoticos;Frutas Exoticas
+019.042;019.042 - Morango Cx 1kg / 1bdj;1,00;Morango;Exoticos;Frutas Exoticas
+020.001;020.001 - Mamao Formosa 1 Mp;1,00;Formosa 1ª;Mamao Formosa Mp;Mamao
+031.001;031.001 - Grape Fruit Importado Cx 13kg;13,00;Grape Fruit Imp;Grape Fruit;Laranja
+031.003;031.003 - Laranja Bahia Lucato Cx 16kg / 8 X 2kg;2,00;Laranja Pacote;Laranja Pacote;Laranja
+031.005;031.005 - Laranja Lima;1,00;Laranja;Laranja Pacote;Laranja
+031.006;031.006 - Laranja Lima Disney Cx 16kg / 16 X 1kg;1,00;Laranja Pacote;Laranja Pacote;Laranja
+031.008;031.008 - Laranja Navel Cat 1 Cx 15kg;15,00;Laranja Imp;Laranja Imp;Laranja
+031.009;031.009 - Laranja Navel Varejo;1,00;Laranja Imp;Laranja Imp;Laranja
+031.010;031.010 - Laranja Navelena Imp Com Cal 1 Cx 14kg;14,00;Laranja Imp;Laranja Imp;Laranja
+031.011;031.011 - Laranja Navelena Imp Com Cal 1 Cx 15kg;15,00;Laranja Imp;Laranja Imp;Laranja
+031.012;031.012 - Laranja Navelena Imp Com Cal 2 Cx 15kg;15,00;Laranja Navelena;Laranja Navelena;Laranja
+031.014;031.014 - Laranja Navelena Imp Eleg Cal 1 Cx 14kg;14,00;Laranja Imp;Laranja Imp;Laranja
+031.015;031.015 - Laranja Navelena Imp Eleg Cal 1 Cx 15kg;15,00;Laranja Imp;Laranja Imp;Laranja
+031.016;031.016 - Laranja;1,00;Laranja Imp;Laranja Imp;Laranja
+031.016;031.016 - Laranja Navelena Imp Eleg Cal 2 Cx 15kg;15,00;Laranja Imp;Laranja Imp;Laranja
+031.017;031.017 - Laranja Navelena Imp Eleg Cal 3 Cx 15kg;15,00;Laranja Imp;Laranja Imp;Laranja
+031.020;031.020 - Laranja Pera Cutrale Cx Open Top 15kg;15,00;Laranja;Laranja;Laranja
+031.021;031.021 - Laranja Pera Cx 20kg;20,00;Laranja;Laranja;Laranja
+031.024;031.024 - Laranja Pera Rio Cx 15kg / 5 X 3kg;3,00;Laranja Pacote;Laranja Pacote;Laranja
+031.026;031.026 - Laranja Sanguinelle/Cara Cara Bollo 1 Kg X 14 Und / Cx 14 Kg;14,00;Laranja Imp;Laranja Imp;Laranja
+031.026;031.026 - Laranja Sanguinelle/Cara Cara Bollo Cx 15kg;15,00;Laranja Imp;Laranja Imp;Laranja
+031.027;031.027 - Laranja Navel Imp. Bollo Privilege Pacote Cx 8 Und C/ 1,5kg;1,50;Laranja Pacote Imp;Laranja Imp;Laranja
+031.028;031.028 - Laranja Pera Nac Sc 5kg;5,00;Laranja;Laranja;Laranja
+032.001;032.001 - Limão Siciliano Cx 15kg;15,00;Limao Siciliano;Limao Siciliano;Limao
+032.001;032.001 - Limão Siciliano Cx 15kg;15,00;Limao Siciliano;Limao Siciliano;Limao
+032.002;032.002 - Limao Siciliano Imp Ele Cal 1 Cx 7kg;7,00;Limao Imp;Limao Imp;Limao
+032.003;032.003 - Limao Siciliano Imp Eleg Cal 1 Cx 14kg;14,00;Limao Imp;Limao Imp;Limao
+032.004;032.004 - Limao Siciliano Imp Eleg Cal 1 Cx 15kg;15,00;Limao Imp;Limao Imp;Limao
+032.005;032.005 - Limao Siciliano Imp Eleg Cal 2 Cx 14kg;14,00;Limao Imp;Limao Imp;Limao
+032.006;032.006 - Limao Siciliano Imp Eleg Cal 2 Cx 14kg;14,00;Limao Imp;Limao Imp;Limao
+032.007;032.007 - Limao Siciliano Imp Eleg Cal 2 Cx 15kg;15,00;Limao Imp;Limao Imp;Limao
+032.011;032.011 - Limao Siciliano Varejo;1,00;Limao Imp;Limao Imp;Limao
+032.013;032.013 - Limao Tahiti Cat 1 Cx 20 Kg;20,00;Limao Tahiti;Limao Tahiti;Limao
+032.014;032.014 - Limao Siciliano Levissa Pc 1 Kg;1,00;Limao Imp;Limao Imp;Limao
+032.015;032.015 - Limao Siciliano R. Gourmet Bdj 650g;0,65;Limao Imp;Limao Imp;Limao
+032.016;032.016 - Limao Siciliano Imp 10 Kg;10,00;Limao Imp;Limao Imp;Limao
+032.016;032.016 - Limao Siciliano Imp 10 Kg;10,00;Limao Imp;Limao Imp;Limao
+032.017;032.017 - Limao Taiti Cat 1 Cal M/45-50mm Cx Plast 25kg;25,00;Limao Tahiti;Limao Tahiti;Limao
+032.018;032.018 - Limao Taiti Cat 1 Cal G/50-60mm Cx Plast 25kg;25,00;Limao Tahiti;Limao Tahiti;Limao
+032.019;032.019 - Limao Taiti Cat 1 Cal G/50-60mm Cx Ifco 25kg;25,00;Limao Tahiti;Limao Tahiti;Limao
+032.020;032.020 - Limao Taiti Cat 1 Cal G/50-60mm Cx Eurobox 14kg;14,00;Limao Tahiti;Limao Tahiti;Limao
+032.021;032.021 - Limao Taiti Cat 1 Cal G/50-60mm Cx 12kg;12,00;Limao Tahiti;Limao Tahiti;Limao
+032.022;032.022 - Limao Taiti Cat 2 Cal G/50-60mm Cx Papelao 14kg;14,00;Limao Tahiti;Limao Tahiti;Limao
+032.023;032.023 - Limao Taiti Cat 2 Sc 20kg;20,00;Limao Tahiti;Limao Tahiti;Limao
+033.001;033.001 - Tangerina Cat 1 Cal 1/1x Cx 10kg;10,00;Tangerina;Tangerina;Tangerina
+033.002;033.002 - Tangerina Cat 1 Cal 1/1x Cx 15kg;15,00;Tangerina;Tangerina;Tangerina
+033.003;033.003 - Tangerina Cat 1 Cal 1/1x Cx 9kg;9,00;Tangerina;Tangerina;Tangerina
+033.004;033.004 - Tangerina Cat 1 Cal 1xxx/1xx Cx 10kg;10,00;Tangerina;Tangerina;Tangerina
+033.005;033.005 - Tangerina Cat 1 Cal 1xxx/1xx Cx 15kg;15,00;Tangerina;Tangerina;Tangerina
+033.006;033.006 - Tangerina Cat 1 Cal 2 Cx 10kg;10,00;Tangerina;Tangerina;Tangerina
+033.007;033.007 - Tangerina Cat 1 Cal 2-4 Cx 15kg;15,00;Tangerina;Tangerina;Tangerina
+033.008;033.008 - Tangerina Cat 1 Cal 2 Cx 9kg;9,00;Tangerina;Tangerina;Tangerina
+033.009;033.009 - Tangerina Cat 1 Cal 3 Cx 10kg;10,00;Tangerina;Tangerina;Tangerina
+033.010;033.010 - Tangerina Imp Com Cal 2/3 Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.011;033.011 - Tangerina Imp Com Cal 1/1x Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.012;033.012 - Tangerina Imp Com Cal 1xx/1xxx Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.013;033.013 - Tangerina Imp Com Cal 1xxx Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.014;033.014 - Tangerina Imp Eleg Cal 1x Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.015;033.015 - Tangerina Imp Eleg Cal 1xx - 1xxx Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.016;033.016 - Tangerina Imp Eleg Cal 1 - 1xxx Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.016;033.016 - Tangerina Imp Eleg Cal 1xxx Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.017;033.017 - Tangerina Imp Eleg Cal 2 Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.018;033.018 - Tangerina Imp Emb Eleg Cal 3 Cx 10,5kg X 15 X 700g;10,50;Tangerina Imp;Tangerina Imp;Tangerina
+033.019;033.019 - Tangerina Imp Varejo;1,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.020;033.020 - Tangerina Nadorcott Bollo Imp Eleg Cal 1-3 Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.022;033.022 - Tangerina Privilege Bollo Imp Cal 1/1x Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.023;033.023 - Tangerina Bollo Imp Cal 1/1x Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.024;033.024 - Tangerina Bollo Imp Cal 1xx/1xxx Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.025;033.025 - Tangerina Privilege Bollo Imp Cal 1xx/1xxx Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.026;033.026 - Tangerina Bollo Imp Cal 2/3 Cx 10kg;10,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.028;033.028 - Tangerina Verona Cat 1 Cal 60-70 / 1x /1 Cx 10kg;10,00;Tangerina Verona;Tangerina Verona;Tangerina
+033.029;033.029 - Tangerina Verona Cat 1 Cal 48-54 / 1xx/1xxx Cx 10kg;10,00;Tangerina Verona;Tangerina Verona;Tangerina
+033.030;033.030 - Tangerina Verona Cat 1 Cal 80-100 / 1 Cx 10kg;10,00;Tangerina Verona;Tangerina Verona;Tangerina
+033.032;033.032 - Tangerina Importada Pick & Nicky 500g Cx 10 Und;5,00;Tangerina Imp Pick & Nicky;Tangerina Imp Pick & Nicky;Tangerina
+033.033;033.033 - Tangerina Nac Pick & Nicky 500g Cx 10 Und;5,00;Tangerina Imp Pick & Nicky;Tangerina Imp Pick & Nicky;Tangerina
+033.036;033.036 - Tangerina R. Gourmet Bdj 960g;0,96;Tangerina;Tangerina;Tangerina
+033.037;033.037 - Tangerina Nac. Levissa Pct 1kg;1,00;Tangerina;Tangerina;Tangerina
+033.038;033.038 - Tangerina Importada - Emb Kg;1,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.039;033.039 - Tangerina Imp Eleg Cal 2-4 Cx 15kg;15,00;Tangerina Imp;Tangerina;Tangerina
+033.040;033.040 - Tangerina Imp Cal 1/1xxx Cx Ifco 15kg;15,00;Tangerina Imp;Tangerina;Tangerina
+033.041;033.041 - Tangerina Cat 1 Cal 1xx/1xxx Cx 9 Kg;9,00;Tangerina;Tangerina;Tangerina
+033.042;033.042 - Tangerina Verona Cat 1 Cal 80-100 / 1 Cx 14 Kg;14,00;Tangerina Verona;Tangerina Verona;Tangerina
+033.044;033.044 - Tangerina Imp Eleg Cal 1xx/1xxx Cx 9,5 Kg;9,50;Tangerina Imp;Tangerina;Tangerina
+033.044;033.044 - Tangerina Imp Eleg Cal 1xx/1xxx Cx 9,5kg;9,50;Tangerina Imp;Tangerina;Tangerina
+033.045;033.045 - Tangerina Imp Eleg Cal 2-4 Cx 14kg;14,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.046;033.046 - Tangerina Cat 1 Cal. 1/1x Cx 20 Kg;20,00;Tangerina;Tangerina;Tangerina
+033.047;033.047 - Tangerina Cat 1 Cal 1xx/1xxx Cx 20 Kg;20,00;Tangerina;Tangerina;Tangerina
+033.048;033.048 - Tangerina Cat 1 Cal 1/1x Cx 18 Kg;18,00;Tangerina;Tangerina;Tangerina
+033.049;033.049 - Tangerina Imp Eleg Cal 2-4 Cx 9kg;9,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.050;033.050 - Tangerina Imp Eleg Cal 1/1x Cx 9kg;9,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.052;033.052 - Tangerina Bollo Imp Cal 1xx/1xxx Cx 9kg;9,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.053;033.053 - Tangerina Imp Eleg Cal 1xx/1xxx Cx 9kg;9,00;Tangerina Imp;Tangerina Imp;Tangerina
+033.054;033.054 - Tangerina Imp Com Cx 15kg;15,00;Tangerina Imp;Tangerina Imp;Tangerina
+041.002;041.002 - Kiwi Gold Chileno Eleg Cal 33 Cx 6kg;6,00;Kiwi Imp;Kiwi Gold;Kiwi
+041.003;041.003 - Kiwi Green Zespri Cx 7,5kg / 15 X 500g;7,50;Kiwi Green;Kiwi Green;Kiwi
+041.005;041.005 - Kiwi Green Zespri Imp Cal 27 Cx 10kg;10,00;Kiwi Green;Kiwi Green;Kiwi
+041.006;041.006 - Kiwi Green Zespri Imp Cal 30-33 Cx 10kg;10,00;Kiwi Green;Kiwi Green;Kiwi
+041.007;041.007 - Kiwi Green Zespri Imp Cal 36 Cx 10kg;10,00;Kiwi Green;Kiwi Green;Kiwi
+041.008;041.008 - Kiwi Hayward Imp Com Cal 20-23 Cx 10kg;10,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.009;041.009 - Kiwi Hayward Imp Com Cal 25-27 Cx 10kg;10,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.010;041.010 - Kiwi Hayward Imp Com Cal 30 Cx 10kg;10,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.011;041.011 - Kiwi Hayward Imp Com Cal 33 Cx 10kg;10,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.012;041.012 - Kiwi Hayward Imp Com Cal 33 Cx 9kg;9,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.013;041.013 - Kiwi Hayward Imp Com Cal 36 Cx 10kg;10,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.014;041.014 - Kiwi Hayward Imp Eleg Cal 25 Cx 9kg;9,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.015;041.015 - Kiwi Hayward Imp Eleg Cal 25-27 Cx 10kg;10,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.016;041.016 - Kiwi Hayward Imp Eleg Cal 27 Cx 9kg;9,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.017;041.017 - Kiwi Hayward Imp Eleg Cal 30 Cx 10kg;10,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.018;041.018 - Kiwi Hayward Imp Eleg Cal 30 Cx 9kg;9,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.019;041.019 - Kiwi Hayward Imp Eleg Cal 33 Cx 10kg;10,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.020;041.020 - Kiwi Hayward Imp Eleg Cal 33 Cx 9kg;9,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.021;041.021 - Kiwi Hayward Imp Eleg Cal 36 Cx 10kg;10,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.022;041.022 - Kiwi Hayward Imp Eleg Cal 36 Cx 9kg;9,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.023;041.023 - Kiwi Hayward Imp 500 Gr Cx 10 Und;5,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.023;041.023 - Kiwi Hayward Imp Varejo;1,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.025;041.025 - Kiwi Sungold Zespri Imp Cal 22 Cx 5,5kg;5,50;Kiwi Sungold;Kiwi Sungold;Kiwi
+041.026;041.026 - Kiwi Sungold Zespri Imp Cal 27 Cx 5,5kg;5,50;Kiwi Sungold;Kiwi Sungold;Kiwi
+041.027;041.027 - Kiwi Sungold Zespri Imp Cal 30 Cx 5,5kg;5,50;Kiwi Sungold;Kiwi Sungold;Kiwi
+041.028;041.028 - Kiwi Sungold Zespri Imp Cal 33 Cx 5,5kg;5,50;Kiwi Sungold;Kiwi Sungold;Kiwi
+041.029;041.029 - Kiwi Sungold Zespri Imp Cal 36 Cx 5,5kg;5,50;Kiwi Sungold;Kiwi Sungold;Kiwi
+041.031;041.031 - Kiwi Sungold Zespri Imp Cx 4,4kg / 10 X 440g;4,40;Kiwi Sungold;Kiwi Sungold;Kiwi
+041.032;041.032 - Kiwi Sungold Zespri Imp Cx 4,6kg / 10 X 460g;4,60;Kiwi Sungold;Kiwi Sungold;Kiwi
+041.033;041.033 - Kiwi Sungold Zespri Imp Cal 39 Cx 5,5kg;5,50;Kiwi Sungold;Kiwi Sungold;Kiwi
+041.035;041.035 - Kiwi Cx 9kg;9,00;Kiwi Imp;Kiwi Nacional;Kiwi
+041.036;041.036 - Kiwi Imp Qualita Cx 10 Und C/700gr;7,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.037;041.037 - Kiwi Pick & Nicky Imp 600g Cx 10 Und;6,00;Kiwi Imp Pick & Nicky;Kiwi Hayward;Kiwi
+041.038;041.038 - Kiwi Hayward Imp Eleg Cal 39 Cx 10kg;10,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.039;041.039 - Kiwi Pick & Nicky Imp 600g Cx 22 Und;13,20;Kiwi Imp Pick & Nicky;Kiwi Hayward;Kiwi
+041.040;041.040 - Kiwi Green Zespri Imp Cal 39 Cx 10kg;10,00;Kiwi Green;Kiwi Green;Kiwi
+041.041;041.041 - Kiwi Hayward Imp Com Cal 39 Cx 10kg;10,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.042;041.042 - Kiwi Hayward Imp Eleg Cal 42 Cx 09kg;9,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.043;041.043 - Kiwi Pick & Nick 600gr Cx 22 Und;13,20;Kiwi Imp Pick & Nicky;Kiwi Hayward;Kiwi
+041.044;041.044 - Kiwi Sungold Zespri Imp Cx 5,04 Kg / 14 X 360g;5,04;Kiwi Sungold;Kiwi Sungold;Kiwi
+041.045;041.045 - Kiwi Hayward Imp Eleg Cal 20-23 Cx 10kg;10,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.046;041.046 - Kiwi Hayward Imp Com Cal 36 Cx 09kg;9,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.047;041.047 - Kiwi Hayward Imp Com Cal 30 Cx 9kg;9,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.048;041.048 - Kiwi Hayward Imp Com Cal 39 Cx 9kg;9,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.049;041.049 - Kiwi Hayward Imp Com Cal 27 Cx 9 Kg;9,00;Kiwi Imp;Kiwi Hayward;Kiwi
+041.050;041.050 - Kiwi Jingold Amarelo Imp Cal 36 Cx 6kg;6,00;Kiwi Imp;Kiwi Jingold Amarelo;Kiwi
+041.051;041.051 - Kiwi Pick & Nicky 600g Cx 10 Und;6,00;Kiwi Imp Pick & Nicky;Kiwi Hayward;Kiwi
+041.053;041.053 - Kiwi Green Zespri Imp Cx 4,96 Kg / 16 X 310g;4,96;Kiwi Green;Kiwi Green;Kiwi
+041.054;041.054 - Kiwi Sungold Zespri Imp Cx 4,96 Kg / 16 X 310g;4,96;Kiwi Sungold;Kiwi Sungold;Kiwi
+042.003;042.003 - Pera D'Anjou Varejo;1,00;Pera D'Anjou Imp;Pera Danjou;Pera
+042.004;042.004 - Pera Ercolini Ele Imp Cx 10kg;10,00;Pera Ercolini Imp;Pera Ercolini;Pera
+042.005;042.005 - Pera Imp D Anjou Com Cal 120 Cx 18kg;18,00;Pera D'Anjou Imp;Pera Danjou;Pera
+042.005;042.005 - Pera Imp D'Anjou Com Cal 120 Cx 18kg;18,00;Pera D'Anjou Imp;Pera Danjou;Pera
+042.006;042.006 - Pera Imp D'Anjou Com Cal 135-150 Cx 18kg;18,00;Pera D'Anjou Imp;Pera Danjou;Pera
+042.007;042.007 - Pera Imp D'Anjou Com Cal 60-70 Cx 18kg;18,00;Pera D'Anjou Imp;Pera Danjou;Pera
+042.008;042.008 - Pera Imp D'Anjou Com Cal 80-110 Cx 18kg;18,00;Pera D'Anjou Imp;Pera Danjou;Pera
+042.009;042.009 - Pera Imp D'Anjou Eleg Cal 120 Cx 18kg;18,00;Pera D'Anjou Imp;Pera Danjou;Pera
+042.010;042.010 - Pera Imp D'Anjou Eleg Cal 135 Cx 18kg;18,00;Pera D'Anjou Imp;Pera Danjou;Pera
+042.011;042.011 - Pera Imp D'Anjou Eleg Cal 150 Cx 18kg;18,00;Pera D'Anjou Imp;Pera Danjou;Pera
+042.012;042.012 - Pera Imp D'Anjou Eleg Cal 30-40 Cx 09kg;9,00;Pera D'Anjou Imp;Pera Danjou;Pera
+042.014;042.014 - Pera Imp D'Anjou Eleg Cal 60-70 Cx 18kg;18,00;Pera D'Anjou Imp;Pera Danjou;Pera
+042.015;042.015 - Pera Imp D'Anjou Eleg Cal 80-110 Cx 18kg;18,00;Pera D'Anjou Imp;Pera Danjou;Pera
+042.017;042.017 - Pera Imp Williams Eleg Cal 75-80 Cx 09kg;9,00;Pera Willians Imp;Pera Willians;Pera
+042.018;042.018 - Pera Imp Willians Eleg Cal 70-110 Cx 18kg;18,00;Pera Willians Imp;Pera Willians;Pera
+042.018;042.018 - Pera Imp Willians Eleg Cal 80-110 Cx 18kg;18,00;Pera Willians Imp;Pera Willians;Pera
+042.019;042.019 - Pera Morettini Imp Eleg Cal 55-60 Cx 10 Kg;10,00;Pera Morenttini;Pera Portuguesa;Pera
+042.020;042.020 - Pera Packham S Imp Cal 80-110 Cx 18kg;18,00;Pera Packham;Pera Packham'S;Pera
+042.020;042.020 - Pera Packham'S Imp Cal 80-110 Cx 18kg;18,00;Pera Packham;Pera Packham'S;Pera
+042.022;042.022 - Pera Portuguesa Imp Com Cal 50-55 Cx 10 Kg;10,00;Pera Portuguesa Imp;Pera Portuguesa Imp;Pera
+042.023;042.023 - Pera Portuguesa Imp Com Cal 55-60 Cx 10 Kg;10,00;Pera Portuguesa;Pera Portuguesa Imp;Pera
+042.024;042.024 - Pera Portuguesa Imp Com Cal 60-65 Cx 10 Kg;10,00;Pera Portuguesa Imp;Pera Portuguesa Imp;Pera
+042.026;042.026 - Pera Portuguesa Imp Eleg Cal 50-55 Cx 10kg;10,00;Pera Portuguesa Imp;Pera Portuguesa Imp;Pera
+042.027;042.027 - Pera Portuguesa Imp Eleg Cal 55-60 Cx 10kg;10,00;Pera Portuguesa Imp;Pera Portuguesa Imp;Pera
+042.028;042.028 - Pera Portuguesa Imp Eleg Cal 60-65 Cx 10kg;10,00;Pera Portuguesa Imp;Pera Portuguesa Imp;Pera
+042.029;042.029 - Pera Portuguesa Imp Eleg Cal 65-70 Cx 10kg;10,00;Pera Portuguesa Imp;Pera Portuguesa Imp;Pera
+042.030;042.030 - Pera Portuguesa Pick & Nicky Imp Pct 1kg Cx 14 Und;14,00;Pera Portuguesa Imp Pick & Nicky;Pera Portuguesa Imp;Pera
+042.031;042.031 - Pera Portuguesa Varejo;1,00;Pera Portuguesa Imp;Pera Portuguesa;Pera
+042.033;042.033 - Pera Rocha Cat I Cal 55-60 Cx 10kg;10,00;Pera Portuguesa;Pera Portuguesa;Pera
+042.034;042.034 - Pera Rocha Cat I Cal 60-65 Cx 10kg;10,00;Pera Portuguesa;Pera Portuguesa;Pera
+042.035;042.035 - Pera Rocha Cat I Cal 65-70 Cx 10kg;10,00;Pera Portuguesa;Pera Portuguesa;Pera
+042.036;042.036 - Pera Rocha Cat I Cal 70-75 Cx 10kg;10,00;Pera Portuguesa;Pera Portuguesa;Pera
+042.039;042.039 - Pera Rocha Pick & Nicky Nac Cx 14 Und X 1kg;1,00;Pera Portuguesa Pick & Nicky;Pera Portuguesa;Pera
+042.041;042.041 - Pera Red Imp Cal 80-113 Cx 18 Kg;18,00;Pera Red Imp;Pera Red;Pera
+042.042;042.042 - Pera D'Anjou Imp Qualita Cx 10 Und C/500gr;5,00;Pera D'Anjou Imp;Pera Danjou;Pera
+042.043;042.043 - Pera Portuguesa Imp Qualita Cx 10 Und C/ 500gr;5,00;Pera Portuguesa Imp;Pera Portuguesa Imp;Pera
+042.044;042.044 - Pera Red D'Anjou Cx 9kg;9,00;Pera Red Imp;Pera Danjou;Pera
+042.045;042.045 - Pera Asiatica Imp Cx 10kg;10,00;Pera Asiatica Imp;Pera Asiatica;Pera
+042.046;042.046 - Pera Portuguesa Imp Eleg Cal 45-50 Cx 14 Kg;14,00;Pera Portuguesa Imp;Pera Portuguesa Imp;Pera
+042.047;042.047 - Pera Rocha R. Gourmet Bdj 500g;0,50;Pera Portuguesa Imp;Pera Portuguesa;Pera
+042.048;042.048 - Pera D'Anjou Imp. R. Gourmet Bdj 550g;0,55;Pera D'Anjou Imp;Pera Danjou;Pera
+042.049;042.049 - Pera Imp. Williams Eleg. Cal 120 / Cx 18 Kg;18,00;Pera Willians Imp;Pera Willians;Pera
+042.051;042.051 - Pera Portuguesa Imp Eleg Cal 60-65 Cx Plast 21 Kg;21,00;Pera Portuguesa Imp;Pera Portuguesa;Pera
+042.052;042.052 - Pera Portuguesa Imp Eleg Cal 55-60 Cx Plast 21 Kg;21,00;Pera Portuguesa Imp;Pera Portuguesa;Pera
+042.053;042.053 - Pera Portuguesa Imp Eleg Cal 50-55 Cx Plast 21 Kg;21,00;Pera Portuguesa Imp;Pera Portuguesa;Pera
+042.055;042.055 - Pera Portuguesa Pick & Nicky Imp Pct 1kg Cx Plast 20 Und;20,00;Pera Portuguesa Imp Pick & Nicky;Pera Portuguesa;Pera
+042.056;042.056 - Pera Imp Williams Com Cal 70-120 Cx 18kg;18,00;Pera Willians Imp;Pera Willians;Pera
+042.057;042.057 - Pera Red Imp Cal 120-135 Cx 18kg;18,00;Pera Red Imp;Pera Red;Pera
+042.058;042.058 - Pera Rocha Cat Ii Cal 55-60 Cx 10kg;10,00;Pera Portuguesa;Pera Portuguesa;Pera
+042.059;042.059 - Pera Rocha Cat Ii Cal 60-65 Cx 10kg;10,00;Pera Portuguesa;Pera Portuguesa;Pera
+042.060;042.060 - Pera Asiatica Imp. Eleg. Cx 05 Kg;5,00;Pera Asiatica Imp;Pera Portuguesa;Pera
+042.062;042.062 - Pera Turma Da Monica Imp Pct 1kg Cx 14 Und;14,00;Pera Turma Da Monica;Pera Portuguesa;Pera
+042.063;042.063 - Pera Imp Forelle Eleg Cx 10kg;10,00;Pera Portuguesa Imp;Pera Forelle;Pera
+042.065;042.065 - Pera Forelle Imp - Cal 100 - 110 Cx 18kg;18,00;Pera Portuguesa Imp;Pera Forelle;Pera
+042.066;042.066 - Pera Asiatica Imp Cx 8kg;8,00;Pera Asiatica Imp;Pera Asiatica;Pera
+042.067;042.067 - Pera Portuguesa Imp Eleg Cal 45-50 Cx 10 Kg;10,00;Pera Portuguesa Imp;Pera Portuguesa Imp;Pera
+043.004;043.004 - Maca Fuji Imp Eleg Cal 135-138 Cx 18kg;18,00;Maca Gala Imp;Maca Fuji Imp;Maca
+043.011;043.011 - Maca Gala Pick & Nick Imp Pct 1kg Cx 18 Und;18,00;Maca Gala Imp Pick & Nicky;Maca Gala Imp;Maca
+043.011;043.011 - Maça Gala Pick & Nick Imp Pct 1kg Cx 18 Und;18,00;Maca Gala Imp Pick & Nicky;Maca Gala Imp;Maca
+043.011;043.011 - Maca Gala Pick E Nick Imp Pct 1kg Cx 18 Und;18,00;Maca Gala Imp Pick & Nicky;Maca Gala Imp;Maca
+043.011;043.011 - Maca Pick & Nick Imp Pct 1kg Cx 18 Und;18,00;Maca Gala Imp Pick & Nicky;Maca Gala Imp;Maca
+043.012;043.012 - Maca Granny Smith Imp Eleg Cal 125 Cx 18kg;18,00;Maca Granny Imp;Maca Granny;Maca
+043.013;043.013 - Maca Granny Smith Imp Eleg Cal 125 Cx 19kg;19,00;Maca Granny Imp;Maca Granny;Maca
+043.015;043.015 - Maca Granny Smith Imp Eleg Cal 70 Cx 18kg;18,00;Maca Granny Imp;Maca Granny;Maca
+043.016;043.016 - Maca Granny Smith Imp Eleg Cal 80-113 Cx 18kg;18,00;Maca Granny Imp;Maca Granny;Maca
+043.017;043.017 - Maca Granny Smith Imp Eleg Cal 72-113 Cx 19kg;19,00;Maca Granny Imp;Maca Granny;Maca
+043.018;043.018 - Maca Granny Smith Varejo;1,00;Maca Granny Imp;Maca Granny;Maca
+043.019;043.019 - Maca Nac Fuji Cat I Cal 110 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.019;043.019 - Maça Nac Fuji Cat I Cal 110 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.020;043.020 - Maca Nac Fuji Cat I Cal 120 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.020;043.020 - Maça Nac Fuji Cat I Cal 120 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.021;043.021 - Maça Nac Fuji Cat I Cal 135 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.022;043.022 - Maca Nac Fuji Cat I Cal 150 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.022;043.022 - Maça Nac Fuji Cat I Cal 150 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.023;043.023 - Maça Nac Fuji Cat I Cal 165 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.024;043.024 - Maça Nac Fuji Cat I Cal 180 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.026;043.026 - Maça Nac Fuji Cat Ii Cal 120 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.027;043.027 - Maca Nac Fuji Cat Ii Cal 135 Cx 18kg;18,00;Maca Gala;Maca Fuji;Maca
+043.027;043.027 - Maça Nac Fuji Cat Ii Cal 135 Cx 18kg;18,00;Maca Gala;Maca Fuji;Maca
+043.028;043.028 - Maça Nac Fuji Cat Ii Cal 150 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.029;043.029 - Maca Nac Fuji Cat Ii Cal 165 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.030;043.030 - Maça Nac Fuji Cat Iii Cal 120 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.031;043.031 - Maça Nac Fuji Cat Iii Cal 135 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.032;043.032 - Maça Nac Fuji Cat Iii Cal 150 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.033;043.033 - Maça Nac Fuji Cat Iii Cal 165 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.034;043.034 - Maca Nac Fuji Varejo Kg;1,00;Maca Fuji;Maca Fuji;Maca
+043.035;043.035 - Maca Nac Gala Varejo;1,00;Maca Gala;Maca Gala;Maca
+043.036;043.036 - Maça Nac Gala Cat I Cal 100 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.037;043.037 - Maça Nac Gala Cat I Cal 120 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.038;043.038 - Maça Nac Gala Cat I Cal 135 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.039;043.039 - Maça Nac Gala Cat I Cal 150 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.039;043.039 - Maça Nac Gala Cat I Cal 150 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.040;043.040 - Maça Nac Gala Cat I Cal 165 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.041;043.041 - Maça Nac Gala Cat I Cal 180 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.042;043.042 - Maça Nac Gala Cat I Cal 198 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.043;043.043 - Maca Nac Gala Cat I Cal 220 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.043;043.043 - Maça Nac Gala Cat I Cal 220 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.045;043.045 - Maça Nac Gala Cat Ii Cal 120 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.046;043.046 - Maça Nac Gala Cat Ii Cal 135 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.047;043.047 - Maça Nac Gala Cat Ii Cal 150 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.048;043.048 - Maça Nac Gala Cat Ii Cal 165 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.049;043.049 - Maça Nac Gala Cat Iii Cal 120 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.050;043.050 - Maça Nac Gala Cat Iii Cal 135 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.051;043.051 - Maça Nac Gala Cat Iii Cal 150 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.052;043.052 - Maça Nac Gala Cat Iii Cal 165 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.053;043.053 - Maça Nac Gala Cat Iii Cal 180 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.054;043.054 - Maça Pick & Nicky Nac Pct 1kg Cx 18und;18,00;Maca Gala Pick & Nicky;Maca Gala;Maca
+043.054;043.054 - Maça Pick Nicky Nac Pct 1kg Cx 18und;18,00;Maca Gala Pick & Nicky;Maca Gala;Maca
+043.056;043.056 - Maca Red Imp Com Cal 125 Cx 19kg;19,00;Maca Red Imp;Maca Red;Maca
+043.057;043.057 - Maca Red Imp Com Cal 88-113 Cx 18kg;18,00;Maca Red Imp;Maca Red;Maca
+043.058;043.058 - Maca Red Imp Com Cal 88-113 Cx 19kg;19,00;Maca Red Imp;Maca Red;Maca
+043.059;043.059 - Maca Red Imp Eleg Cal 125 Cx 18kg;18,00;Maca Red Imp;Maca Red;Maca
+043.060;043.060 - Maca Red Imp Eleg Cal 125 Cx 19kg;19,00;Maca Red Imp;Maca Red;Maca
+043.062;043.062 - Maca Red Imp Eleg Cal 30-45 Cx 9kg;9,00;Maca Red Imp;Maca Red;Maca
+043.064;043.064 - Maca Red Imp Eleg Cal 72-80 Cx 19kg;19,00;Maca Red Imp;Maca Red;Maca
+043.065;043.065 - Maca Red Imp Eleg Cal 88-113 Cx 19kg;19,00;Maca Red Imp;Maca Red;Maca
+043.066;043.066 - Maca Red Imp Eleg Cal 88-113 Cx 18kg;18,00;Maca Red Imp;Maca Red;Maca
+043.067;043.067 - Maca Red Imp Varejo;1,00;Maca Red Imp;Maca Red;Maca
+043.068;043.068 - Maca Royal Gala Imp Com Cal 100 Cx14kg;14,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.071;043.071 - Maca Royal Gala Imp Com Cal 135 Cx 18kg;18,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.072;043.072 - Maca Royal Gala Imp Com Cal 150 Cx 18kg;18,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.073;043.073 - Maca Royal Gala Imp Eleg Cal 120-135 Cx 18kg;18,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.074;043.074 - Maca Royal Gala Imp Eleg Cal 135-138 Cx 18kg;18,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.075;043.075 - Maca Royal Gala Imp Eleg Cal 150 Cx 18 Kg;18,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.076;043.076 - Maca Royal Gala Imp Eleg Cal 165-175 Cx 18kg;18,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.077;043.077 - Maca Royal Gala Imp Eleg Cal 65-70 135 Cx 18kg;18,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.080;043.080 - Maca Turma Da Monica Cx 18kg;18,00;Maca Monica;Maca Gala;Maca
+043.080;043.080 - Maça Turma Da Monica Cx 18kg;18,00;Maca Monica;Maca Gala;Maca
+043.082;043.082 - Maca Red Imp Cal 150-198 Cx 19kg;19,00;Maca Red Imp;Maca Red;Maca
+043.083;043.083 - Maca Granny Smith Imp Qualita Cx 10 Und C/500gr;5,00;Maca Granny Imp;Maca Granny;Maca
+043.084;043.084 - Maca Mista Imp Qualita Caixa 10 Unidades Com 500 Gramas;5,00;Maca Mista;Maca Red;Maca
+043.085;043.085 - Maca Red Imp Qualita Caixa 10 Unidades Com 500 Gramas;5,00;Maca Red Imp;Maca Red;Maca
+043.088;043.088 - Maca Nacional Granel Cal 250 Cx 18kg;18,00;Outras Macas;Maca Gala;Maca
+043.089;043.089 - Maca Nacional Fuji Granel Cal 250 Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.090;043.090 - Maca Disney 1kg X 10 Und Cx 10kg;10,00;Maca Pacote;Maca Fuji;Maca
+043.091;043.091 - Maca Royal Gala Imp Com Cal 165-175 Cx 18kg;18,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.092;043.092 - Maca Royal Gala Imp Com Cal 88-113 Cx 18kg;18,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.093;043.093 - Maca Nac Gala Cat I Cal 110 Cx 18 Kg;18,00;Maca Gala;Maca Gala;Maca
+043.095;043.095 - Maca Red Imp. R. Gourmet Bdj 570g;0,57;Maca Red Imp;Maca Red;Maca
+043.096;043.096 - Maca Imp. Mista R. Gourmet Bdj 600g;0,60;Maca Mista;Maca Red;Maca
+043.097;043.097 - Maca Red Imp Com Cal 125 Cx 18kg;18,00;Maca Red Imp;Maca Red;Maca
+043.098;043.098 - Maca Nac Fuji Cat Ii 180;0,18;Maca Fuji;Maca Gala;Maca
+043.099;043.099 - Maca Nac Fuji Cat I 198;0,20;Maca Fuji;Maca Gala;Maca
+043.102;043.102 - Maca Nac Gala - Cat Ii ./. Cal 180/ Cx 18 Kg;18,00;Maca Gala;Maca Gala;Maca
+043.102;043.102 - Maca Nac Gala Cat Ii Cal 180 Cx 18 Kg;18,00;Maca Gala;Maca Gala;Maca
+043.103;043.103 - Maca Royal Gala Imp Eleg Cal 150 / 163-175 Cx 20kg;20,00;Maca Gala Imp;Maca Gala;Maca
+043.104;043.104 - Maca Royal Gala Imp Eleg Cal 120 Cx 19kg;19,00;Maca Gala Imp;Maca Gala;Maca
+043.105;043.105 - Maca Royal Gala Imp Eleg Cal 135 / 150 Cx 20kg;20,00;Maca Gala Imp;Maca Gala;Maca
+043.106;043.106 - Maca Royal Gala Imp Com Cal 120 Cx 19 Kg;19,00;Maca Gala Imp;Maca Gala;Maca
+043.106;043.106 - Maca Royal Gala Imp Com Cal 120 Cx 19kg;19,00;Maca Gala Imp;Maca Gala;Maca
+043.107;043.107 - Maca Royal Gala Imp Eleg Cal 88-113 Cx 18kg;18,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.108;043.108 - Maca Royal Gala Imp Com Cal 120 Cx 18kg;18,00;Maca Gala Imp;Maca Gala;Maca
+043.111;043.111 - Maca Gala Pick & Nick Imp Pct 1 Kg Cx Plast 18 Und;18,00;Maca Gala Imp Pick & Nicky;Maca Gala;Maca
+043.111;043.111 - Maca Gala Pick & Nick Imp Pct 1kg Cx Plast 18 Und;18,00;Maca Gala Imp Pick & Nicky;Maca Gala;Maca
+043.111;043.111 - Maca Pick & Nick Imp Pct 1 Kg Cx Plast 18 Und;18,00;Maca Gala Imp Pick & Nicky;Maca Gala;Maca
+043.112;043.112 - Maca Gold Rose Imp Cx 17 Kg;17,00;Maca Gold Rose;Maca Gala;Maca
+043.113;043.113 - Maca Royal Gala Imp Com Cal 135 Cx Plast 18 Kg;18,00;Maca Gala Imp;Maca Gala;Maca
+043.113;043.113 - Maca Royal Gala Imp Com Cal 135 Cx Plast 18kg;18,00;Maca Gala Imp;Maca Gala;Maca
+043.114;043.114 - Maca Sacolinha Nectar Schio Cx 24und / 850g;20,40;Maca Pacote;Maca Gala;Maca
+043.115;043.115 - Maca Pick & Nicky Nac Pct 850g Cx 24 Und;20,40;Maca Gala Pick & Nicky;Maca Gala;Maca
+043.116;043.116 - Maca Gold Rose Imp Cx 3,7 Kg;3,70;Maca Gold Rose;Maca Gala;Maca
+043.117;043.117 - Maca Seninha Cx 18 Und X 1 Kg;1,00;Maca Pacote;Maca Gala;Maca
+043.118;043.118 - Maca Nac Fuji Cat Iii 110 Cal Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.119;043.119 - Maca Nac Fuji Cat Iii 100 Cal Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.120;043.120 - Maca Nac Fuji Cat Iii 180 Cal Cx 18kg;18,00;Maca Fuji;Maca Fuji;Maca
+043.121;043.121 - Granel;1,00;Maca Gala Imp;Maca Gala;Maca
+043.121;043.121 - Maca Royal Gala Imp Eleg Cal 88-113 Cx 19kg;19,00;Maca Gala Imp;Maca Gala;Maca
+043.122;043.122 - Maca Nac Gala Cat Ii Cal 110 Cx 18kg;18,00;Maca Gala;Maca Gala;Maca
+043.123;043.123 - Maca Pink Lady Imp Eleg Cal 70-120 Cx 17,5 Kg;17,50;Maca Pink Lady;Maca Pink Lady;Maca
+043.124;043.124 - Maca Granny Smith Imp Com Cal 125 Cx 19kg;19,00;Maca Granny Imp;Maca Granny;Maca
+043.125;043.125 - Maca Granny Smith Imp Com Cal 150-163 Cx 20kg;20,00;Maca Granny Imp;Maca Granny;Maca
+043.127;043.127 - Maca Cripps Pink Imp Eleg Cal 60 Cx 16 Kg;16,00;Maca Gala Pink;Maca Pink Lady;Maca
+043.128;043.128 - Maca Pink Lady Imp Eleg Cal 80 Cx 6,5 Kg;6,50;Maca Pink Lady;Maca Pink Lady;Maca
+043.129;043.129 - Maca Cripps Pink Imp Eleg Cal 70 Cx 17,5;17,50;Maca Gala Pink;Maca Pink Lady;Maca
+043.129;043.129 - Maca Cripps Pink Imp Eleg Cal 70 Cx 17,5 Kg;17,50;Maca Gala Pink;Maca Pink Lady;Maca
+043.130;043.130 - Maca Gala Pick & Nick Imp Pct 850gr Cx 22 Und;18,70;Maca Gala Imp Pick & Nicky;Maca Gala Imp;Maca
+043.130;043.130 - Maca Pick & Nick Imp Pct 850gr Cx 22 Und;18,70;Maca Gala Imp Pick & Nicky;Maca Gala Imp;Maca
+043.131;043.131 - Maca Red Imp Eleg Cal 72-80 Cx 18kg;18,00;Maca Red Imp;Maca Red;Maca
+043.132;043.132 - Maca Granny Smith Imp Eleg Cal 80-113 Cx 17kg;17,00;Maca Granny Imp;Maca Granny;Maca
+043.133;043.133 - Maca Royal Gala Imp Eleg Cal 125 Cx 19kg;19,00;Maca Gala Imp;Maca Gala;Maca
+043.134;043.134 - Maca Royal Gala Imp Com Cal 125 Cx 20kg;20,00;Maca Gala Imp;Maca Gala;Maca
+043.135;043.135 - Maca Royal Gala Imp Com Cal 88-113 Cx 19kg;19,00;Maca Gala Imp;Maca Gala;Maca
+043.136;043.136 - Maca Royal Gala Imp Com Cal 125 Cx 19kg;19,00;Maca Gala Imp;Maca Gala;Maca
+043.137;043.137 - Maca Gala Pick & Nick Imp Pct 850gr Cx 14 Und;11,90;Maca Gala Imp;Maca Gala Imp;Maca
+043.137;043.137 - Maca Pick & Nick Imp Pct 850gr Cx 14 Und;11,90;Maca Gala Imp;Maca Gala Imp;Maca
+043.138;043.138 - Maca Royal Gala Imp Eleg Cal 198 Cx 20kg;20,00;Maca Gala Imp;Maca Gala;Maca
+043.139;043.139 - Maca Royal Gala Imp Com Cal 88-113 Cx 20kg;20,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.140;043.140 - Maca Royal Gala Imp Com Cal 150 / 163-175 Cx 20kg;20,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.141;043.141 - Maca Fuji Imp Eleg Cal 80-113 Cx 18kg;18,00;Maca Fuji Imp;Maca Fuji Imp;Maca
+043.142;043.142 - Maca Gold Rose Imp Cx 18 Kg;18,00;Maca Gala Imp;Maca Gala;Maca
+043.143;043.143 - Maca Royal Gala Imp Eleg Cal 135-138 Cx 19kg;19,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.144;043.144 - Maca Pink Lady Imp Pct 1kg Cx 12 Und;12,00;Maca Pink Lady;Maca Pink Lady;Maca
+043.145;043.145 - Maca Gala Pink Imp Eleg Cal 150-163 Cx 19,5 Kg;19,50;Maca Gala Pink;Maca Pink Lady;Maca
+043.146;043.146 - Maca Pink Lady Imp Eleg Cal 150-165 Cx 17,5 Kg;17,50;Maca Pink Lady;Maca Pink Lady;Maca
+043.148;043.148 - Maca Royal Gala Imp Com Cal 125 Cx 18kg;18,00;Maca Gala Imp;Maca Gala Imp;Maca
+043.150;043.150 - Maca Red Imp Eleg Cal 150-175 Cx 20kg;20,00;Maca Red Imp;Maca Red;Maca
+043.151;043.151 - Maca Granny Smith Imp Eleg Cal 135 Cx 18kg;18,00;Maca Granny Imp;Maca Granny;Maca
+044.001;044.001 - Caqui Imp Cat 1 Cal 12-18 Cx 4,5kg;4,50;Caqui Imp;Caqui Rojo Brilhante;Caqui
+044.005;044.005 - Caqui Fuyu Cx 15 Kg;15,00;Caqui Imp;Caqui Fuyu;Caqui
+051.001;051.001 - Ameixa Fresca Black Imp Eleg Cal 45-50 Cx 9kg;9,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.002;051.002 - Ameixa Fresca Black Imp Eleg Cal 50-55 Cx 7kg;7,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.003;051.003 - Ameixa Fresca Black Imp Eleg Cal 50-55 Cx 9kg;9,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.004;051.004 - Ameixa Fresca Black Imp Eleg Cal 55-60 Cx 9kg;9,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.005;051.005 - Ameixa Fresca Black Imp Eleg Cal 60-65 Cx 9kg;9,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.006;051.006 - Ameixa Fresca Black Imp Eleg Cal 65-70 Cx 9kg;9,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.007;051.007 - Ameixa Fresca Black Imp Eleg Cal 70-75 Cx 9kg;9,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.009;051.009 - Ameixa Fresca Imp Varejo;1,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.011;051.011 - Ameixa Imp Qualita Caixa 10 Unidades Com 400 Gramas;4,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.015;051.015 - Ameixa Fresca Nac Cal G Cx 6kg;6,00;Ameixa;Ameixa Nacional;Ameixa
+051.016;051.016 - Ameixa Fresca Nac Cal P/M Cx 6kg;6,00;Ameixa;Ameixa Nacional;Ameixa
+051.017;051.017 - Ameixa Fresca Nacional Cx 9kg;9,00;Ameixa;Ameixa Nacional;Ameixa
+051.018;051.018 - Ameixa Fresca Black Imp Com Cal 65-70 Cx 9kg;9,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.019;051.019 - Ameixa Fresca Black Imp Com Cal 60-65 Cx 9kg;9,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.020;051.020 - Ameixa Fresca Black Imp Com Cal 50-55 Cx 9kg;9,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.021;051.021 - Ameixa Fresca Black Imp Com Cal 55-60 Cx9kg;9,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.022;051.022 - Ameixa Fresca Black Imp Com Cal 45-50 Cx 9kg;9,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.023;051.023 - Ameixa Importada Pick & Nicky 500g X 10und;10,00;Ameixa Pick & Nicky;Ameixa Importada;Ameixa
+051.024;051.024 - Ameixa Pick & Nicky 500g X 22 Und;11,00;Ameixa Pick & Nicky;Ameixa Nacional;Ameixa
+051.024;051.024 - Ameixa Pick & Nicky 500g X 22und;22,00;Ameixa Pick & Nicky;Ameixa Nacional;Ameixa
+051.025;051.025 - Ameixa Importada Pick & Nicky 500g X 22und;22,00;Ameixa Pick & Nicky;Ameixa Nacional;Ameixa
+051.026;051.026 - Ameixa Fresca Black Imp Eleg Cx 4,5kg;4,50;Ameixa Imp;Ameixa Nacional;Ameixa
+051.026;051.026 - Ameixa Fresca Black Imp Eleg Cx 5kg;5,00;Ameixa Imp;Ameixa Nacional;Ameixa
+051.027;051.027 - Ameixa Fresca Black Imp Eleg Cal 40-50 Cx 9kg;9,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.028;051.028 - Ameixa Seca S/ Caroco Imp Reserva Gourmet Cx 24 Und C/150g;3,60;Ameixa Seca;Ameixa Seca S/ Caroco;Ameixa
+051.029;051.029 - Ameixa Fresca Nac Cal P/M Cx 10kg;10,00;Ameixa;Nectarina Nacional;Ameixa
+051.030;051.030 - Ameixa Fresca Nac Cal G Cx 10 Kg;10,00;Ameixa;Nectarina Nacional;Ameixa
+051.031;051.031 - Ameixa Fresca Nac Cal P/M Cx 8kg;8,00;Ameixa;Ameixa Nacional;Ameixa
+051.032;051.032 - Ameixa Fresca Nac Cal G Cx 8kg;8,00;Ameixa;Ameixa Nacional;Ameixa
+051.033;051.033 - Ameixa Pick & Nicky 500g X 10 Und;5,00;Ameixa Pick & Nicky;Nectarina Nacional;Ameixa
+051.035;051.035 - Ameixa Fresca Imp Com Cal 65-70 Cx 15kg;15,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.036;051.036 - Ameixa Fresca Imp Com Cal 55-60 Cx 15kg;15,00;Ameixa Imp;Ameixa Importada;Ameixa
+051.037;051.037 - Ameixa Fresca Imp Com Cal 60-65 Cx 15kg;15,00;Ameixa Imp;Ameixa Importada;Ameixa
+052.001;052.001 - Pessego Imp Eleg Cx 09kg;9,00;Pessego Imp;Pessego Importado;Pessego
+052.002;052.002 - Pessego Nac Cx 10 Kg;10,00;Pessego;Pessego Nacional;Pessego
+052.003;052.003 - Pessego Imp Eleg Cx 08kg;8,00;Pessego Imp;Pessego Importado;Pessego
+052.004;052.004 - Pessego Fresco Nac Cal G Cx 6kg;6,00;Pessego;Pessego Nacional;Pessego
+052.005;052.005 - Pessego Fresco Nac Cal P/M Cx 6kg;6,00;Pessego;Pessego Nacional;Pessego
+052.006;052.006 - Pessego Fresco Nacional Cx 9kg;9,00;Pessego;Pessego Nacional;Pessego
+052.007;052.007 - Pessego Fresco Nac Cal P/M/G Cx 8kg;8,00;Pessego;Pessego Nacional;Pessego
+053.001;053.001 - Nectarina Imp Eleg Cx 08kg;8,00;Nectarina Imp;Nectarina Importada;Nectarina
+053.002;053.002 - Nectarina Imp Eleg Cx 09kg;9,00;Nectarina Imp;Nectarina Importada;Nectarina
+053.003;053.003 - Nectarina Nac Cx 10kg;10,00;Nectarina;Nectarina Nacional;Nectarina
+053.004;053.004 - Nectarina Fresca Nacional Cx 6kg;6,00;Nectarina;Nectarina Nacional;Nectarina
+053.005;053.005 - Nectarina Fresca Nac Cx 9kg;9,00;Nectarina;Nectarina Nacional;Nectarina
+060.001;060.001 - Ameixa Seca S/ Caroco Imp Cx 10kg;10,00;Ameixa Seca Granel;Ameixa Seca S/ Caroco;Ameixa Seca
+060.002;060.002 - Ameixa Seca S/ Caroco Imp Reserva Gourmet Cx 24 Und C/150g;3,60;Ameixa Seca;Ameixa Seca S/ Caroco;Ameixa Seca
+061.003;061.003 - Uva Passa Escura S/ Semente Imp R. Gourmet Cx 50 Und / 200g;10,00;Uva Passa Escura;Uva Passa Preta;Uva Passa
+061.004;061.004 - Uva Passa Imp. S/ Semente Escura Cx 10kg;10,00;Uva Passa Granel;Uva Passa Preta;Uva Passa
+061.005;061.005 - Uva Passa Clara Imp Reserva Gourmet Cx 24 Und C/200g;4,80;Uva Passa Clara;Uva Passa Branca;Uva Passa
+061.007;061.007 - Uva Passa Preta S/ Semente Imp Reserva Gourmet Cx 24 Und C/150g;3,60;Uva Passa Escura;Uva Passa Preta;Uva Passa
+061.007;061.007 - Uva Passa Preta S/Semente Imp Reserva Gourmet Cx 24und C/150g;3,60;Uva Passa Escura;Uva Passa Preta;Uva Passa
+061.008;061.008 - Uva Passa Clara S/ Semente Imp Reserva Gourmet Cx 24 Und C/150g;3,60;Uva Passa Clara;Uva Passa Branca;Uva Passa
+061.008;061.008 - Uva Passa Clara S/Sement Imp Res Gourmet Cx24 Und C/150g;3,60;Uva Passa Clara;Uva Passa Branca;Uva Passa
+062.002;062.002 - Ameixa Seca S/ Caroco Imp Cx 10kg;10,00;Ameixa Seca;Ameixa Seca S/ Caroco;Amendoa
+062.003;062.003 - Ameixa Seca S/ Caroco Imp R. Gourmet Cx 50 X 200g;10,00;Ameixa Seca;Ameixa Seca S/ Caroco;Amendoa
+062.005;062.005 - Amendoa Crua S/ Casca Imp Cx 10kg;10,00;Amendoa;Amendoa S/ Casca;Amendoa
+062.006;062.006 - Amendoa S/ Caroco Cx 10kg;10,00;Amendoa;Amendoa S/ Casca;Amendoa
+062.007;062.007 - Ameixa Seca Com Caroco Imp Reserva Gourmet Cx 24 Und X 200g;4,80;Ameixa Seca;Ameixa Seca C/ Caroco;Amendoa
+062.008;062.008 - Amendoas Sem Casca Imp Reserva Gourmet Cx 24 Und X 150g;3,60;Amendoa;Amendoa S/ Casca;Amendoa
+062.009;062.009 - Amendoa Crua S/ Casca Imp Cx 20 Kg;20,00;Amendoa;Amendoa S/ Casca;Amendoa
+062.009;062.009 - Amendoa Crua S/ Casca Imp Cx 22,68 Kg;22,68;Amendoa;Amendoa S/ Casca;Amendoa
+062.010;062.010 - Amendoa Crua S/ Casca Imp Cx 12kg;12,00;Amendoa;Amendoa S/ Casca;Amendoa
+062.011;062.011 - Amendoas Sem Casca Imp Reserva Gourmet Cx 24 Und X 100g;2,40;Amendoa;Amendoa S/ Casca;Amendoa
+063.002;063.002 - Ameixa Seca S/ Caroco Imp Reserva Gourmet Cx 24 Und C/200g;4,80;Ameixa Seca;Ameixa Seca S/ Caroco;Frutas Cristalizada
+063.003;063.003 - Frutas Cristalizadas Cx 10 Kg;10,00;Frutas Cristalizadas;Frutas Cristalizadas;Frutas Cristalizada
+063.005;063.005 - Uva Passa Preta S/ Semente Imp Reserva Gourmet Cx 24 Und C/200g;4,80;Uva Passa Escura;Uva Passa Preta;Frutas Cristalizada
+063.006;063.006 - Frutas Cristalizadas Reserva Gourmet Cx 24 Und X 200g;4,80;Frutas Cristalizadas;Frutas Cristalizadas;Frutas Cristalizada
+063.008;063.008 - Frutas Cristalizadas Reserva Gourmet Cx 24 Und X 150g;3,60;Frutas Cristalizadas;Frutas Cristalizadas;Frutas Cristalizada
+065.001;065.001 - Nozes S/ Casca Cx 10kg;10,00;Nozes;Nozes;Noz
+065.002;065.002 - Nozes Mariposa Imp Reserva Gourmet Cx 50 Und X 100g;5,00;Nozes;Nozes;Noz
+065.004;065.004 - Nozes Mariposa Imp R. Gourmet Cx 24 Und X 100g;2,40;Nozes;Nozes;Noz
+065.005;065.005 - Nozes Mariposa Imp R. Gourmet Cx 24 Und X 100g;2,40;Nozes;Amendoa C/ Casca;Noz
+066.004;066.004 - Tamaras Secas Imp Reserva Gourmet Cx 24 Und X 150g;3,60;Tamara Imp;Tamara S/ Semente;Tamara
+066.005;066.005 - Tamara Com Caroco Imp Reserva Gourmet Cx 24 Und X 200g;4,80;Tamara Imp;Tamara C/ Semente;Tamara
+066.008;066.008 - Tamara C/ Caroco Doce Mel Cx 5 Kg / 25 X 200g;5,00;Tamara Imp;Tamara C/ Semente;Tamara
+067.001;067.001 - Pistache Cx 10kg;10,00;Pistache;Pistache;Pistache
+067.002;067.002 - Pistache Imp Reserva Gourmet Cx 50 Und X 100g;5,00;Pistache;Pistache;Pistache
+067.003;067.003 - Pistache Imp Reserva Gourmet Cx 24 Und X 100g;2,40;Pistache;Pistache;Pistache
+068.001;068.001 - Damasco Cx 12,5 Kg;12,50;Damasco;Damasco;Damasco
+068.002;068.002 - Damasco Turco Imp Reserva Gourmet Cx 24 Und X 100g;2,40;Damasco;Damasco;Damasco
+068.004;068.004 - Damasco Turco Seco Imp Reserva Gourmet Cx 24 Und X 120g;2,88;Damasco;Damasco;Damasco
+069.001;069.001 - Castanha Do Para Reserva Gourmet Cx 50 Und X 100g;5,00;Castanha Do Para;Castanha-Do-Para;Castanha
+069.002;069.002 - Castanha Do Para Reserva Gourmet Cx 24 Und C/100g;2,40;Castanha Do Para;Castanha-Do-Para;Castanha
+069.003;069.003 - Castanha Do Para Cx 20kg;20,00;Castanha Do Para;Castanha-Do-Para;Castanha
+069.004;069.004 - Castanha Do Para Cx 10kg;10,00;Castanha Do Para;Almeirao;Castanha
+069.006;069.006 - Castanha Do Para Reserva Gourmet Cx 24 Und C/120g;2,88;Castanha Do Para;Castanha-Do-Para;Castanha
+069.014;069.014 - Castanha De Caju Torrada Sem Sal Nac Cx 11kg;11,00;Castanha Do Para;Castanha De Caju;Castanha
+069.015;069.015 - Castanha De Caju Torrada Com Sal Nac Cx 11kg;11,00;Castanha Do Para;Castanha De Caju;Castanha
+071.001;071.001 - Pimentao Amarelo Cx 10kg;10,00;Pimentao Amarelo;Pimentao Blocky Amarelo;Pimentao
+071.002;071.002 - Pimentao Laranja Cx 10kg;10,00;Pimentao Laranja;Pimentao Blocky Laranja;Pimentao
+071.003;071.003 - Pimentao Rei Amarelo Cx 4 Kg / 40 X 100g;4,00;Pimentao Rei Amarelo;Pimentao Blocky Amarelo;Pimentao
+071.004;071.004 - Pimentao Rei Amarelo Cx 4,5kg / 30 X 150g;4,50;Pimentao Rei Amarelo;Pimentao Blocky Amarelo;Pimentao
+071.005;071.005 - Pimentao Rei Duo 250g Cx 4,5 Kg / 18 X 250g;4,50;Pimentao Rei Duo;Pimentao Blocky Duo;Pimentao
+071.006;071.006 - Pimentao Rei Laranja Cx 4,5kg / 30 X 150g;4,50;Pimentao Rei Laranja;Pimentao Blocky Laranja;Pimentao
+071.007;071.007 - Pimentao Rei Longo Cx 4,5kg / 15 X 300g;4,50;Pimentao Rei Longo;Pimentao Longo;Pimentao
+071.009;071.009 - Pimentao Rei Vermelho Cx 4,5kg / 30 X 150g;4,50;Pimentao Rei Vermelho;Pimentao Blocky Vermelho;Pimentao
+071.009;071.009 - Pimentão Rei Vermelho Cx 4,5kg / 30 X 150g;4,50;Pimentao Rei Vermelho;Pimentao Blocky Vermelho;Pimentao
+071.010;071.010 - Pimentao Rei Vermelho Cx 4kg / 40 X 100g;4,00;Pimentao Rei Vermelho;Pimentao Blocky Vermelho;Pimentao
+071.012;071.012 - Pimentao Vermelho;1,00;Pimentao Vermelho;Pimentao Blocky Vermelho;Pimentao
+071.014;071.014 - Pimentao Rei Longo 200g / 22 Und Cx 4,4kg;4,40;Pimentao Rei Longo;Pimentao Longo;Pimentao
+071.015;071.015 - Pimentao Amarelo Cx 5kg;5,00;Pimentao Amarelo;Pimentao Blocky Amarelo;Pimentao
+071.016;071.016 - Pimentao Vermelho Cx 5kg;5,00;Pimentao Vermelho;Pimentao Blocky Vermelho;Pimentao
+071.017;071.017 - Pimentao Laranja Cx 5kg;5,00;Pimentao Laranja;Pimentao Blocky Laranja;Pimentao
+071.018;071.018 - Pimentao Vermelho Cx 10kg;10,00;Pimentao Vermelho;Pimentao Lamuyo;Pimentao
+071.019;071.019 - Pimentao Amarelo 8kg;8,00;Pimentao Amarelo;Pimentao Comum;Pimentao
+071.020;071.020 - Pimentao Vermelho 8kg;8,00;Pimentao Vermelho;Pimentao Comum;Pimentao
+072.001;072.001 - Mini Tomates Turma Da Monica Cx 10,8kg / 60 X 180g;10,80;Tomate Grape;Tomate;Tomate
+072.003;072.003 - Tomate Aquarela Natural Da Horta Cx 9kg / 50 X 180g;9,00;Tomate Grape;Tomate Aquarela;Tomate
+072.006;072.006 - Tomate Bombom Natural Da Horta Cx 9kg / 50 X 180g;9,00;Tomate Grape;Tomate Grape;Tomate
+072.007;072.007 - Tomate Bombom Premium Cx 9kg / 50 X 180g;9,00;Tomate Grape;Tomate Grape;Tomate
+072.008;072.008 - Tomate Cereja Rama Cx 9,2kg / 46 X 200g;9,20;Tomate Rama;Tomate Grape;Tomate
+072.015;072.015 - Tomate Sweet Grape Uva Cx 10,8kg X 60 X 180g;10,80;Tomate Grape;Tomate Grape;Tomate
+072.018;072.018 - Tomate Bombom 500g Cx 20 Und;5,00;Tomate Grape;Tomate Grape;Tomate
+072.020;072.020 - Tomate Mel Grape Cx 10,8 Kg / 60 X 180g;10,80;Tomate Grape;Tomate Grape;Tomate
+072.021;072.021 - Tomate Mel Grape Cx 12 Kg / 24 X 500g;12,00;Tomate Grape;Tomate Grape;Tomate
+072.028;072.028 - Tomate Bombom Premium Cx Plastica 9kg / 50 X 180g;9,00;Tomate Grape;Tomate Grape;Tomate
+072.029;072.029 - Tomate Bombom A Granel Cx 10kg;10,00;Tomate Grape;Tomate Grape;Tomate
+073.001;073.001 - Abobora Cremosa Bata Cat Extra Cx 11kg;11,00;Abobora Bata;Abobora Bata;Abobora
+073.002;073.002 - Abobora Japonesa Cat 1 Sc 20kg;20,00;Abobora Japonesa;Abobora Japonesa;Abobora
+073.003;073.003 - Abobora Moranga Cat 1 Sc 20kg;20,00;Abobora Moranga;Abobora Moranga;Abobora
+073.004;073.004 - Jerimum Leite;1,00;Abobora Jerimum Leite;Jerimum Leite;Abobora
+073.007;073.007 - Abobora Japonesa Cat 1 Cx Ifco 15kg;15,00;Abobora Japonesa;Abobora Japonesa;Abobora
+073.010;073.010 - Abobora Caboclo Cat 1 Sc 20 Kg;20,00;Abobora Caboclo;Outras Aboboras;Abobora
+073.011;073.011 - Abobora Jacarezinho Cat 1 Sc 20kg;20,00;Abobora Jacarezinho;Outras Aboboras;Abobora
+073.012;073.012 - Abobora Jerimum De Leite Cat 1 Sc 20kg;20,00;Abobora Jerimum Leite;Outras Aboboras;Abobora
+073.013;073.013 - Abobora Jerimum De Leite Cat 1 Sc 40kg;40,00;Abobora Jerimum Leite;Outras Aboboras;Abobora
+073.015;073.015 - Abobora Cremosa Bata Cat Extra Cx 15kg;15,00;Abobora Bata;Abobora Bata;Abobora
+073.017;073.017 - Abobora Japonesa Cat 1 Sc 18kg;18,00;Abobora Japonesa;Abobora Japonesa;Abobora
+075.001;075.001 - Brocolis Ninja Qualita Cx 4,5kg / 15 X 300g;4,50;Brocolis;Brocolis;Verduras
+075.002;075.002 - Brocolis Ninja R. Gourmet Cx 4,5kg / 15 X 300g;4,50;Brocolis;Brocolis;Verduras
+075.008;075.008 - Brocolis Ninja Bdj Cx 9 Kg / 30 X 300g;9,00;Brocolis;Brocolis;Verduras
+075.009;075.009 - Brocolis Ninja Bdj Cx 5 Kg Nacional;5,00;Brocolis;Brocolis;Verduras
+075.011;075.011 - Brocolis Florete Pick & Nick Cx 4kg / 20 X 200g;4,00;Brocolis;Brocolis;Verduras
+075.013;075.013 - Brocolis Ninja Bdj Cx 4,5kg / 15 X 300g;4,50;Brocolis;Brocolis;Verduras
+075.014;075.014 - Brocolis Ninja Cx Plastica 3,6kg / 12 X 300g;3,60;Brocolis;Brocolis;Verduras
+075.015;075.015 - Brocolis Ninja Bdj Cx Plastica 3,9 Kg / 13 X 300g;3,90;Brocolis;Brocolis;Verduras
+075.016;075.016 - Brocolis Ninja Bdj Cx 7,2 Kg / 24 X 300g;7,20;Brocolis;Brocolis;Verduras
+076.001;076.001 - Aspargo Cx 5 Kg / 11 Und;5,00;Aspargo Imp;Aspargo;Vegetais Exoticos
+076.002;076.002 - Aspargo Imp Cx 5kg / 11 Und;5,00;Aspargo Imp;Aspargo;Vegetais Exoticos
+077.001;077.001 - Alho Imp Granel;1,00;Alho Imp;Alho Comum;Raizes/Tuberculos
+077.002;077.002 - Alho Imp Cx 10kg;10,00;Alho Imp;Alho Comum;Raizes/Tuberculos
+077.008;077.008 - Cara Sao Tome;1,00;Cara;Cara;Raizes/Tuberculos
+077.011;077.011 - Gengibre Cx 10kg;10,00;Gengibre;Gengibre;Raizes/Tuberculos
+077.015;077.015 - Cara Sao Tome Extra;1,00;Cara;Cara;Raizes/Tuberculos
+077.016;077.016 - Gengibre Extra Cx 14kg;14,00;Gengibre;Gengibre;Raizes/Tuberculos
+077.017;077.017 - Alho Roxo Nacional Tipo 5 Cx 10 Kg;10,00;Alho;Alho Comum;Raizes/Tuberculos
+077.018;077.018 - Gengibre Extra Cx Ifco 5 Kg;5,00;Gengibre;Gengibre;Raizes/Tuberculos
+077.019;077.019 - Gengibre / Ginger Cx 4,5kg Exp;4,50;Gengibre;Gengibre;Raizes/Tuberculos
+077.020;077.020 - Gengibre Cx 4,5kg;4,50;Gengibre;Gengibre;Raizes/Tuberculos
+077.021;077.021 - Abobora Spaghetti Vegano Rg Cx 5kg;5,00;Outras Aboboras;Outras Aboboras;Raizes/Tuberculos
+077.022;077.022 - Mini Abobora Reserva Gourmet Cx 5kg;5,00;Outras Aboboras;Outras Aboboras;Raizes/Tuberculos
+077.023;077.023 - Abobora Perola Negra Reserva Gourmet Cx 5kg;5,00;Outras Aboboras;Outras Aboboras;Raizes/Tuberculos
+077.027;077.027 - Alho Nacional Tamanho 6 Cx 10kg;10,00;Alho;Alho Comum;Raizes/Tuberculos
+077.028;077.028 - Alho Nacional Tamanho 5 Cx 10kg;10,00;Alho;Alho Comum;Raizes/Tuberculos
+077.029;077.029 - Alho Imp Chines Tamanho 7 Cx 10kg;10,00;Alho Imp;Alho Comum;Raizes/Tuberculos
+079.003;079.003 - Cebola Branca;1,00;Cebola Branca;Cebola;Legumes
+080.001;080.001 - Goma Tapioca Doce Mel Fd 20 Un / Pc 1kg;20,00;Goma De Tapioca;Goma De Tapioca;Goma De Tapioca
+080.002;080.002 - Fecula De Mandioca Sc 25kg;25,00;Goma De Tapioca;Goma De Tapioca;Goma De Tapioca
+119.001;119.001 - Abobora Moranga Cat 1 Cx 10kg;10,00;Abobora Moranga;Abobora Moranga;Abobora
+119.002;119.002 - Abobora Japonesa Cat 1 Cx 10kg;10,00;Abobora Japonesa;Abobora Japonesa;Abobora
+119.003;119.003 - Abobora Cremosa Bata 1 Cx Ifco 11kg;11,00;Abobora Bata;Abobora Bata;Abobora
