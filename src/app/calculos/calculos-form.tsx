@@ -105,8 +105,10 @@ export function CalculosForm() {
                 const body = {
                     spreadsheetId: config.sheets.spreadsheetId,
                     range: config.sheets.range,
+                    action: 'append' as const,
                     record: {
                         ...payload,
+                        // Sheets: gravar data como string dia/mês/ano
                         data_registro: format(data.dataRegistro, 'dd/MM/yyyy'),
                     },
                 };
@@ -115,34 +117,27 @@ export function CalculosForm() {
                     const { data: fnData, error: fnError } = await supabase.functions.invoke('append-sheet', { body });
                     if (fnError) {
                         console.warn('Edge Function append-sheet erro:', fnError);
-                    } else if (fnData && (fnData.ok === false || fnData.success === false)) {
-                        console.warn('Edge Function retornou falha lógica:', fnData);
                     } else {
-                        sent = true;
-                    }
-                }
-
-                if (!sent && config.sheets.appsScriptUrl) {
-                    try {
-                        const resp = await fetch(config.sheets.appsScriptUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(body),
-                        });
-                        if (!resp.ok) {
-                            const text = await resp.text();
-                            console.warn('Apps Script respondeu com erro:', text);
-                        } else {
+                        console.debug('append-sheet resposta:', fnData);
+                        // Considere sucesso com ok:true mesmo sem flags adicionais (alguns deployments retornam apenas ok)
+                        if (fnData && fnData.ok === true) {
                             sent = true;
+                        } else if (fnData && (fnData.appended || fnData.synced)) {
+                            sent = true;
+                        } else {
+                            console.warn('Edge Function retornou corpo inesperado:', fnData);
                         }
-                    } catch (appsErr) {
-                        console.warn('Falha no fallback Apps Script:', appsErr);
                     }
                 }
 
+                // Sem fallback para Apps Script: a gravação agora é direta pela Edge Function
+                if (!sent) {
+                    console.warn('Falha no envio ao Google Sheets via Edge Function.');
+                }
+                
                 if (!sent) {
                     toast.warning('Registro salvo, mas envio ao Google Sheets falhou.', {
-                        description: 'Verifique a função append-sheet ou configure VITE_APPS_SCRIPT_URL para fallback.',
+                        description: 'Verifique as secrets da função append-sheet (Google).',
                     });
                 }
             } catch (err) {
@@ -160,12 +155,52 @@ export function CalculosForm() {
             });
         }
 
-        // Gerar link do WhatsApp
-        const mensagem = `*CHECKPESO - RESUMO DA ANÁLISE*%0A%0A*Filial:* ${data.filial}%0A*Data:* ${format(data.dataRegistro, 'dd/MM/yyyy')}%0A*Fornecedor:* ${data.fornecedor || 'N/A'}%0A*NF:* ${data.notaFiscal || 'N/A'}%0A%0A*-- DADOS DA PESAGEM --*%0A*Qtd. Recebida:* ${data.quantidadeRecebida} CX%0A*Peso Líq. p/ Caixa:* ${data.pesoLiquidoPorCaixa.toFixed(3)} KG%0A*Peso Bruto Análise:* ${data.pesoBrutoAnalise.toFixed(3)} KG%0A*Tara p/ Caixa:* ${data.taraCaixa.toFixed(3)} KG%0A%0A*-- RESULTADOS --*%0A*Peso Líq. Programado:* ${resultados.pesoLiquidoProgramado.toFixed(3)} KG%0A*Peso Líq. Real:* ${resultados.pesoLiquidoReal.toFixed(3)} KG%0A*Perda Total:* ${resultados.perdaKg.toFixed(3)} KG (${resultados.perdaPercentual.toFixed(2)}%)%0A*Perda em Caixas:* ${resultados.perdaCx.toFixed(2)} CX%0A%0A*Observações:* ${data.observacoes || 'Nenhuma'}`;
-        const link = `https://api.whatsapp.com/send?text=${mensagem}`;
-        
-        // Abre o link em uma nova aba
-        window.open(link, '_blank');
+    // Montar mensagem linha por linha
+    let message = "";
+
+    message += "📟🍍RESUMO DO RECEBIMENTO🍍📟\n\n";
+
+    message += `🗓️ *DATA:* ${format(data.dataRegistro, 'dd/MM/yyyy')}\n`;
+    message += `🏢 *FILIAL:* ${data.filial || 'SEM INFORMAÇÃO'}\n`;
+    message += `🪪 *FORNECEDOR:* ${data.fornecedor || 'SEM INFORMAÇÃO'}\n`;
+    message += `📄 *NOTA FISCAL:* ${data.notaFiscal || 'SEM INFORMAÇÃO'}\n`;
+    // message += `🔎 *CODIGO DO PRODUTO:*
+    // message += `📦 *PRODUTO:*
+    // message += `🍇 *FAMÍLIA:*
+    message += "-----\n";
+
+    message += `*-- DADOS DA PESAGEM --*\n`;
+    message += `🔄️ *QTD. TOTAL RECEBIDA:* ${data.quantidadeRecebida || 'SEM INFORMAÇÃO'} CX\n`;
+    message += `🔄️ *PESO LÍQUIDO TOTAL PROGRAMADO:* ${resultados.pesoLiquidoProgramado?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += `🔄️ *PESO LÍQUIDO POR CX:* ${data.pesoLiquidoPorCaixa?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += `🔄️ *TARA DA CAIXA:* ${data.taraCaixa?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += `📋 *MODELO DA TABELA:* ${data.modeloTabela || 'SEM INFORMAÇÃO'}\n`;
+    message += `🔄️ *QTD. ANALISADA:* ${quantidadeTabela || 'SEM INFORMAÇÃO'}\n`;
+    message += `🔄️ *QTD. BAIXO PESO:* ${data.quantidadebaixopeso || 'SEM INFORMAÇÃO'}\n`;
+    message += `🔄️ *PESO BRUTO DA ANÁLISE:* ${data.pesoBrutoAnalise?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += `🔄️ *PESO LÍQUIDO DA ANÁLISE:* ${resultados.pesoLiquidoAnalise?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += "-----\n";
+
+    message += `*-- RESULTADOS --*\n`;
+    message += `📟 *PESO LÍQUIDO REAL DA CARGA:* ${resultados.pesoLiquidoReal?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += `🔴 *PERDA EM KG:* ${resultados.perdaKg?.toFixed(3) || 'SEM INFORMAÇÃO'} KG\n`;
+    message += `🔴 *PERDA EM CX:* ${resultados.perdaCx?.toFixed(2) || 'SEM INFORMAÇÃO'} CX\n`;
+    message += `💲 *% PERDA DA CARGA:* ${resultados.perdaPercentual.toFixed(3) || 'SEM INFORMAÇÃO'} %\n`;
+    message += "-----\n";
+
+    message += `💬 *OBSERVAÇÕES:* ${data.observacoes || 'SEM INFORMAÇÃO'}\n\n`;
+
+    message += "📟🥝APP CHECKPESO - GDM🍎📟";
+
+
+// Codificar a mensagem para WhatsApp
+const mensagemCodificada = encodeURIComponent(message);
+
+// Gerar link WhatsApp
+const link = `https://api.whatsapp.com/send?text=${mensagemCodificada}`;
+
+// Abre o WhatsApp
+window.open(link, "_blank");
     }
     
     const getSeverity = (perda: number): 'ok' | 'attention' | 'critical' => {

@@ -22,10 +22,24 @@ import { DataTableToolbar } from './data-table-toolbar';
 import { DataTablePagination } from './data-table-pagination';
 
 // Carregamento de dados reais do Supabase
+function parseSQLDate(dateStr: any): Date {
+    if (!dateStr) return new Date();
+    if (dateStr instanceof Date) return dateStr;
+    if (typeof dateStr === 'string') {
+        const m = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (m) {
+            const [_, y, mo, d] = m;
+            return new Date(Number(y), Number(mo) - 1, Number(d));
+        }
+        return new Date(dateStr);
+    }
+    return new Date();
+}
+
 function mapRowToRegistroPeso(row: any): RegistroPeso {
     return {
         id: row.id,
-        dataRegistro: new Date(row.data_registro),
+        dataRegistro: parseSQLDate(row.data_registro),
         filial: row.filial,
         fornecedor: row.fornecedor ?? undefined,
         notaFiscal: row.nota_fiscal ?? undefined,
@@ -49,14 +63,12 @@ const initialData: RegistroPeso[] = [];
 
 export default function RelatoriosPage() {
     const [allData, setAllData] = useState<RegistroPeso[]>(initialData);
-    const [dateRange, setDateRange] = useState<DateRange | undefined>({
-        from: subDays(new Date(), 29),
-        to: new Date(),
-    });
+    // Mostrar todos os registros por padrão; filtro de datas é opcional
+    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
     useEffect(() => {
         let mounted = true;
-        (async () => {
+        const fetchAll = async () => {
             try {
                 const { supabase, hasSupabaseEnv } = await import('@/lib/supabase');
                 if (!hasSupabaseEnv) return;
@@ -74,23 +86,71 @@ export default function RelatoriosPage() {
             } catch (err) {
                 console.warn('Falha ao buscar dados do Supabase:', err);
             }
+        };
+        (async () => { await fetchAll(); })();
+        const interval = setInterval(fetchAll, 15000);
+        return () => { mounted = false; clearInterval(interval); };
+    }, []);
+
+    // Realtime: mantém a tabela atualizada sem precisar mexer nos filtros
+    useEffect(() => {
+        let channel: ReturnType<any> | null = null;
+        (async () => {
+            try {
+                const { supabase, hasSupabaseEnv } = await import('@/lib/supabase');
+                if (!hasSupabaseEnv) return;
+                channel = supabase
+                    .channel('registros_peso_changes_reports')
+                    .on(
+                        'postgres_changes',
+                        { event: '*', schema: 'public', table: 'registros_peso' },
+                        (payload: any) => {
+                            try {
+                                const evt = payload?.eventType || payload?.event || '';
+                                if (evt === 'INSERT' && payload?.new) {
+                                    const row = mapRowToRegistroPeso(payload.new);
+                                    setAllData(prev => [row, ...prev]);
+                                } else if (evt === 'UPDATE' && payload?.new) {
+                                    const updated = mapRowToRegistroPeso(payload.new);
+                                    setAllData(prev => prev.map(r => (r.id === updated.id ? updated : r)));
+                                } else if (evt === 'DELETE' && payload?.old) {
+                                    const id = payload.old.id;
+                                    setAllData(prev => prev.filter(r => r.id !== id));
+                                }
+                            } catch (e) {
+                                console.warn('Falha ao aplicar payload realtime (reports):', e);
+                            }
+                        }
+                    )
+                    .subscribe();
+            } catch (err) {
+                console.warn('Erro ao inicializar Realtime (reports):', err);
+            }
         })();
-        return () => { mounted = false; };
+        return () => {
+            (async () => {
+                try {
+                    const { supabase, hasSupabaseEnv } = await import('@/lib/supabase');
+                    if (!hasSupabaseEnv) return;
+                    if (channel) supabase.removeChannel(channel as any);
+                } catch {}
+            })();
+        };
     }, []);
 
     const filteredDataByDate = useMemo(() => {
         if (!dateRange?.from) return allData;
-        
         const startDate = startOfDay(dateRange.from);
         const endDate = dateRange.to ? startOfDay(addDays(dateRange.to, 1)) : startOfDay(addDays(startDate, 1));
-        
         return allData.filter(item => {
             const itemDate = startOfDay(item.dataRegistro);
             return itemDate >= startDate && itemDate < endDate;
         });
-    }, [dateRange]);
+    }, [dateRange, allData]);
 
-    const [sorting, setSorting] = useState<SortingState>([])
+    const [sorting, setSorting] = useState<SortingState>([
+        { id: 'dataRegistro', desc: true },
+    ])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = useState({})

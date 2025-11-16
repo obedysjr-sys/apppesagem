@@ -13,10 +13,25 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 
 // Carregar registros reais do Supabase
+function parseSQLDate(dateStr: any): Date {
+    if (!dateStr) return new Date();
+    if (dateStr instanceof Date) return dateStr;
+    if (typeof dateStr === 'string') {
+        const m = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (m) {
+            const [_, y, mo, d] = m;
+            return new Date(Number(y), Number(mo) - 1, Number(d));
+        }
+        // fallback: try native
+        return new Date(dateStr);
+    }
+    return new Date();
+}
+
 function mapRowToRegistroPeso(row: any): RegistroPeso {
     return {
         id: row.id,
-        dataRegistro: new Date(row.data_registro),
+        dataRegistro: parseSQLDate(row.data_registro),
         filial: row.filial,
         fornecedor: row.fornecedor ?? undefined,
         notaFiscal: row.nota_fiscal ?? undefined,
@@ -49,7 +64,7 @@ export default function DashboardPage() {
 
     useEffect(() => {
         let mounted = true;
-        (async () => {
+        const fetchAll = async () => {
             try {
                 const { supabase, hasSupabaseEnv } = await import('@/lib/supabase');
                 if (!hasSupabaseEnv) return;
@@ -67,8 +82,13 @@ export default function DashboardPage() {
             } catch (err) {
                 console.warn('Falha ao buscar dados do Supabase:', err);
             }
+        };
+        (async () => {
+            await fetchAll();
         })();
-        return () => { mounted = false; };
+        // Polling de fallback para ambientes com websocket instável
+        const interval = setInterval(fetchAll, 15000);
+        return () => { mounted = false; clearInterval(interval); };
     }, []);
 
     // Realtime: atualiza automaticamente quando novos registros são inseridos
@@ -82,11 +102,20 @@ export default function DashboardPage() {
                     .channel('registros_peso_changes')
                     .on(
                         'postgres_changes',
-                        { event: 'INSERT', schema: 'public', table: 'registros_peso' },
+                        { event: '*', schema: 'public', table: 'registros_peso' },
                         (payload: any) => {
                             try {
-                                if (payload?.new) {
+                                const evt = payload?.eventType || payload?.event || '';
+                                if (evt === 'INSERT' && payload?.new) {
                                     setRecords(prev => [mapRowToRegistroPeso(payload.new), ...prev]);
+                                } else if (evt === 'UPDATE' && payload?.new) {
+                                    setRecords(prev => {
+                                        const updated = mapRowToRegistroPeso(payload.new);
+                                        return prev.map(r => (r.id === updated.id ? updated : r));
+                                    });
+                                } else if (evt === 'DELETE' && payload?.old) {
+                                    const id = payload.old.id;
+                                    setRecords(prev => prev.filter(r => r.id !== id));
                                 }
                             } catch (e) {
                                 console.warn('Falha ao aplicar payload realtime:', e);
