@@ -3,7 +3,28 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from 'xlsx';
 import { format } from "date-fns";
-import logoBase64 from '/logo.png'; // Import da logo via pasta public
+// Carrega a logo em data URL (base64) em tempo de execução e mantém em cache.
+let cachedLogoDataUrl: string | null = null;
+const getLogoDataUrl = async (): Promise<string | null> => {
+  if (cachedLogoDataUrl) return cachedLogoDataUrl;
+  try {
+    const res = await fetch('/logo.png');
+    if (!res.ok) return null;
+    const blob = await res.blob();
+    await new Promise<void>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        cachedLogoDataUrl = typeof reader.result === 'string' ? reader.result : null;
+        resolve();
+      };
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(blob);
+    });
+    return cachedLogoDataUrl;
+  } catch {
+    return null;
+  }
+};
 
 // Remove acentos e caracteres especiais problemáticos
 const normalizeText = (value: string | undefined | null): string => {
@@ -15,12 +36,80 @@ const normalizeText = (value: string | undefined | null): string => {
 };
 
 // Função para exportar dados para XLSX
-export const exportToXlsx = (data: RegistroPeso[], fileName: string) => {
+export const exportToXlsx = async (data: RegistroPeso[], fileName: string) => {
+    // Try to use exceljs for styled header; fallback to plain XLSX if not available
+    try {
+        const ExcelJSModule = await import('exceljs');
+        const ExcelJS: any = (ExcelJSModule as any)?.default ?? ExcelJSModule;
+        const wb = new ExcelJS.Workbook();
+        const ws = wb.addWorksheet('Relatório');
+        const header = [
+            'Data', 'Filial', 'Categoria', 'Modelo Tabela', 'Qtd. Recebida', 'Qtd. Tabela',
+            'Peso Líq. por Caixa (KG)', 'Tara por Caixa (KG)', 'Tara Total (KG)', 'Qtd. Baixo Peso',
+            'Peso Bruto Analise (KG)', 'Peso Analisado (KG)', 'Peso Real (KG)',
+            'Perda (KG)', 'Perda (CX)', 'Perda (%)', 'Fornecedor', 'NF', 'Código', 'Produto', 'Família', 'Grupo Produto'
+        ];
+        ws.addRow(header);
+        // Style header row (green background, bold)
+        const headerRow = ws.getRow(1);
+        headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+        headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF22A34A' } };
+        headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
+        headerRow.height = 22;
+        // Data rows
+        data.forEach(item => {
+            const taraTotal = (item.quantidadeTabela ?? 0) * (item.taraCaixa ?? 0);
+            ws.addRow([
+                format(item.dataRegistro, 'dd/MM/yyyy'),
+                normalizeText(item.filial),
+                normalizeText(item.categoria),
+                normalizeText(item.modeloTabela),
+                item.quantidadeRecebida,
+                item.quantidadeTabela,
+                Number(item.pesoLiquidoPorCaixa.toFixed(3)),
+                Number(item.taraCaixa.toFixed(3)),
+                Number(taraTotal.toFixed(3)),
+                item.quantidadebaixopeso,
+                Number(item.pesoBrutoAnalise.toFixed(3)),
+                Number(item.pesoLiquidoAnalise.toFixed(3)),
+                Number(item.pesoLiquidoReal.toFixed(3)),
+                Number(item.perdaKg.toFixed(3)),
+                Number(item.perdaCx.toFixed(2)),
+                Number(item.perdaPercentual.toFixed(2)),
+                normalizeText(item.fornecedor),
+                normalizeText(item.notaFiscal),
+                normalizeText(item.codigo),
+                normalizeText(item.produto),
+                normalizeText(item.familia),
+                normalizeText(item.grupoProduto),
+            ]);
+        });
+        // Auto filter and sizing
+        ws.autoFilter = {
+            from: { row: 1, column: 1 },
+            to: { row: 1, column: header.length },
+        } as any;
+        ws.columns = header.map((h) => ({ header: h, width: Math.max(14, h.length + 2) }));
+        ws.views = [{ state: 'frozen', ySplit: 1 }];
+        const buf = await wb.xlsx.writeBuffer();
+        const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${fileName}.xlsx`;
+        a.click();
+        URL.revokeObjectURL(url);
+        return;
+    } catch (e) {
+        console.warn('exceljs not available, falling back to plain XLSX export.', e);
+    }
+    // Fallback: basic export without styles
     const worksheet = XLSX.utils.json_to_sheet(data.map(item => {
         const taraTotal = (item.quantidadeTabela ?? 0) * (item.taraCaixa ?? 0);
         return {
             'Data': format(item.dataRegistro, 'dd/MM/yyyy'),
             'Filial': normalizeText(item.filial),
+            'Categoria': normalizeText(item.categoria),
             'Modelo Tabela': normalizeText(item.modeloTabela),
             'Peso Programado (KG)': item.pesoLiquidoProgramado.toFixed(3),
             'Qtd. Recebida': item.quantidadeRecebida,
@@ -37,6 +126,10 @@ export const exportToXlsx = (data: RegistroPeso[], fileName: string) => {
             'Perda (%)': item.perdaPercentual.toFixed(2),
             'Fornecedor': normalizeText(item.fornecedor),
             'NF': normalizeText(item.notaFiscal),
+            'Código': normalizeText(item.codigo),
+            'Produto': normalizeText(item.produto),
+            'Família': normalizeText(item.familia),
+            'Grupo Produto': normalizeText(item.grupoProduto),
         };
     }));
     const workbook = XLSX.utils.book_new();
@@ -45,7 +138,7 @@ export const exportToXlsx = (data: RegistroPeso[], fileName: string) => {
 };
 
 // Função para exportar dados para PDF profissional
-export const exportToPdf = (data: RegistroPeso[], title: string) => {
+export const exportToPdf = async (data: RegistroPeso[], title: string) => {
     const doc = new jsPDF();
 
     // Totais
@@ -61,10 +154,10 @@ export const exportToPdf = (data: RegistroPeso[], title: string) => {
       : 0;
 
     // Header
-    // Se a logo estiver em data URL base64, adiciona ao PDF; caso contrário, ignora.
-    if (typeof logoBase64 === 'string' && logoBase64.startsWith('data:image')) {
-        const base64Data = logoBase64.substring(logoBase64.indexOf(',') + 1);
-        try { doc.addImage(base64Data, 'PNG', 14, 12, 20, 20); } catch {}
+    // Tenta carregar a logo em base64 e adiciona ao PDF.
+    const logoDataUrl = await getLogoDataUrl();
+    if (logoDataUrl) {
+        try { doc.addImage(logoDataUrl, 'PNG', 14, 12, 20, 20); } catch {}
     }
     doc.setFont("helvetica", "bold");
     doc.setFontSize(20);
@@ -99,6 +192,8 @@ export const exportToPdf = (data: RegistroPeso[], title: string) => {
     const tableColumn = [
         "Data",
         "Filial",
+        "Categoria",
+        "Produto",
         "Modelo",
         "Qtd Rec.",
         "Peso Analise (KG)",
@@ -111,6 +206,8 @@ export const exportToPdf = (data: RegistroPeso[], title: string) => {
     const tableRows: (string | number)[][] = data.map(item => [
         format(item.dataRegistro, 'dd/MM/yy'),
         normalizeText(item.filial).substring(0, 15),
+        normalizeText(item.categoria)?.substring(0, 12),
+        normalizeText(item.produto)?.substring(0, 18),
         normalizeText(item.modeloTabela),
         item.quantidadeRecebida,
         item.pesoLiquidoAnalise.toFixed(2),
@@ -130,6 +227,7 @@ export const exportToPdf = (data: RegistroPeso[], title: string) => {
         styles: { fontSize: 8, cellPadding: 2 },
         columnStyles: {
             0: { cellWidth: 16 },
+            3: { cellWidth: 28 },
             6: { textColor: [239, 68, 68] }, // Coluna Perda KG em vermelho
         },
         didDrawPage: (data) => {
@@ -142,7 +240,7 @@ export const exportToPdf = (data: RegistroPeso[], title: string) => {
 };
 
 // Função para gerar HTML
-export const exportToHtml = (data: RegistroPeso[]) => {
+export const exportToHtml = async (data: RegistroPeso[]) => {
     // Agregados
     const totalRegistros = data.length;
     const totalPerdaKg = data.reduce((sum, item) => sum + item.perdaKg, 0);
@@ -186,6 +284,7 @@ export const exportToHtml = (data: RegistroPeso[]) => {
         perdaCx: data.filter(i => withinDays(i.dataRegistro, 365)).reduce((s, i) => s + i.perdaCx, 0),
     };
 
+    const logoSrc = (await getLogoDataUrl()) || (typeof window !== 'undefined' ? `${window.location.origin}/logo.png` : '/logo.png');
     const html = `
     <html>
       <head>
@@ -218,7 +317,7 @@ export const exportToHtml = (data: RegistroPeso[]) => {
       <body>
         <div class="container">
           <header>
-            <img src="${logoBase64}" alt="logo" />
+            <img src="${logoSrc}" alt="logo" />
             <div>
               <h1>CHECKPESO - GDM</h1>
               <div class="sub">Relatorio de Pesagem · Gerado em ${format(new Date(), 'dd/MM/yyyy HH:mm')}</div>
@@ -258,7 +357,7 @@ export const exportToHtml = (data: RegistroPeso[]) => {
               <table>
                 <thead>
                   <tr>
-                    <th>Data</th><th>Filial</th><th>Modelo</th><th>Qtd Recebida</th><th>Peso Analise (KG)</th><th>Peso Real (KG)</th><th>Perda (KG)</th><th>Perda (CX)</th><th>Fornecedor</th><th>NF</th>
+                    <th>Data</th><th>Filial</th><th>Produto</th><th>Categoria</th><th>Modelo</th><th>Qtd Recebida</th><th>Peso Analise (KG)</th><th>Peso Real (KG)</th><th>Perda (KG)</th><th>Perda (CX)</th><th>Fornecedor</th><th>NF</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -266,6 +365,8 @@ export const exportToHtml = (data: RegistroPeso[]) => {
                     <tr>
                       <td>${format(item.dataRegistro, 'dd/MM/yyyy')}</td>
                       <td>${normalizeText(item.filial)}</td>
+                      <td>${normalizeText(item.produto)}</td>
+                      <td>${normalizeText(item.categoria)}</td>
                       <td>${normalizeText(item.modeloTabela)}</td>
                       <td>${item.quantidadeRecebida}</td>
                       <td>${item.pesoLiquidoAnalise.toFixed(3)}</td>

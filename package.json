@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test:e2e": "node scripts/test-register.mjs",
-    "test:sync": "node scripts/sync-headers-and-append.mjs"
+    "test:sync": "node scripts/sync-headers-and-append.mjs",
+    "import:produtos": "node scripts/import-produtos-from-csv.mjs"
   },
   "dependencies": {
     "@faker-js/faker": "^10.1.0",
@@ -49,6 +50,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.3.0",
+    "exceljs": "^4.4.0",
     "input-otp": "^1.2.4",
     "jspdf": "^3.0.3",
     "jspdf-autotable": "^5.0.2",

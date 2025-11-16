@@ -95,6 +95,12 @@ async function main() {
     perda_cx: perdaCx,
     perda_percentual: perdaPercentual,
     observacoes: 'Sync headers + append via function',
+    // Campos de produto para validar escrita nas colunas finais
+    cod_produto: '001.021',
+    produto: '001.021 - Mamao Papaya Golden Doce Mel Extra Cx 12 Kg',
+    categoria: 'Papaya Extra',
+    familia: 'Mamao Papaya',
+    grupo_produto: 'Mamao',
   };
 
   if (!supabaseUrl || !supabaseAnonKey) {

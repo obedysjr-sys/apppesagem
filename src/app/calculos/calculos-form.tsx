@@ -46,6 +46,12 @@ export function CalculosForm() {
             quantidadebaixopeso: 0,
             fornecedor: '',
             notaFiscal: '',
+            // Novos campos opcionais
+            codigo: '',
+            produto: '',
+            categoria: '',
+            familia: '',
+            grupoProduto: '',
             observacoes: '',
         },
     });
@@ -64,6 +70,47 @@ export function CalculosForm() {
     const quantidadeTabela = getQuantidadeDaTabela(watchedValues.quantidadeRecebida || 0);
     const tabelaInfo = getTabelaSRangeInfo(watchedValues.quantidadeRecebida || 0);
     const resultados = calcularResultados(watchedValues);
+
+    // Busca produto por código e preenche campos relacionados
+    async function lookupProdutoPorCodigo(codigo: string) {
+        const code = codigo?.trim();
+        if (!code) return;
+        try {
+            const { supabase, hasSupabaseEnv } = await import('../../lib/supabase');
+            if (!hasSupabaseEnv) return;
+            const { data, error } = await supabase
+                .from('produtos')
+                .select('cod_produto, descricao, unid, categoria, familia, grupo_produto')
+                .eq('cod_produto', code)
+                .limit(1)
+                .maybeSingle();
+            if (error) {
+                console.warn('Lookup produto erro:', error);
+                return;
+            }
+            if (data) {
+                form.setValue('produto', data.descricao || '', { shouldDirty: true });
+                form.setValue('categoria', data.categoria || '', { shouldDirty: true });
+                form.setValue('familia', data.familia || '', { shouldDirty: true });
+                form.setValue('grupoProduto', data.grupo_produto || '', { shouldDirty: true });
+                // Auto-fill Peso Líq. por Caixa (KG) a partir de unid
+                const unid = Number(data.unid ?? 0);
+                if (Number.isFinite(unid) && unid > 0) {
+                    const raw = unid.toString().replace('.', ',');
+                    setRawInputs((s) => ({ ...s, pesoLiquidoPorCaixa: raw }));
+                    form.setValue('pesoLiquidoPorCaixa', unid, { shouldDirty: true });
+                }
+            } else {
+                // Não encontrado: limpar para digitação manual
+                form.setValue('produto', '', { shouldDirty: true });
+                form.setValue('categoria', '', { shouldDirty: true });
+                form.setValue('familia', '', { shouldDirty: true });
+                form.setValue('grupoProduto', '', { shouldDirty: true });
+            }
+        } catch (e) {
+            console.warn('Falha ao buscar produto:', e);
+        }
+    }
 
     async function onSubmit(data: CalculosFormValues) {
         // Persistência no Supabase
@@ -88,6 +135,12 @@ export function CalculosForm() {
                 perda_cx: resultados.perdaCx,
                 perda_percentual: resultados.perdaPercentual,
                 observacoes: data.observacoes || null,
+                // Novos campos opcionais para filtros e relatórios
+                cod_produto: data.codigo || null,
+                produto: data.produto || null,
+                categoria: data.categoria || null,
+                familia: data.familia || null,
+                grupo_produto: data.grupoProduto || null,
             };
 
             if (!hasSupabaseEnv) {
@@ -130,9 +183,20 @@ export function CalculosForm() {
                     }
                 }
 
-                // Sem fallback para Apps Script: a gravação agora é direta pela Edge Function
-                if (!sent) {
-                    console.warn('Falha no envio ao Google Sheets via Edge Function.');
+                // Fallback Apps Script: tenta enviar direto para a URL publicada
+                if (!sent && config.sheets.appsScriptUrl && config.sheets.spreadsheetId && config.sheets.range) {
+                    try {
+                        const resp = await fetch(config.sheets.appsScriptUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(body),
+                        });
+                        const text = await resp.text();
+                        console.debug('[AppsScript] Status', resp.status, 'Body', text);
+                        if (resp.ok) sent = true;
+                    } catch (e) {
+                        console.warn('[AppsScript] Falha no fallback:', (e as any)?.message || e);
+                    }
                 }
                 
                 if (!sent) {
@@ -164,9 +228,10 @@ export function CalculosForm() {
     message += `🏢 *FILIAL:* ${data.filial || 'SEM INFORMAÇÃO'}\n`;
     message += `🪪 *FORNECEDOR:* ${data.fornecedor || 'SEM INFORMAÇÃO'}\n`;
     message += `📄 *NOTA FISCAL:* ${data.notaFiscal || 'SEM INFORMAÇÃO'}\n`;
-    // message += `🔎 *CODIGO DO PRODUTO:*
-    // message += `📦 *PRODUTO:*
-    // message += `🍇 *FAMÍLIA:*
+    message += `🔎 *CÓDIGO:* ${data.codigo || 'SEM INFORMAÇÃO'}\n`;
+    message += `📦 *PRODUTO:* ${data.produto || 'SEM INFORMAÇÃO'}\n`;
+    message += `🍇 *CATEGORIA:* ${data.categoria || 'SEM INFORMAÇÃO'}\n`;
+    message += `🧬 *FAMÍLIA:* ${data.familia || 'SEM INFORMAÇÃO'}\n`;
     message += "-----\n";
 
     message += `*-- DADOS DA PESAGEM --*\n`;
@@ -457,6 +522,23 @@ window.open(link, "_blank");
                             <CardContent className="grid gap-6 sm:grid-cols-2">
                                 <FormField control={form.control} name="fornecedor" render={({ field }) => (<FormItem><FormLabel>Fornecedor</FormLabel><FormControl><Input {...field} /></FormControl></FormItem>)} />
                                 <FormField control={form.control} name="notaFiscal" render={({ field }) => (<FormItem><FormLabel>Nota Fiscal</FormLabel><FormControl><Input {...field} /></FormControl></FormItem>)} />
+                                {/* NOVOS CAMPOS: Código / Produto / Categoria (opcionais) */}
+                                <FormField control={form.control} name="codigo" render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Código</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        {...field}
+                                        onChange={(e) => { const val = e.currentTarget.value; field.onChange(val); lookupProdutoPorCodigo(val); }}
+                                        onBlur={() => { const codigo = (form.getValues('codigo') || '').trim(); if (codigo) lookupProdutoPorCodigo(codigo); }}
+                                      />
+                                    </FormControl>
+                                  </FormItem>
+                                )} />
+                                <FormField control={form.control} name="produto" render={({ field }) => (<FormItem><FormLabel>Produto</FormLabel><FormControl><Input {...field} placeholder="Preencha manualmente se não encontrado" /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="categoria" render={({ field }) => (<FormItem><FormLabel>Categoria</FormLabel><FormControl><Input {...field} placeholder="Preencha manualmente se não encontrado" /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="familia" render={({ field }) => (<FormItem><FormLabel>Família</FormLabel><FormControl><Input {...field} /></FormControl></FormItem>)} />
+                                <FormField control={form.control} name="grupoProduto" render={({ field }) => (<FormItem><FormLabel>Grupo Produto</FormLabel><FormControl><Input {...field} /></FormControl></FormItem>)} />
                                 <FormField control={form.control} name="observacoes" render={({ field }) => (<FormItem className="sm:col-span-2"><FormLabel>Observações</FormLabel><FormControl><Textarea placeholder="Detalhes sobre a carga, avarias, etc." {...field} /></FormControl></FormItem>)} />
                             </CardContent>
                             <CardFooter className="flex justify-end gap-2">
@@ -488,7 +570,7 @@ window.open(link, "_blank");
                                 <ResultCard title="Perda (CX)" value={resultados.perdaCx.toFixed(2)} unit="CX" />
                                 <ResultCard title="Peso Prg." value={resultados.pesoLiquidoProgramado.toFixed(3)} unit="KG" />
                                 <ResultCard title="Peso Real" value={resultados.pesoLiquidoReal.toFixed(3)} unit="KG" />
-                                <ResultCard title="Peso Análise" value={resultados.pesoLiquidoAnalise.toFixed(3)} unit="KG" />
+                                <ResultCard title="Peso Líquido Análise" value={resultados.pesoLiquidoAnalise.toFixed(3)} unit="KG" />
                                 <ResultCard title="Qtd. Análise" value={quantidadeTabela} unit="CX" />
                             </CardContent>
                         </Card>

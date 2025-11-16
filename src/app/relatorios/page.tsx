@@ -56,6 +56,12 @@ function mapRowToRegistroPeso(row: any): RegistroPeso {
         perdaKg: Number(row.perda_kg ?? 0),
         perdaCx: Number(row.perda_cx ?? 0),
         perdaPercentual: Number(row.perda_percentual ?? 0),
+        // Campos opcionais de produto
+        codigo: row.cod_produto ?? undefined,
+        produto: row.produto ?? row.descricao ?? undefined,
+        categoria: row.categoria ?? undefined,
+        familia: row.familia ?? undefined,
+        grupoProduto: row.grupo_produto ?? undefined,
     };
 }
 
@@ -65,6 +71,15 @@ export default function RelatoriosPage() {
     const [allData, setAllData] = useState<RegistroPeso[]>(initialData);
     // Mostrar todos os registros por padrão; filtro de datas é opcional
     const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+    const STORAGE_KEY = 'relatoriosColumnVisibility';
+    const defaultVisibility: VisibilityState = {
+        modeloTabela: false,
+        notaFiscal: false,
+        codigo: false,
+        produto: false,
+        familia: false,
+        grupoProduto: false,
+    };
 
     useEffect(() => {
         let mounted = true;
@@ -152,7 +167,13 @@ export default function RelatoriosPage() {
         { id: 'dataRegistro', desc: true },
     ])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() => {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) return JSON.parse(saved);
+        } catch {}
+        return defaultVisibility;
+    })
     const [rowSelection, setRowSelection] = useState({})
 
     const table = useReactTable({
@@ -166,7 +187,13 @@ export default function RelatoriosPage() {
         },
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
-        onColumnVisibilityChange: setColumnVisibility,
+        onColumnVisibilityChange: (updater) => {
+            setColumnVisibility((prev) => {
+                const next = typeof updater === 'function' ? (updater as any)(prev) : updater;
+                try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch {}
+                return next;
+            });
+        },
         onRowSelectionChange: setRowSelection,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),

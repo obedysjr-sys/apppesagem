@@ -21,6 +21,12 @@ const SUPABASE_HEADERS = [
   'perda_cx',
   'perda_percentual',
   'observacoes',
+  // Novos campos de produto — devem existir na planilha nesta ordem
+  'cod_produto',
+  'produto',
+  'categoria',
+  'familia',
+  'grupo_produto',
 ];
 
 /**

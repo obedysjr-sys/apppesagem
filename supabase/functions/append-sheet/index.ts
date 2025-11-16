@@ -11,7 +11,32 @@ const SUPABASE_HEADERS = [
   "quantidade_baixo_peso", "peso_bruto_analise", "tara_caixa",
   "peso_liquido_programado", "peso_liquido_analise", "peso_liquido_real",
   "perda_kg", "perda_cx", "perda_percentual", "observacoes",
+  // Novos campos de produto
+  "cod_produto", "produto", "categoria", "familia", "grupo_produto",
 ] as const;
+
+/**
+ * Converte um índice de coluna (1-based) para letra(s) A1 (A, B, ... Z, AA, AB, ...).
+ */
+function toColumnLetter(n: number): string {
+  let s = '';
+  while (n > 0) {
+    const r = (n - 1) % 26;
+    s = String.fromCharCode(65 + r) + s;
+    n = Math.floor((n - 1) / 26);
+  }
+  return s;
+}
+
+/**
+ * Normaliza o range informado para abranger todas as colunas definidas em SUPABASE_HEADERS.
+ * Ex.: "Registros!A:T" → "Registros!A:W" (se existirem 23 cabeçalhos).
+ */
+function normalizeRange(range: string, totalHeaders: number): string {
+  const [sheetName] = range.split('!');
+  const endCol = toColumnLetter(totalHeaders);
+  return `${sheetName}!A:${endCol}`;
+}
 
 type ApiBody = {
   spreadsheetId: string;
@@ -68,6 +93,32 @@ function base64UrlEncode(data: Uint8Array): string {
  */
 function utf8Encode(str: string): Uint8Array {
   return new TextEncoder().encode(str);
+}
+
+// --- Fallback Apps Script ---
+
+/**
+ * Tenta executar a mesma operação via Apps Script publicado como Web App.
+ * Útil quando a autenticação da Service Account falhar ou a API do Sheets recusar.
+ */
+async function appsScriptFallback(
+  appsScriptUrl: string | undefined,
+  payload: { spreadsheetId: string; range: string; action: "append" | "sync_headers"; record?: Record<string, unknown> }
+): Promise<{ ok: boolean; error?: string }> {
+  if (!appsScriptUrl) return { ok: false, error: 'APPS_SCRIPT_URL não configurado.' };
+  try {
+    const resp = await fetch(appsScriptUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const text = await resp.text();
+    if (!resp.ok) return { ok: false, error: `Apps Script HTTP ${resp.status}: ${text}` };
+    return { ok: true };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return { ok: false, error: `Falha no Apps Script: ${msg}` };
+  }
 }
 
 // --- Autenticação Google ---
@@ -177,7 +228,8 @@ async function ensureHeaders(spreadsheetId: string, range: string, token: string
  * Anexa uma nova linha de dados à planilha.
  */
 async function appendRow(spreadsheetId: string, range: string, record: Record<string, unknown>, token: string): Promise<{ ok: boolean; error?: string }> {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+  const normalized = normalizeRange(range, SUPABASE_HEADERS.length);
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(normalized)}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
   
   const rowData = SUPABASE_HEADERS.map(header => record[header] ?? '');
 
@@ -221,23 +273,50 @@ Deno.serve(async (req: Request) => {
 
     const serviceAccountEmail = Deno.env.get('GOOGLE_SERVICE_ACCOUNT_EMAIL');
     const privateKey = Deno.env.get('GOOGLE_PRIVATE_KEY');
+    const appsScriptUrl = Deno.env.get('APPS_SCRIPT_URL');
 
     if (!serviceAccountEmail || !privateKey) {
       throw new Error('Segredos do Google (EMAIL ou KEY) não configurados na Supabase.');
     }
 
-    const token = await getGoogleAuthToken(serviceAccountEmail, privateKey);
+    let token: string | null = null;
+    try {
+      token = await getGoogleAuthToken(serviceAccountEmail, privateKey);
+    } catch (authErr) {
+      console.warn('Falha ao obter token do Google, tentando fallback Apps Script...', authErr);
+      token = null;
+    }
 
     let result: { ok: boolean; error?: string; action: string } = { ok: false, action };
 
     if (action === 'sync_headers') {
-      const syncResult = await ensureHeaders(spreadsheetId, range, token);
-      result = { ...result, ok: syncResult.ok, error: syncResult.error };
+      if (token) {
+        const syncResult = await ensureHeaders(spreadsheetId, range, token);
+        if (!syncResult.ok) {
+          const fb = await appsScriptFallback(appsScriptUrl, { spreadsheetId, range: normalizeRange(range, SUPABASE_HEADERS.length), action: 'sync_headers' });
+          result = { ...result, ok: fb.ok, error: fb.error ?? syncResult.error };
+        } else {
+          result = { ...result, ok: true };
+        }
+      } else {
+        const fb = await appsScriptFallback(appsScriptUrl, { spreadsheetId, range: normalizeRange(range, SUPABASE_HEADERS.length), action: 'sync_headers' });
+        result = { ...result, ok: fb.ok, error: fb.error };
+      }
     } else if (action === 'append' && record) {
-      // Garante os cabeçalhos antes de inserir dados.
-      await ensureHeaders(spreadsheetId, range, token);
-      const appendResult = await appendRow(spreadsheetId, range, record, token);
-      result = { ...result, ok: appendResult.ok, error: appendResult.error };
+      if (token) {
+        // Tenta sincronizar cabeçalhos, mas não falha se der erro
+        try { await ensureHeaders(spreadsheetId, range, token); } catch {}
+        const appendResult = await appendRow(spreadsheetId, range, record, token);
+        if (!appendResult.ok) {
+          const fb = await appsScriptFallback(appsScriptUrl, { spreadsheetId, range: normalizeRange(range, SUPABASE_HEADERS.length), action: 'append', record });
+          result = { ...result, ok: fb.ok, error: fb.error ?? appendResult.error };
+        } else {
+          result = { ...result, ok: true };
+        }
+      } else {
+        const fb = await appsScriptFallback(appsScriptUrl, { spreadsheetId, range: normalizeRange(range, SUPABASE_HEADERS.length), action: 'append', record });
+        result = { ...result, ok: fb.ok, error: fb.error };
+      }
     } else {
       throw new Error('Ação inválida ou dados ausentes.');
     }

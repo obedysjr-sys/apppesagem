@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
+import { Input } from '@/components/ui/input';
 import { DateRange } from 'react-day-picker';
 import { addDays, format, startOfDay, subDays } from 'date-fns';
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell } from 'recharts';
@@ -61,6 +62,12 @@ export default function DashboardPage() {
         from: subDays(new Date(), 29),
         to: new Date(),
     });
+    const [filialQuery, setFilialQuery] = useState('');
+    const [fornecedorQuery, setFornecedorQuery] = useState('');
+    const [produtoQuery, setProdutoQuery] = useState('');
+    const [categoriaQuery, setCategoriaQuery] = useState('');
+    const [familiaQuery, setFamiliaQuery] = useState('');
+    const [grupoProdutoQuery, setGrupoProdutoQuery] = useState('');
 
     useEffect(() => {
         let mounted = true;
@@ -143,10 +150,23 @@ export default function DashboardPage() {
         const startDate = startOfDay(dateRange.from);
         const endDate = dateRange.to ? startOfDay(addDays(dateRange.to, 1)) : startOfDay(addDays(startDate, 1));
         
-        return records.filter(item => {
+        const inRange = records.filter(item => {
             const itemDate = startOfDay(item.dataRegistro);
             return itemDate >= startDate && itemDate < endDate;
         });
+        const matchText = (val: any, q: string) => {
+            if (!q) return true;
+            const s = String(val ?? '').toLowerCase();
+            return s.includes(q.toLowerCase());
+        };
+        return inRange.filter(item =>
+            matchText(item.filial, filialQuery) &&
+            matchText((item as any).fornecedor, fornecedorQuery) &&
+            matchText((item as any).produto, produtoQuery) &&
+            matchText((item as any).categoria, categoriaQuery) &&
+            matchText((item as any).familia, familiaQuery) &&
+            matchText((item as any).grupo_produto, grupoProdutoQuery)
+        );
     }, [dateRange, records]);
 
     const kpiData = useMemo(() => {
@@ -188,9 +208,26 @@ export default function DashboardPage() {
             return acc;
         }, {} as Record<string, { name: string, perda_kg: number, volume: number }>);
 
+        // Perda por Categoria (Top 10)
+        const lossByCategory = filteredData.reduce((acc, item: any) => {
+            const key = item.categoria || 'Sem categoria';
+            if (!acc[key]) acc[key] = { name: key, perda_kg: 0 };
+            acc[key].perda_kg += item.perdaKg || 0;
+            return acc;
+        }, {} as Record<string, { name: string, perda_kg: number }>);
+        const topCategories = Object.values(lossByCategory)
+            .sort((a,b) => b.perda_kg - a.perda_kg)
+            .slice(0, 10);
+
+        const topBranches = Object.values(lossByBranch)
+            .sort((a,b) => b.perda_kg - a.perda_kg)
+            .slice(0, 5);
+
         return {
             dailyLoss: Object.values(dailyLoss).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
             lossByBranch: Object.values(lossByBranch),
+            topCategories,
+            topBranches,
         }
     }, [filteredData]);
 
@@ -216,6 +253,28 @@ export default function DashboardPage() {
                         </TabsList>
                     </Tabs>
                     <DateRangePicker date={dateRange} onDateChange={setDateRange} />
+                </div>
+
+                {/* Filtros avançados */}
+                <div className="grid gap-2 md:grid-cols-3 lg:grid-cols-6">
+                    <div>
+                        <Input className="w-full" placeholder="Filial" value={filialQuery} onChange={e => setFilialQuery(e.target.value)} />
+                    </div>
+                    <div>
+                        <Input className="w-full" placeholder="Fornecedor" value={fornecedorQuery} onChange={e => setFornecedorQuery(e.target.value)} />
+                    </div>
+                    <div>
+                        <Input className="w-full" placeholder="Produto" value={produtoQuery} onChange={e => setProdutoQuery(e.target.value)} />
+                    </div>
+                    <div>
+                        <Input className="w-full" placeholder="Categoria" value={categoriaQuery} onChange={e => setCategoriaQuery(e.target.value)} />
+                    </div>
+                    <div>
+                        <Input className="w-full" placeholder="Família" value={familiaQuery} onChange={e => setFamiliaQuery(e.target.value)} />
+                    </div>
+                    <div>
+                        <Input className="w-full" placeholder="Grupo Produto" value={grupoProdutoQuery} onChange={e => setGrupoProdutoQuery(e.target.value)} />
+                    </div>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -262,6 +321,94 @@ export default function DashboardPage() {
                         </CardContent>
                     </Card>
                 </div>
+
+                {/* Novos gráficos: Top categorias e Top filiais por perda */}
+                <div className="grid gap-4 md:grid-cols-2">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Top 10 Perdas por Categoria (KG)</CardTitle>
+                        </CardHeader>
+                        <CardContent className="pl-2">
+                            <ResponsiveContainer width="100%" height={350}>
+                                <BarChart data={chartData.topCategories}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="name" />
+                                    <YAxis />
+                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} />
+                                    <Legend />
+                                    <Bar dataKey="perda_kg" name="Perda (KG)" fill="var(--color-secondary)" />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Top 5 Filiais por Perda (KG)</CardTitle>
+                        </CardHeader>
+                        <CardContent className="pl-2">
+                            <ResponsiveContainer width="100%" height={350}>
+                                <BarChart data={chartData.topBranches}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="name" />
+                                    <YAxis />
+                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} />
+                                    <Legend />
+                                    <Bar dataKey="perda_kg" name="Perda (KG)" fill="var(--color-primary)" />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Últimos 30 registros */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Últimos 30 Registros</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full text-sm">
+                                <thead>
+                                    <tr className="border-b">
+                                        <th className="text-left p-2">Data</th>
+                                        <th className="text-left p-2">Filial</th>
+                                        <th className="text-left p-2">Categoria</th>
+                                        <th className="text-right p-2">Qtd. Recebida</th>
+                                        <th className="text-right p-2">Qtd. Analisada</th>
+                                        <th className="text-right p-2">Peso Analisado (KG)</th>
+                                        <th className="text-right p-2">Peso Real (KG)</th>
+                                        <th className="text-right p-2">Perda (KG)</th>
+                                        <th className="text-right p-2">Perda (CX)</th>
+                                        <th className="text-left p-2">Fornecedor</th>
+                                        <th className="text-left p-2">NF</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredData.slice(0, 30).map((r, idx) => (
+                                        <tr key={idx} className="border-b">
+                                            <td className="p-2">{format(r.dataRegistro, 'dd/MM/yyyy')}</td>
+                                            <td className="p-2">{r.filial}</td>
+                                            <td className="p-2">{(r as any).categoria ?? ''}</td>
+                                            <td className="p-2 text-right">{r.quantidadeRecebida}</td>
+                                            <td className="p-2 text-right">{r.quantidadeTabela}</td>
+                                            <td className="p-2 text-right">{r.pesoLiquidoAnalise.toFixed(3)}</td>
+                                            <td className="p-2 text-right">{r.pesoLiquidoReal.toFixed(3)}</td>
+                                            <td className="p-2 text-right">{r.perdaKg.toFixed(3)}</td>
+                                            <td className="p-2 text-right">{r.perdaCx.toFixed(2)}</td>
+                                            <td className="p-2">{(r as any).fornecedor ?? ''}</td>
+                                            <td className="p-2">{(r as any).notaFiscal ?? ''}</td>
+                                        </tr>
+                                    ))}
+                                    {filteredData.length === 0 && (
+                                        <tr>
+                                            <td className="p-2" colSpan={11}>Nenhum registro encontrado para os filtros selecionados.</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </CardContent>
+                </Card>
 
                  <Card>
                     <CardHeader>

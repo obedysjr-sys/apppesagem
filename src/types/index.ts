@@ -11,6 +11,12 @@ export const calculosFormSchema = z.object({
   quantidadebaixopeso: z.coerce.number().min(0, 'Qtd. Baixo Peso não pode ser negativa.'),
   fornecedor: z.string().optional(),
   notaFiscal: z.string().optional(),
+  // Novos campos opcionais vinculados ao produto
+  codigo: z.string().optional(),
+  produto: z.string().optional(),
+  categoria: z.string().optional(),
+  familia: z.string().optional(),
+  grupoProduto: z.string().optional(),
   observacoes: z.string().optional(),
 });
 
@@ -47,4 +53,10 @@ export interface RegistroPeso {
     perdaKg: number;
     perdaCx: number;
     perdaPercentual: number;
+    // Metadados do produto (opcionais)
+    codigo?: string;
+    produto?: string;
+    categoria?: string;
+    familia?: string;
+    grupoProduto?: string;
 }

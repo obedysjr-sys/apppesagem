@@ -22,6 +22,10 @@ export const columns: ColumnDef<RegistroPeso>[] = [
     header: "Filial",
   },
   {
+    accessorKey: "categoria",
+    header: "Categoria",
+  },
+  {
     accessorKey: "modeloTabela",
     header: "Modelo",
   },
@@ -60,5 +64,22 @@ export const columns: ColumnDef<RegistroPeso>[] = [
   {
     accessorKey: "notaFiscal",
     header: "NF",
+  },
+  // Campos opcionais adicionais (para filtros futuros)
+  {
+    accessorKey: "codigo",
+    header: "Código",
+  },
+  {
+    accessorKey: "produto",
+    header: "Produto",
+  },
+  {
+    accessorKey: "familia",
+    header: "Família",
+  },
+  {
+    accessorKey: "grupoProduto",
+    header: "Grupo Produto",
   },
 ]

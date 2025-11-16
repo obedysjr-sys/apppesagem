@@ -35,10 +35,10 @@ export function DataTableToolbar<TData>({
             exportToXlsx(data, "Relatorio_CheckPeso");
             break;
         case 'pdf':
-            exportToPdf(data, "Periodo_Selecionado");
+            void exportToPdf(data, "Periodo_Selecionado");
             break;
         case 'html':
-            exportToHtml(data);
+            void exportToHtml(data);
             break;
         case 'whatsapp':
             shareViaWhatsApp(data);
@@ -50,6 +50,14 @@ export function DataTableToolbar<TData>({
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
+          placeholder="Filtrar por código..."
+          value={(table.getColumn("codigo")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("codigo")?.setFilterValue(event.target.value)
+          }
+          className="h-8 w-[120px] lg:w-[160px]"
+        />
+        <Input
           placeholder="Filtrar por filial..."
           value={(table.getColumn("filial")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
@@ -58,12 +66,44 @@ export function DataTableToolbar<TData>({
           className="h-8 w-[150px] lg:w-[200px]"
         />
         <Input
+          placeholder="Filtrar por produto..."
+          value={(table.getColumn("produto")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("produto")?.setFilterValue(event.target.value)
+          }
+          className="h-8 w-[150px] lg:w-[200px] hidden md:block"
+        />
+        <Input
+          placeholder="Filtrar por categoria..."
+          value={(table.getColumn("categoria")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("categoria")?.setFilterValue(event.target.value)
+          }
+          className="h-8 w-[150px] lg:w-[200px] hidden md:block"
+        />
+        <Input
           placeholder="Filtrar por fornecedor..."
           value={(table.getColumn("fornecedor")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("fornecedor")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[200px] hidden md:block"
+        />
+        <Input
+          placeholder="Filtrar por família..."
+          value={(table.getColumn("familia")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("familia")?.setFilterValue(event.target.value)
+          }
+          className="h-8 w-[150px] lg:w-[200px] hidden lg:block"
+        />
+        <Input
+          placeholder="Filtrar por grupo produto..."
+          value={(table.getColumn("grupoProduto")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("grupoProduto")?.setFilterValue(event.target.value)
+          }
+          className="h-8 w-[150px] lg:w-[200px] hidden lg:block"
         />
       </div>
       <div className="flex items-center space-x-2">
