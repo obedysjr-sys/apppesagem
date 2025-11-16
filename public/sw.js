@@ -1,4 +1,4 @@
-const CACHE_NAME = 'checkpeso-v1';
+const CACHE_NAME = 'checkpeso-v2';
 const OFFLINE_URL = '/';
 
 self.addEventListener('install', (event) => {
@@ -26,6 +26,7 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
 
+  // Sempre rede da rede para navegações (garante HTML atualizado)
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request).catch(() => caches.match(OFFLINE_URL))
@@ -33,6 +34,19 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Não cachear chamadas ao Supabase (rest/functions) para evitar dados obsoletos
+  try {
+    const url = new URL(request.url);
+    const host = url.hostname || '';
+    const isSupabaseHost = host.endsWith('supabase.co') || host.endsWith('supabase.com');
+    const isSupabasePath = url.pathname.includes('/rest/v1/') || url.pathname.includes('/functions/v1/');
+    if (isSupabaseHost || isSupabasePath) {
+      event.respondWith(fetch(request));
+      return;
+    }
+  } catch {}
+
+  // Estático: cache-first com fallback à rede e atualização do cache
   event.respondWith(
     caches.match(request).then((cached) =>
       cached || fetch(request).then((response) => {
