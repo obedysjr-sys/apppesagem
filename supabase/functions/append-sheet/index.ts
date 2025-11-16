@@ -27,17 +27,26 @@ type ApiBody = {
  * Responde dinamicamente ao Origin da requisição para segurança.
  */
 const getCorsHeaders = (origin: string | null) => {
-  // Lista de origens permitidas. Adicione outras se necessário.
-  const allowedOrigins = [
+  // Permitir localhost e domínios da Vercel (produção e previews)
+  const defaultOrigins = [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://checkpeso.vercel.app',
   ];
 
-  const isAllowed = origin && allowedOrigins.includes(origin);
+  const allowedEnv = (typeof Deno !== 'undefined' ? Deno.env.get('ALLOWED_ORIGINS') : undefined) || '';
+  const allowedFromEnv = allowedEnv.split(',').map(s => s.trim()).filter(Boolean);
+
+  const isVercel = origin ? /\.vercel\.app$/i.test(origin) : false;
+  const isAllowed = Boolean(
+    origin && (
+      defaultOrigins.includes(origin) ||
+      allowedFromEnv.includes(origin) ||
+      isVercel
+    )
+  );
 
   return {
-    'Access-Control-Allow-Origin': isAllowed ? origin : allowedOrigins[0],
+    'Access-Control-Allow-Origin': origin && isAllowed ? origin : (origin ?? defaultOrigins[0]),
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Vary': 'Origin',

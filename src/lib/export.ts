@@ -51,14 +51,20 @@ export const exportToPdf = (data: RegistroPeso[], title: string) => {
     // Totais
     const totalRegistros = data.length;
     const totalPerdaKg = data.reduce((sum, item) => sum + item.perdaKg, 0);
-    const totalPesoReal = data.reduce((sum, item) => sum + item.pesoLiquidoReal, 0);
-    const mediaPerdaPercentual = totalRegistros > 0 ? data.reduce((sum, item) => sum + item.perdaPercentual, 0) / totalRegistros : 0;
+    const totalPerdaCx = data.reduce((sum, item) => sum + item.perdaCx, 0);
+    const mediaPerdaPercentual = totalRegistros > 0
+      ? data.reduce((sum, item) => {
+          const base = Math.max(item.pesoLiquidoAnalise || 0, 1);
+          const perc = (item.perdaKg / base) * 100;
+          return sum + perc;
+        }, 0) / totalRegistros
+      : 0;
 
     // Header
-    if (logoBase64) {
-        // jspdf espera a string base64 pura, então removemos o prefixo do data URL
+    // Se a logo estiver em data URL base64, adiciona ao PDF; caso contrário, ignora.
+    if (typeof logoBase64 === 'string' && logoBase64.startsWith('data:image')) {
         const base64Data = logoBase64.substring(logoBase64.indexOf(',') + 1);
-        doc.addImage(base64Data, 'PNG', 14, 12, 20, 20);
+        try { doc.addImage(base64Data, 'PNG', 14, 12, 20, 20); } catch {}
     }
     doc.setFont("helvetica", "bold");
     doc.setFontSize(20);
@@ -85,8 +91,8 @@ export const exportToPdf = (data: RegistroPeso[], title: string) => {
         doc.setFont("helvetica", "normal");
     };
     kpiCard(14, 42, "Total de Registros", totalRegistros.toString());
-    kpiCard(60, 42, "Peso Real Total", `${totalPesoReal.toFixed(2)} KG`);
-    kpiCard(106, 42, "Perda Total", `${totalPerdaKg.toFixed(2)} KG`);
+    kpiCard(60, 42, "Perda Total (CX)", `${totalPerdaCx.toFixed(2)} CX`);
+    kpiCard(106, 42, "Perda Total (KG)", `${totalPerdaKg.toFixed(2)} KG`);
     kpiCard(152, 44, "Perda Média", `${mediaPerdaPercentual.toFixed(2)}%`);
 
     // Tabela
@@ -137,45 +143,164 @@ export const exportToPdf = (data: RegistroPeso[], title: string) => {
 
 // Função para gerar HTML
 export const exportToHtml = (data: RegistroPeso[]) => {
+    // Agregados
+    const totalRegistros = data.length;
+    const totalPerdaKg = data.reduce((sum, item) => sum + item.perdaKg, 0);
+    const totalPerdaCx = data.reduce((sum, item) => sum + item.perdaCx, 0);
+    const mediaPerdaPercentual = totalRegistros > 0 ? data.reduce((sum, item) => sum + item.perdaPercentual, 0) / totalRegistros : 0;
+
+    // Dados para gráficos
+    const dailyLoss = Object.values(
+        data.reduce((acc, item) => {
+            const date = format(item.dataRegistro, 'yyyy-MM-dd');
+            if (!acc[date]) acc[date] = { date, perdaKg: 0 };
+            acc[date].perdaKg += item.perdaKg;
+            return acc;
+        }, {} as Record<string, { date: string, perdaKg: number }>)
+    );
+    const lossByBranch = Object.values(
+        data.reduce((acc, item) => {
+            const key = normalizeText(item.filial);
+            if (!acc[key]) acc[key] = { name: key, perdaKg: 0 };
+            acc[key].perdaKg += item.perdaKg;
+            return acc;
+        }, {} as Record<string, { name: string, perdaKg: number }>)
+    );
+
+    // Resumos por período (7, 30, 365 dias)
+    const now = new Date();
+    const withinDays = (d: Date, n: number) => {
+        const ms = (now.getTime() - new Date(d).getTime()) / (1000 * 60 * 60 * 24);
+        return ms <= n;
+    };
+    const resumo7d = {
+        perdaKg: data.filter(i => withinDays(i.dataRegistro, 7)).reduce((s, i) => s + i.perdaKg, 0),
+        perdaCx: data.filter(i => withinDays(i.dataRegistro, 7)).reduce((s, i) => s + i.perdaCx, 0),
+    };
+    const resumo30d = {
+        perdaKg: data.filter(i => withinDays(i.dataRegistro, 30)).reduce((s, i) => s + i.perdaKg, 0),
+        perdaCx: data.filter(i => withinDays(i.dataRegistro, 30)).reduce((s, i) => s + i.perdaCx, 0),
+    };
+    const resumo365d = {
+        perdaKg: data.filter(i => withinDays(i.dataRegistro, 365)).reduce((s, i) => s + i.perdaKg, 0),
+        perdaCx: data.filter(i => withinDays(i.dataRegistro, 365)).reduce((s, i) => s + i.perdaCx, 0),
+    };
+
     const html = `
     <html>
       <head>
-        <title>Relatório de Pesagem - CHECKPESO</title>
+        <meta charset="utf-8" />
+        <title>Relatorio de Pesagem - CHECKPESO</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
-          body { font-family: sans-serif; margin: 2rem; background-color: #f9fafb; color: #111827; }
-          h1 { color: #15803d; }
-          table { width: 100%; border-collapse: collapse; }
-          th, td { border: 1px solid #d1d5db; padding: 8px; text-align: left; }
-          th { background-color: #dcfce7; }
-          tr:nth-child(even) { background-color: #f3f4f6; }
+          :root { --primary: #10b981; --muted: #111827; --bg: #0b0f12; --card: #111827; --border: #1f2937; --accent: #f59e0b; }
+          body { font-family: system-ui, -apple-system, Segoe UI, Roboto; margin: 0; background-color: var(--bg); color: #e5e7eb; }
+          .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+          header { display:flex; align-items:center; gap: 12px; margin-bottom: 16px; }
+          header img { width: 40px; height: 40px; }
+          header h1 { font-size: 24px; margin: 0; }
+          .sub { color:#94a3b8; }
+          .kpis { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin: 16px 0; }
+          .card { background-color: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+          .card h3 { margin:0; font-size:12px; color:#94a3b8; }
+          .card .value { margin-top:4px; font-size:18px; font-weight:700; }
+          .section { margin-top: 20px; }
+          .section h2 { font-size: 18px; margin-bottom: 8px; display:flex; align-items:center; gap:8px; }
+          .grid-2 { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+          .table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius: 10px; }
+          table { width:100%; border-collapse: collapse; min-width: 900px; }
+          thead th { background:#0f172a; color:#93c5fd; }
+          th, td { border-bottom: 1px solid var(--border); padding: 10px; text-align:left; }
+          tr:nth-child(even) { background-color: rgba(255,255,255,0.02); }
+          .footer { margin-top: 24px; font-size: 12px; color:#94a3b8; }
         </style>
       </head>
       <body>
-        <h1>Relatório de Pesagem - CHECKPESO</h1>
-        <p>Gerado em: ${format(new Date(), 'dd/MM/yyyy HH:mm')}</p>
-        <table>
-          <thead>
-            <tr>
-              <th>Data</th><th>Filial</th><th>Modelo</th><th>Qtd. Recebida</th><th>Peso Analisado (KG)</th><th>Peso Real (KG)</th><th>Perda (KG)</th><th>Perda (CX)</th><th>Fornecedor</th><th>NF</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${data.map(item => `
-              <tr>
-                <td>${format(item.dataRegistro, 'dd/MM/yyyy')}</td>
-                <td>${item.filial}</td>
-                <td>${item.modeloTabela}</td>
-                <td>${item.quantidadeRecebida}</td>
-                <td>${item.pesoLiquidoAnalise.toFixed(3)}</td>
-                <td>${item.pesoLiquidoReal.toFixed(3)}</td>
-                <td>${item.perdaKg.toFixed(3)}</td>
-                <td>${item.perdaCx.toFixed(2)}</td>
-                <td>${item.fornecedor}</td>
-                <td>${item.notaFiscal}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
+        <div class="container">
+          <header>
+            <img src="${logoBase64}" alt="logo" />
+            <div>
+              <h1>CHECKPESO - GDM</h1>
+              <div class="sub">Relatorio de Pesagem · Gerado em ${format(new Date(), 'dd/MM/yyyy HH:mm')}</div>
+            </div>
+          </header>
+
+          <div class="kpis">
+            <div class="card"><h3>📦 Total de Registros</h3><div class="value">${totalRegistros}</div></div>
+            <div class="card"><h3>📉 Perda Total (KG)</h3><div class="value" style="color:#ef4444">${totalPerdaKg.toFixed(2)} KG</div></div>
+            <div class="card"><h3>🧱 Perda Total (CX)</h3><div class="value" style="color:#f59e0b">${totalPerdaCx.toFixed(2)} CX</div></div>
+            <div class="card"><h3>📈 Perda Media</h3><div class="value">${mediaPerdaPercentual.toFixed(2)}%</div></div>
+          </div>
+
+          <div class="grid-2 section">
+            <div class="card">
+              <h2>📊 Evolucao da Perda (KG)</h2>
+              <canvas id="dailyLoss"></canvas>
+            </div>
+            <div class="card">
+              <h2>🏢 Perda por Filial (KG)</h2>
+              <canvas id="lossByBranch"></canvas>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>🗂️ Resumos Semana/Mes/Ano</h2>
+            <div class="grid-2">
+              <div class="card"><h3>Ultimos 7 dias</h3><div class="value">${resumo7d.perdaKg.toFixed(2)} KG · ${resumo7d.perdaCx.toFixed(2)} CX</div></div>
+              <div class="card"><h3>Ultimos 30 dias</h3><div class="value">${resumo30d.perdaKg.toFixed(2)} KG · ${resumo30d.perdaCx.toFixed(2)} CX</div></div>
+              <div class="card"><h3>Ultimos 365 dias</h3><div class="value">${resumo365d.perdaKg.toFixed(2)} KG · ${resumo365d.perdaCx.toFixed(2)} CX</div></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>📋 Tabela de Registros</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Data</th><th>Filial</th><th>Modelo</th><th>Qtd Recebida</th><th>Peso Analise (KG)</th><th>Peso Real (KG)</th><th>Perda (KG)</th><th>Perda (CX)</th><th>Fornecedor</th><th>NF</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${data.map(item => `
+                    <tr>
+                      <td>${format(item.dataRegistro, 'dd/MM/yyyy')}</td>
+                      <td>${normalizeText(item.filial)}</td>
+                      <td>${normalizeText(item.modeloTabela)}</td>
+                      <td>${item.quantidadeRecebida}</td>
+                      <td>${item.pesoLiquidoAnalise.toFixed(3)}</td>
+                      <td>${item.pesoLiquidoReal.toFixed(3)}</td>
+                      <td>${item.perdaKg.toFixed(3)}</td>
+                      <td>${item.perdaCx.toFixed(2)}</td>
+                      <td>${normalizeText(item.fornecedor)}</td>
+                      <td>${normalizeText(item.notaFiscal)}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="footer">Relatorio gerado pela aplicacao CHECKPESO · ${format(new Date(), 'dd/MM/yyyy HH:mm')}</div>
+        </div>
+        <script>
+          const dailyLabels = ${JSON.stringify(dailyLoss.map(d => d.date))};
+          const dailyValues = ${JSON.stringify(dailyLoss.map(d => Number(d.perdaKg.toFixed(2))))};
+          const branchLabels = ${JSON.stringify(lossByBranch.map(b => b.name))};
+          const branchValues = ${JSON.stringify(lossByBranch.map(b => Number(b.perdaKg.toFixed(2))))};
+
+          new Chart(document.getElementById('dailyLoss'), {
+            type: 'line',
+            data: { labels: dailyLabels, datasets: [{ label: 'Perda (KG)', data: dailyValues, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.2)' }] },
+            options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#9ca3af' } }, y: { ticks: { color: '#9ca3af' } } } }
+          });
+
+          new Chart(document.getElementById('lossByBranch'), {
+            type: 'bar',
+            data: { labels: branchLabels, datasets: [{ label: 'Perda (KG)', data: branchValues, backgroundColor: '#f59e0b' }] },
+            options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#9ca3af' } }, y: { ticks: { color: '#9ca3af' } } } }
+          });
+        </script>
       </body>
     </html>
     `;
