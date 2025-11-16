@@ -15,13 +15,16 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { exportToPdf, exportToXlsx, exportToHtml, shareViaWhatsApp } from "@/lib/export"
 import { RegistroPeso } from "@/types"
+import { cn } from "@/lib/utils"
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
+  className?: string
 }
 
 export function DataTableToolbar<TData>({
   table,
+  className,
 }: DataTableToolbarProps<TData>) {
 
   const handleExport = (format: 'pdf' | 'xlsx' | 'html' | 'whatsapp') => {
@@ -47,7 +50,7 @@ export function DataTableToolbar<TData>({
   }
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+    <div className={cn("flex flex-col md:flex-row md:items-center md:justify-between gap-3", className)}>
       <div className="flex flex-1 items-center flex-wrap gap-2">
         <Input
           placeholder="Filtrar por código..."
