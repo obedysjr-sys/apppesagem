@@ -108,9 +108,11 @@ Aplicativo web para registro, análise e gestão de pesagem de cargas com integr
 ├─ apps-script/
 │  └─ append-sheet.gs
 ├─ public/
-│  └─ modelosexemplos/
+│  ├─ logo.png
+│  ├─ manifest.webmanifest
+│  └─ sw.js
 ├─ scripts/
-│  ├─ test-register.mjs
+│  ├─ import-produtos-from-csv.mjs
 │  └─ sync-headers-and-append.mjs
 ├─ src/
 │  ├─ app/
@@ -126,7 +128,7 @@ Aplicativo web para registro, análise e gestão de pesagem de cargas com integr
 │  │  └─ tabelaS4.ts
 │  └─ types/index.ts
 ├─ supabase/
-│  └─ functions/append-sheet/index.ts
+│  └─ functions/append-sheet/
 ├─ package.json
 └─ README.md
 ```
