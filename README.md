@@ -1,4 +1,4 @@
-# [INSIRA O NOME DO SEU APLICATIVO]
+# [CHECKPESO - GDM]
 
 Aplicativo web para registro, análise e gestão de pesagem de cargas com integração a Supabase e Google Sheets. Este README foi preparado em tom profissional e didático para orientar desenvolvimento, operação e evolução do projeto.
 
