@@ -27,6 +27,13 @@ const SUPABASE_HEADERS = [
   'categoria',
   'familia',
   'grupo_produto',
+  // Novos cálculos (adicionados)
+  'peso_liquido_ideal_analise',
+  'peso_liquido_real_analise',
+  'media_baixo_peso_por_caixa',
+  'percentual_qtd_caixas_com_baixo_peso',
+  'media_qtd_caixas_com_baixo_peso',
+  'media_baixo_peso_por_cx',
 ];
 
 /**

@@ -11,8 +11,15 @@ const SUPABASE_HEADERS = [
   "quantidade_baixo_peso", "peso_bruto_analise", "tara_caixa",
   "peso_liquido_programado", "peso_liquido_analise", "peso_liquido_real",
   "perda_kg", "perda_cx", "perda_percentual", "observacoes",
-  // Novos campos de produto
+  // Campos de produto
   "cod_produto", "produto", "categoria", "familia", "grupo_produto",
+  // Novos cálculos
+  "peso_liquido_ideal_analise",
+  "peso_liquido_real_analise",
+  "media_baixo_peso_por_caixa",
+  "percentual_qtd_caixas_com_baixo_peso",
+  "media_qtd_caixas_com_baixo_peso",
+  "media_baixo_peso_por_cx",
 ] as const;
 
 /**

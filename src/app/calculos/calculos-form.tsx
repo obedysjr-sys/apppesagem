@@ -145,32 +145,39 @@ export function CalculosForm() {
         // Persistência no Supabase
         try {
             const { supabase, hasSupabaseEnv } = await import('../../lib/supabase');
-            const payload = {
-                data_registro: format(data.dataRegistro, 'yyyy-MM-dd'),
-                filial: data.filial,
-                fornecedor: data.fornecedor || null,
-                nota_fiscal: data.notaFiscal || null,
-                modelo_tabela: data.modeloTabela,
-                quantidade_recebida: data.quantidadeRecebida,
-                peso_liquido_por_caixa: data.pesoLiquidoPorCaixa,
-                quantidade_tabela: quantidadeTabela,
-                quantidade_baixo_peso: data.quantidadebaixopeso,
-                peso_bruto_analise: data.pesoBrutoAnalise,
-                tara_caixa: data.taraCaixa,
-                peso_liquido_programado: resultados.pesoLiquidoProgramado,
-                peso_liquido_analise: resultados.pesoLiquidoAnalise,
-                peso_liquido_real: resultados.pesoLiquidoReal,
-                perda_kg: resultados.perdaKg,
-                perda_cx: resultados.perdaCx,
-                perda_percentual: resultados.perdaPercentual,
-                observacoes: data.observacoes || null,
-                // Novos campos opcionais para filtros e relatórios
-                cod_produto: data.codigo || null,
-                produto: data.produto || null,
-                categoria: data.categoria || null,
-                familia: data.familia || null,
-                grupo_produto: data.grupoProduto || null,
-            };
+                const observacoesUpper = (data.observacoes || '').toUpperCase();
+                const payload = {
+                    data_registro: format(data.dataRegistro, 'yyyy-MM-dd'),
+                    filial: data.filial,
+                    fornecedor: data.fornecedor || null,
+                    nota_fiscal: data.notaFiscal || null,
+                    modelo_tabela: data.modeloTabela,
+                    quantidade_recebida: data.quantidadeRecebida,
+                    peso_liquido_por_caixa: data.pesoLiquidoPorCaixa,
+                    quantidade_tabela: quantidadeTabela,
+                    quantidade_baixo_peso: data.quantidadebaixopeso,
+                    peso_bruto_analise: data.pesoBrutoAnalise,
+                    tara_caixa: data.taraCaixa,
+                    peso_liquido_programado: resultados.pesoLiquidoProgramado,
+                    peso_liquido_analise: resultados.pesoLiquidoAnalise,
+                    peso_liquido_real: resultados.pesoLiquidoReal,
+                    perda_kg: resultados.perdaKg,
+                    perda_cx: resultados.perdaCx,
+                    perda_percentual: resultados.perdaPercentual,
+                    peso_liquido_ideal_analise: resultados.pesoLiquidoIdealAnalise,
+                    peso_liquido_real_analise: resultados.pesoLiquidoRealAnalise,
+                    media_baixo_peso_por_caixa: resultados.mediaPesoBaixoPorCaixa,
+                    percentual_qtd_caixas_com_baixo_peso: resultados.percentualqtdcaixascombaixopeso,
+                    media_qtd_caixas_com_baixo_peso: resultados.mediaqtdcaixascombaixopeso,
+                    media_baixo_peso_por_cx: resultados.mediabaixopesoporcaixa,
+                    observacoes: observacoesUpper || null,
+                    // Novos campos opcionais para filtros e relatórios
+                    cod_produto: data.codigo || null,
+                    produto: data.produto || null,
+                    categoria: data.categoria || null,
+                    familia: data.familia || null,
+                    grupo_produto: data.grupoProduto || null,
+                };
 
             if (!hasSupabaseEnv) {
                 toast.warning('Supabase não configurado.', { description: 'Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no .env.' });
@@ -218,8 +225,8 @@ export function CalculosForm() {
                         const resp = await fetch(config.sheets.appsScriptUrl, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(body),
-                        });
+                        body: JSON.stringify(body),
+                    });
                         const text = await resp.text();
                         console.debug('[AppsScript] Status', resp.status, 'Body', text);
                         if (resp.ok) sent = true;
@@ -282,7 +289,7 @@ export function CalculosForm() {
     message += `💲 *% PERDA DA CARGA:* ${resultados.perdaPercentual.toFixed(2) || 'SEM INFORMAÇÃO'} %\n`;
     message += "-----\n";
 
-    message += `💬 *OBSERVAÇÕES:* ${data.observacoes || 'SEM INFORMAÇÃO'}\n\n`;
+    message += `💬 *OBSERVAÇÕES:* ${(data.observacoes || '').toUpperCase() || 'SEM INFORMAÇÃO'}\n\n`;
 
     message += "📟🥝APP CHECKPESO - GDM🍎📟";
 
@@ -583,7 +590,23 @@ window.open(link, "_blank");
                                 <FormField control={form.control} name="categoria" render={({ field }) => (<FormItem><FormLabel>Categoria</FormLabel><FormControl><Input {...field} placeholder="Preencha manualmente se não encontrado" /></FormControl></FormItem>)} />
                                 <FormField control={form.control} name="familia" render={({ field }) => (<FormItem><FormLabel>Família</FormLabel><FormControl><Input {...field} /></FormControl></FormItem>)} />
                                 <FormField control={form.control} name="grupoProduto" render={({ field }) => (<FormItem><FormLabel>Grupo Produto</FormLabel><FormControl><Input {...field} /></FormControl></FormItem>)} />
-                                <FormField control={form.control} name="observacoes" render={({ field }) => (<FormItem className="sm:col-span-2"><FormLabel>Observações</FormLabel><FormControl><Textarea placeholder="Detalhes sobre a carga, avarias, etc." {...field} /></FormControl></FormItem>)} />
+                                <FormField
+                                  control={form.control}
+                                  name="observacoes"
+                                  render={({ field }) => (
+                                    <FormItem className="sm:col-span-2">
+                                      <FormLabel>Observações</FormLabel>
+                                      <FormControl>
+                                        <Textarea
+                                          className="uppercase"
+                                          placeholder="Detalhes sobre a carga, avarias, etc."
+                                          value={(field.value ?? '').toUpperCase()}
+                                          onChange={(e) => field.onChange(e.currentTarget.value.toUpperCase())}
+                                        />
+                                      </FormControl>
+                                    </FormItem>
+                                  )}
+                                />
                             </CardContent>
                             <CardFooter className="flex justify-end gap-2">
                                 <Button
@@ -609,13 +632,24 @@ window.open(link, "_blank");
                                 <CardDescription>Cálculos baseados nos dados inseridos.</CardDescription>
                             </CardHeader>
                             <CardContent className="grid grid-cols-2 gap-4">
-                                <ResultCard title="Perda (%)" value={resultados.perdaPercentual.toFixed(2)} unit="%" severity={getSeverity(resultados.perdaPercentual)} className="col-span-2"/>
-      <ResultCard title="Perda (KG)" value={resultados.perdaKg.toFixed(2)} unit="KG" />
-                                <ResultCard title="Perda (CX)" value={resultados.perdaCx.toFixed(2)} unit="CX" />
-      <ResultCard title="Peso Prg." value={resultados.pesoLiquidoProgramado.toFixed(2)} unit="KG" />
-      <ResultCard title="Peso Real" value={resultados.pesoLiquidoReal.toFixed(2)} unit="KG" />
-      <ResultCard title="Peso Líquido Análise" value={resultados.pesoLiquidoAnalise.toFixed(2)} unit="KG" />
-                                <ResultCard title="Qtd. Análise" value={quantidadeTabela} unit="CX" />
+                                <ResultCard title="% Total de Perda" value={resultados.perdaPercentual.toFixed(2)} unit="%" severity={getSeverity(resultados.perdaPercentual)} className="col-span-2"/>
+      <ResultCard title="Perda Total (KG)" value={resultados.perdaKg.toFixed(2)} unit="KG" />
+                                <ResultCard title="Perda Total (CX)" value={resultados.perdaCx.toFixed(2)} unit="CX" />
+      <ResultCard title="Peso Total Previsto" value={resultados.pesoLiquidoProgramado.toFixed(2)} unit="KG" />
+      <ResultCard title="Peso Total Confirmado" value={resultados.pesoLiquidoReal.toFixed(2)} unit="KG" />
+      <ResultCard title="Peso Líquido da Análise" value={resultados.pesoLiquidoAnalise.toFixed(2)} unit="KG" />
+                                <ResultCard title="Qtd. Cxs Analisadas" value={quantidadeTabela} unit="CX" />
+                                <ResultCard title="Peso Ideal (Análise)" value={resultados.pesoLiquidoIdealAnalise.toFixed(2)} unit="KG" />
+                                <ResultCard
+                                    title="Falta de Peso (Análise)"
+                                    value={resultados.pesoLiquidoRealAnalise.toFixed(2)}
+                                    unit="KG"
+                                    severity={resultados.pesoLiquidoRealAnalise >= 0 ? 'ok' : 'critical'}
+                                />
+                                <ResultCard title="Qtd. Cxs Baixo Peso Analisada" value={resultados.mediaPesoBaixoPorCaixa.toFixed(2)} unit="CX" />
+                                <ResultCard title="% de Cxs Carga com Baixo Peso" value={(resultados.percentualqtdcaixascombaixopeso * 100).toFixed(2)} unit="%" />
+                                <ResultCard title="Qtd. Cxs Baixo Peso na Carga" value={resultados.mediaqtdcaixascombaixopeso.toFixed(2)} unit="CX" />
+                                <ResultCard title="Média Baixo Peso por CX" value={resultados.mediabaixopesoporcaixa.toFixed(3)} unit="KG" />
                             </CardContent>
                         </Card>
                     </div>

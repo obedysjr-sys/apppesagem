@@ -37,22 +37,38 @@ export function calcularResultados(data: Partial<CalculosFormValues>): CalculosR
 
 
     // 1. Peso Líquido Programado (Total)
-    const pesoLiquidoProgramado = quantidadeRecebida * pesoLiquidoPorCaixa;
+    const pesoLiquidoProgramado = quantidadeRecebida * pesoLiquidoPorCaixa; // OK
 
     // 2. Tara Total
-    const taraTotal = quantidadebaixopeso * taraCaixa;
+    const taraTotal = quantidadebaixopeso * taraCaixa; // OK
 
-    // 3. Peso Líquido da Análise
-    const pesoLiquidoAnalise = pesoBrutoAnalise - taraTotal;
+    // 3. Peso Líquido Ideal da Análise
+    const pesoLiquidoIdealAnalise = quantidadebaixopeso * pesoLiquidoPorCaixa; // OK
 
-    // 4. Peso Líquido Total da Análise e Peso Real
-    const pesoLiquidoTotalAnalise = pesoLiquidoAnalise * quantidadeRecebida / 1000 ;
+    // 4. Peso Líquido da Análise (PESO LIQUIDO DAS CXS COM BAIXO PESO)
+    const pesoLiquidoAnalise = pesoBrutoAnalise - taraTotal; // OK
 
-    const pesoLiquidoReal = pesoLiquidoProgramado - pesoLiquidoTotalAnalise;
+    // 5. Diferença entre o Peso Líquido Real da Análise - o peso ideal da análise
+    const pesoLiquidoRealAnalise = pesoLiquidoAnalise - pesoLiquidoIdealAnalise; // OK --------
+
+    // 6. Média de baixo peso por caixa analisada
+    const mediaPesoBaixoPorCaixa = quantidadeRecebida > 0 ? quantidadebaixopeso : 0;
+
+    // 7. % baixo peso em caixas analisadas da amostra (% DE CXS COM BAIXO PESO/TOTAL SKU) (mostrar esse valor em %)
+    const percentualqtdcaixascombaixopeso = quantidadeTabela > 0 ? (quantidadebaixopeso / quantidadeTabela) : 0; // OK
+
+    // 8. Média de caixas com baixo peso da carga total (MEDIA TOTAL DE CXS C/BAIXO PESO)
+    const mediaqtdcaixascombaixopeso = percentualqtdcaixascombaixopeso * quantidadeRecebida; // OK
+
+    // 9. MEDIA DE BAIXO PESO P/CX
+    const mediabaixopesoporcaixa = quantidadeRecebida > 0 ? ((quantidadebaixopeso * pesoLiquidoPorCaixa) - pesoLiquidoAnalise) / quantidadebaixopeso : 0; // OK
+
+    // 10. PESO LIQUIDO TOTAL FINAL DA CARGA
+    const pesoLiquidoReal = pesoLiquidoProgramado - (mediabaixopesoporcaixa * mediaqtdcaixascombaixopeso); // OK
 
     // 5. Perda em KG
     // Especificação: Perda KG = Peso Programado - Peso Real
-    const perdaKg = pesoLiquidoProgramado - pesoLiquidoReal;
+    const perdaKg = mediabaixopesoporcaixa * mediaqtdcaixascombaixopeso;
 
     // 6. Perda em CX
     let perdaCx = 0;
@@ -79,5 +95,11 @@ export function calcularResultados(data: Partial<CalculosFormValues>): CalculosR
         perdaCx,
         perdaPercentual,
         quantidadeTabela,
+        pesoLiquidoIdealAnalise,
+        pesoLiquidoRealAnalise,
+        mediaPesoBaixoPorCaixa,
+        mediaqtdcaixascombaixopeso,
+        percentualqtdcaixascombaixopeso,
+        mediabaixopesoporcaixa,
     };
 }

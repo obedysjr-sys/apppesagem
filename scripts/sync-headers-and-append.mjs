@@ -69,12 +69,23 @@ async function main() {
   const pesoLiquidoPorCaixa = 1.5;
   const taraCaixa = 0.2;
   const pesoBrutoAnalise = 8.5;
+  const quantidadeTabela = 5; // amostra simplificada para teste
+  const quantidadeBaixoPeso = 2;
 
-const pesoProgramado = Number((quantidadeRecebida * pesoLiquidoPorCaixa).toFixed(2));
-const pesoAnalise = Number((pesoBrutoAnalise - quantidadeRecebida * taraCaixa).toFixed(2));
-const perdaKg = Number((pesoProgramado - pesoAnalise).toFixed(2));
-const perdaCx = Number((perdaKg / pesoLiquidoPorCaixa).toFixed(2));
+  const taraTotal = quantidadeBaixoPeso * taraCaixa;
+  const pesoProgramado = Number((quantidadeRecebida * pesoLiquidoPorCaixa).toFixed(2));
+  const pesoAnalise = Number((pesoBrutoAnalise - taraTotal).toFixed(2));
+  const perdaKg = Number((pesoProgramado - pesoAnalise).toFixed(2));
+  const perdaCx = Number((perdaKg / pesoLiquidoPorCaixa).toFixed(2));
   const perdaPercentual = Number(((perdaKg / (pesoProgramado || 1)) * 100).toFixed(2));
+
+  // Novos cálculos, seguindo src/lib/calculos.ts
+  const pesoLiquidoIdealAnalise = Number((quantidadeBaixoPeso * pesoLiquidoPorCaixa).toFixed(2));
+  const pesoLiquidoRealAnalise = Number((pesoAnalise - pesoLiquidoIdealAnalise).toFixed(2));
+  const mediaPesoBaixoPorCaixa = Number((quantidadeRecebida > 0 ? quantidadeBaixoPeso : 0).toFixed(2));
+  const percentualQtdCaixasComBaixoPeso = Number((quantidadeTabela > 0 ? (quantidadeBaixoPeso / quantidadeTabela) : 0).toFixed(4));
+  const mediaQtdCaixasComBaixoPeso = Number((percentualQtdCaixasComBaixoPeso * quantidadeRecebida).toFixed(2));
+  const mediaBaixoPesoPorCx = Number(((quantidadeRecebida > 0 ? (((quantidadeBaixoPeso * pesoLiquidoPorCaixa) - pesoAnalise) / quantidadeBaixoPeso) : 0)).toFixed(3));
 
   const record = {
     data_registro: fmtDMY(today), // Sheets usa dd/mm/yyyy
@@ -84,8 +95,8 @@ const perdaCx = Number((perdaKg / pesoLiquidoPorCaixa).toFixed(2));
     modelo_tabela: 'S4',
     quantidade_recebida: quantidadeRecebida,
     peso_liquido_por_caixa: pesoLiquidoPorCaixa,
-    quantidade_tabela: quantidadeRecebida,
-    quantidade_baixo_peso: 0,
+    quantidade_tabela: quantidadeTabela,
+    quantidade_baixo_peso: quantidadeBaixoPeso,
     peso_bruto_analise: pesoBrutoAnalise,
     tara_caixa: taraCaixa,
     peso_liquido_programado: pesoProgramado,
@@ -101,6 +112,13 @@ const perdaCx = Number((perdaKg / pesoLiquidoPorCaixa).toFixed(2));
     categoria: 'Papaya Extra',
     familia: 'Mamao Papaya',
     grupo_produto: 'Mamao',
+    // Novos cálculos
+    peso_liquido_ideal_analise: pesoLiquidoIdealAnalise,
+    peso_liquido_real_analise: pesoLiquidoRealAnalise,
+    media_baixo_peso_por_caixa: mediaPesoBaixoPorCaixa,
+    percentual_qtd_caixas_com_baixo_peso: percentualQtdCaixasComBaixoPeso,
+    media_qtd_caixas_com_baixo_peso: mediaQtdCaixasComBaixoPeso,
+    media_baixo_peso_por_cx: mediaBaixoPesoPorCx,
   };
 
   if (!supabaseUrl || !supabaseAnonKey) {

@@ -47,7 +47,14 @@ export const exportToXlsx = async (data: RegistroPeso[], fileName: string) => {
             'Data', 'Filial', 'Categoria', 'Modelo Tabela', 'Qtd. Recebida', 'Qtd. Tabela',
             'Peso Líq. por Caixa (KG)', 'Tara por Caixa (KG)', 'Tara Total (KG)', 'Qtd. Baixo Peso',
             'Peso Bruto Analise (KG)', 'Peso Analisado (KG)', 'Peso Real (KG)',
-            'Perda (KG)', 'Perda (CX)', 'Perda (%)', 'Fornecedor', 'NF', 'Código', 'Produto', 'Família', 'Grupo Produto'
+            'Perda (KG)', 'Perda (CX)', 'Perda (%)', 'Fornecedor', 'NF', 'Código', 'Produto', 'Família', 'Grupo Produto',
+            // Novas colunas
+            'Peso Ideal (Análise) (KG)',
+            'Falta de Peso (Análise) (KG)',
+            'Média Líq./CX Analisada (KG)',
+            '% Cxs Baixo Peso (Amostra)',
+            'Média Cxs Baixo Peso (Carga)',
+            'Média Baixo Peso por CX (KG)'
         ];
         ws.addRow(header);
         // Style header row (green background, bold)
@@ -58,7 +65,7 @@ export const exportToXlsx = async (data: RegistroPeso[], fileName: string) => {
         headerRow.height = 22;
         // Data rows
         data.forEach(item => {
-            const taraTotal = (item.quantidadeTabela ?? 0) * (item.taraCaixa ?? 0);
+            const taraTotal = (item.quantidadebaixopeso ?? 0) * (item.taraCaixa ?? 0);
             ws.addRow([
                 format(item.dataRegistro, 'dd/MM/yyyy'),
                 normalizeText(item.filial),
@@ -82,6 +89,12 @@ export const exportToXlsx = async (data: RegistroPeso[], fileName: string) => {
                 normalizeText(item.produto),
                 normalizeText(item.familia),
                 normalizeText(item.grupoProduto),
+                Number((item.pesoLiquidoIdealAnalise ?? 0).toFixed(2)),
+                Number((item.pesoLiquidoRealAnalise ?? 0).toFixed(2)),
+                Number((item.mediaPesoBaixoPorCaixa ?? 0).toFixed(2)),
+                Number((((item.percentualqtdcaixascombaixopeso ?? 0) * 100)).toFixed(2)),
+                Number((item.mediaqtdcaixascombaixopeso ?? 0).toFixed(2)),
+                Number((item.mediabaixopesoporcaixa ?? 0).toFixed(3)),
             ]);
         });
         // Auto filter and sizing
@@ -105,7 +118,7 @@ export const exportToXlsx = async (data: RegistroPeso[], fileName: string) => {
     }
     // Fallback: basic export without styles
     const worksheet = XLSX.utils.json_to_sheet(data.map(item => {
-        const taraTotal = (item.quantidadeTabela ?? 0) * (item.taraCaixa ?? 0);
+        const taraTotal = (item.quantidadebaixopeso ?? 0) * (item.taraCaixa ?? 0);
         return {
             'Data': format(item.dataRegistro, 'dd/MM/yyyy'),
             'Filial': normalizeText(item.filial),
@@ -130,6 +143,12 @@ export const exportToXlsx = async (data: RegistroPeso[], fileName: string) => {
             'Produto': normalizeText(item.produto),
             'Família': normalizeText(item.familia),
             'Grupo Produto': normalizeText(item.grupoProduto),
+            'Peso Ideal (Análise) (KG)': (item.pesoLiquidoIdealAnalise ?? 0).toFixed(2),
+            'Falta de Peso (Análise) (KG)': (item.pesoLiquidoRealAnalise ?? 0).toFixed(2),
+            'Média Líq./CX Analisada (KG)': (item.mediaPesoBaixoPorCaixa ?? 0).toFixed(2),
+            '% Cxs Baixo Peso (Amostra)': (((item.percentualqtdcaixascombaixopeso ?? 0) * 100)).toFixed(2),
+            'Média Cxs Baixo Peso (Carga)': (item.mediaqtdcaixascombaixopeso ?? 0).toFixed(2),
+            'Média Baixo Peso por CX (KG)': (item.mediabaixopesoporcaixa ?? 0).toFixed(3),
         };
     }));
     const workbook = XLSX.utils.book_new();

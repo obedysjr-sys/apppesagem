@@ -44,6 +44,36 @@ export const columns: ColumnDef<RegistroPeso>[] = [
     cell: ({ row }) => <div>{row.original.pesoLiquidoReal.toFixed(2)}</div>
   },
   {
+    accessorKey: "pesoLiquidoIdealAnalise",
+    header: "Peso Ideal Análise (KG)",
+    cell: ({ row }) => <div>{(row.original.pesoLiquidoIdealAnalise ?? 0).toFixed(2)}</div>
+  },
+  {
+    accessorKey: "pesoLiquidoRealAnalise",
+    header: "Peso Real Análise (KG)",
+    cell: ({ row }) => <div>{(row.original.pesoLiquidoRealAnalise ?? 0).toFixed(2)}</div>
+  },
+  {
+    accessorKey: "mediaPesoBaixoPorCaixa",
+    header: "Média Líq./CX (Análise)",
+    cell: ({ row }) => <div>{(row.original.mediaPesoBaixoPorCaixa ?? 0).toFixed(2)}</div>
+  },
+  {
+    accessorKey: "percentualqtdcaixascombaixopeso",
+    header: "% Cxs Baixo Peso (Amostra)",
+    cell: ({ row }) => <div>{(row.original.percentualqtdcaixascombaixopeso ?? 0).toFixed(2)}</div>
+  },
+  {
+    accessorKey: "mediaqtdcaixascombaixopeso",
+    header: "Média Cxs Baixo Peso (Carga)",
+    cell: ({ row }) => <div>{(row.original.mediaqtdcaixascombaixopeso ?? 0).toFixed(2)}</div>
+  },
+  {
+    accessorKey: "mediabaixopesoporcaixa",
+    header: "Média Baixo Peso/CX",
+    cell: ({ row }) => <div>{(row.original.mediabaixopesoporcaixa ?? 0).toFixed(2)}</div>
+  },
+  {
     accessorKey: "perdaKg",
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>

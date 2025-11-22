@@ -49,6 +49,12 @@ function mapRowToRegistroPeso(row: any): RegistroPeso {
         perdaKg: Number(row.perda_kg ?? 0),
         perdaCx: Number(row.perda_cx ?? 0),
         perdaPercentual: Number(row.perda_percentual ?? 0),
+        pesoLiquidoIdealAnalise: Number(row.peso_liquido_ideal_analise ?? 0),
+        pesoLiquidoRealAnalise: Number(row.peso_liquido_real_analise ?? 0),
+        mediaPesoBaixoPorCaixa: Number(row.media_baixo_peso_por_caixa ?? 0),
+        percentualqtdcaixascombaixopeso: Number(row.percentual_qtd_caixas_com_baixo_peso ?? 0),
+        mediaqtdcaixascombaixopeso: Number(row.media_qtd_caixas_com_baixo_peso ?? 0),
+        mediabaixopesoporcaixa: Number(row.media_baixo_peso_por_cx ?? 0),
     };
 }
 

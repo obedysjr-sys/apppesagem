@@ -14,6 +14,11 @@ const severityClasses = {
     attention: "border-yellow-500/50 bg-yellow-500/10",
     critical: "border-red-500/50 bg-red-500/10",
 };
+const severityTextClasses = {
+    ok: "text-green-600",
+    attention: "text-yellow-600",
+    critical: "text-red-600",
+};
 
 export function ResultCard({ title, value, unit, className, severity = null }: ResultCardProps) {
   return (
@@ -23,7 +28,7 @@ export function ResultCard({ title, value, unit, className, severity = null }: R
       </CardHeader>
       <CardContent className="pb-4">
         <div className="flex items-baseline justify-center gap-1 leading-tight tracking-tight">
-          <span className="text-lg sm:text-xl md:text-2xl font-bold">
+          <span className={cn("text-lg sm:text-xl md:text-2xl font-bold", severity && severityTextClasses[severity])}>
             {value}
           </span>
           {unit && (

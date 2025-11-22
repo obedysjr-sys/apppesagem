@@ -30,6 +30,12 @@ export interface CalculosResultados {
     perdaCx: number;
     perdaPercentual: number;
     quantidadeTabela: number;
+    pesoLiquidoIdealAnalise: number;
+    pesoLiquidoRealAnalise: number;
+    mediaPesoBaixoPorCaixa: number;
+    mediaqtdcaixascombaixopeso: number;
+    percentualqtdcaixascombaixopeso: number;
+    mediabaixopesoporcaixa: number;
 }
 
 // Tipo de Registro de Peso (desacoplado de dados simulados)
@@ -53,6 +59,12 @@ export interface RegistroPeso {
     perdaKg: number;
     perdaCx: number;
     perdaPercentual: number;
+    pesoLiquidoIdealAnalise?: number;
+    pesoLiquidoRealAnalise?: number;
+    mediaPesoBaixoPorCaixa?: number;
+    mediaqtdcaixascombaixopeso?: number;
+    percentualqtdcaixascombaixopeso?: number;
+    mediabaixopesoporcaixa?: number;
     // Metadados do produto (opcionais)
     codigo?: string;
     produto?: string;
