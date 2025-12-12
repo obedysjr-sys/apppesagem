@@ -22,17 +22,19 @@ const severityTextClasses = {
 
 export function ResultCard({ title, value, unit, className, severity = null }: ResultCardProps) {
   return (
-    <Card className={cn("text-center transition-colors", className, severity && severityClasses[severity])}>
-      <CardHeader className="pb-2 pt-4">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+    <Card className={cn("min-w-0 text-center transition-colors", className, severity && severityClasses[severity])}>
+      <CardHeader className="py-2 sm:py-3">
+        <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground whitespace-normal break-words">
+          {title}
+        </CardTitle>
       </CardHeader>
-      <CardContent className="pb-4">
-        <div className="flex items-baseline justify-center gap-1 leading-tight tracking-tight">
-          <span className={cn("text-lg sm:text-xl md:text-2xl font-bold", severity && severityTextClasses[severity])}>
+      <CardContent className="pb-3 sm:pb-4">
+        <div className="flex items-baseline justify-center gap-1 leading-snug tracking-tight">
+          <span className={cn("text-base sm:text-lg md:text-xl font-bold", severity && severityTextClasses[severity])}>
             {value}
           </span>
           {unit && (
-            <span className="text-xs sm:text-sm md:text-base font-normal text-muted-foreground">
+            <span className="text-[11px] sm:text-xs md:text-sm font-normal text-muted-foreground">
               {unit}
             </span>
           )}

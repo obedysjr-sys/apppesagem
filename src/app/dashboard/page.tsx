@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { DateRange } from 'react-day-picker';
 import { addDays, format, startOfDay, subDays } from 'date-fns';
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell, LabelList } from 'recharts';
@@ -74,6 +75,17 @@ export default function DashboardPage() {
     const [categoriaQuery, setCategoriaQuery] = useState('');
     const [familiaQuery, setFamiliaQuery] = useState('');
     const [grupoProdutoQuery, setGrupoProdutoQuery] = useState('');
+
+    const clearFilters = () => {
+        setFilialQuery('');
+        setFornecedorQuery('');
+        setProdutoQuery('');
+        setCategoriaQuery('');
+        setFamiliaQuery('');
+        setGrupoProdutoQuery('');
+        const now = new Date();
+        setDateRange({ from: subDays(now, 29), to: now });
+    };
 
     useEffect(() => {
         let mounted = true;
@@ -173,7 +185,7 @@ export default function DashboardPage() {
             matchText((item as any).familia, familiaQuery) &&
             matchText((item as any).grupo_produto, grupoProdutoQuery)
         );
-    }, [dateRange, records]);
+    }, [dateRange, records, filialQuery, fornecedorQuery, produtoQuery, categoriaQuery, familiaQuery, grupoProdutoQuery]);
 
     const kpiData = useMemo(() => {
         const totalRegistros = filteredData.length;
@@ -294,6 +306,10 @@ return (
 
                 <Input className="w-full min-w-0" placeholder="Grupo Produto" value={grupoProdutoQuery}
                     onChange={e => setGrupoProdutoQuery(e.target.value)} />
+            </div>
+
+            <div className="flex items-center justify-end">
+                <Button variant="outline" onClick={clearFilters}>Limpar Filtros</Button>
             </div>
 
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

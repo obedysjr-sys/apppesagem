@@ -30,38 +30,39 @@ function toNumber(value: unknown): number {
 export function calcularResultados(data: Partial<CalculosFormValues>): CalculosResultados {
     const quantidadeRecebida = toNumber(data.quantidadeRecebida ?? 0);
     const pesoLiquidoPorCaixa = toNumber(data.pesoLiquidoPorCaixa ?? 0);
-    const pesoBrutoAnalise = toNumber(data.pesoBrutoAnalise ?? 0);
+    const pesoBrutoAnaliseCalculado = toNumber(data.pesoBrutoAnalise ?? 0);
     const taraCaixa = toNumber(data.taraCaixa ?? 0);
-    const quantidadeTabela = getQuantidadeDaTabela(quantidadeRecebida);
-    const quantidadebaixopeso = toNumber(data.quantidadebaixopeso ?? 0);
+    const quantidadeTabelaOverride = toNumber((data as any).quantidadeTabelaOverride ?? 0);
+    const quantidadeTabela = quantidadeTabelaOverride > 0 ? quantidadeTabelaOverride : getQuantidadeDaTabela(quantidadeRecebida);
+    const quantidadeBaixoPesoCalculada = toNumber(data.quantidadebaixopeso ?? 0);
 
 
     // 1. Peso Líquido Programado (Total)
     const pesoLiquidoProgramado = quantidadeRecebida * pesoLiquidoPorCaixa; // OK
 
     // 2. Tara Total
-    const taraTotal = quantidadebaixopeso * taraCaixa; // OK
+    const taraTotal = quantidadeBaixoPesoCalculada * taraCaixa; // OK
 
     // 3. Peso Líquido Ideal da Análise
-    const pesoLiquidoIdealAnalise = quantidadebaixopeso * pesoLiquidoPorCaixa; // OK
+    const pesoLiquidoIdealAnalise = quantidadeBaixoPesoCalculada * pesoLiquidoPorCaixa; // OK
 
     // 4. Peso Líquido da Análise (PESO LIQUIDO DAS CXS COM BAIXO PESO)
-    const pesoLiquidoAnalise = pesoBrutoAnalise - taraTotal; // OK
+    const pesoLiquidoAnalise = pesoBrutoAnaliseCalculado - taraTotal; // OK
 
     // 5. Diferença entre o Peso Líquido Real da Análise - o peso ideal da análise
     const pesoLiquidoRealAnalise = pesoLiquidoAnalise - pesoLiquidoIdealAnalise; // OK --------
 
     // 6. Média de baixo peso por caixa analisada
-    const mediaPesoBaixoPorCaixa = quantidadeRecebida > 0 ? quantidadebaixopeso : 0;
+    const mediaPesoBaixoPorCaixa = quantidadeRecebida > 0 ? quantidadeBaixoPesoCalculada : 0;
 
     // 7. % baixo peso em caixas analisadas da amostra (% DE CXS COM BAIXO PESO/TOTAL SKU) (mostrar esse valor em %)
-    const percentualqtdcaixascombaixopeso = quantidadeTabela > 0 ? (quantidadebaixopeso / quantidadeTabela) : 0; // OK
+    const percentualqtdcaixascombaixopeso = quantidadeTabela > 0 ? (quantidadeBaixoPesoCalculada / quantidadeTabela) : 0; // OK
 
     // 8. Média de caixas com baixo peso da carga total (MEDIA TOTAL DE CXS C/BAIXO PESO)
     const mediaqtdcaixascombaixopeso = percentualqtdcaixascombaixopeso * quantidadeRecebida; // OK
 
     // 9. MEDIA DE BAIXO PESO P/CX
-    const mediabaixopesoporcaixa = quantidadeRecebida > 0 ? ((quantidadebaixopeso * pesoLiquidoPorCaixa) - pesoLiquidoAnalise) / quantidadebaixopeso : 0; // OK
+    const mediabaixopesoporcaixa = quantidadeRecebida > 0 ? ((quantidadeBaixoPesoCalculada * pesoLiquidoPorCaixa) - pesoLiquidoAnalise) / quantidadeBaixoPesoCalculada : 0; // OK
 
     // 10. PESO LIQUIDO TOTAL FINAL DA CARGA
     const pesoLiquidoReal = pesoLiquidoProgramado - (mediabaixopesoporcaixa * mediaqtdcaixascombaixopeso); // OK

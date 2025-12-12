@@ -1,7 +1,7 @@
 "use client"
 
 import { Table } from "@tanstack/react-table"
-import { ListFilter, FileText, FileDown, Code, MessageSquare } from "lucide-react"
+import { ListFilter, FileText, FileDown, Code, MessageSquare, Eraser } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -110,6 +110,9 @@ export function DataTableToolbar<TData>({
         />
       </div>
       <div className="flex items-center space-x-2">
+        <Button variant="outline" size="sm" className="h-8 gap-1" onClick={() => table.resetColumnFilters()}>
+            <Eraser /> <span className="hidden sm:inline">Limpar Filtros</span>
+        </Button>
         <Button variant="outline" size="sm" className="h-8 gap-1" onClick={() => handleExport('pdf')}>
             <FileText /> <span className="hidden sm:inline">PDF</span>
         </Button>

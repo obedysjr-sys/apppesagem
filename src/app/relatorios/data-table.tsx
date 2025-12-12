@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from 'react'
 import {
   flexRender,
   Table as TanstackTable,
@@ -13,6 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { PesagemModal } from "./pesagem-modal"
 
 interface DataTableProps<TData> {
   table: TanstackTable<TData>
@@ -21,6 +24,9 @@ interface DataTableProps<TData> {
 export function DataTable<TData>({
   table,
 }: DataTableProps<TData>) {
+
+  const [open, setOpen] = React.useState(false)
+  const [recordId, setRecordId] = React.useState<string | number | null>(null)
 
   return (
     <div className="rounded-md border overflow-x-auto w-full">
@@ -46,10 +52,7 @@ export function DataTable<TData>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
+              <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {flexRender(
@@ -58,6 +61,18 @@ export function DataTable<TData>({
                     )}
                   </TableCell>
                 ))}
+                <TableCell>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      const original = row.original as { id?: string | number }
+                      setRecordId(original?.id ?? null)
+                      setOpen(true)
+                    }}
+                  >
+                    Ver Pesagem
+                  </Button>
+                </TableCell>
               </TableRow>
             ))
           ) : (
@@ -72,6 +87,11 @@ export function DataTable<TData>({
           )}
         </TableBody>
       </Table>
+      <PesagemModal
+        open={open}
+        onOpenChange={setOpen}
+        recordId={recordId ?? ''}
+      />
     </div>
   )
 }

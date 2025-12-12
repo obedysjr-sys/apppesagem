@@ -14,6 +14,7 @@ import {
 } from '@tanstack/react-table';
 
 import { PageContent } from "@/components/layout/page-content";
+import { Button } from "@/components/ui/button";
 import { RegistroPeso } from "@/types";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
@@ -213,6 +214,12 @@ export default function RelatoriosPage() {
         getSortedRowModel: getSortedRowModel(),
       })
 
+    const clearAll = () => {
+        try { table.resetColumnFilters(); } catch {}
+        const now = new Date();
+        setDateRange({ from: subDays(now, 29), to: now });
+    };
+
 return (
     <PageContent 
         title="Relatórios" 
@@ -235,11 +242,16 @@ return (
                     onDateChange={setDateRange}
                     className="w-full sm:w-auto max-w-full"
                 />
+                <div className="w-full sm:w-auto">
+                    <Button variant="outline" onClick={clearAll}>Limpar Filtros</Button>
+                </div>
             </div>
 
             {/* Tabela */}
             <div className="w-full max-w-full overflow-x-auto">
-                <DataTable table={table} />
+                <DataTable 
+                    table={table}
+                />
             </div>
 
             <DataTablePagination table={table} />

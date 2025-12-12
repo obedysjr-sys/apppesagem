@@ -6,3 +6,12 @@ dist/
 *.log
 # Secrets
 checkpeso-*.json
+client_secret_*.json
+info.md
+*.pem
+*.p8
+*.p12
+*.key
+
+# TypeScript build info
+*.tsbuildinfo
