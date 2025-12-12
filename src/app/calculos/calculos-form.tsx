@@ -360,10 +360,7 @@ export function CalculosForm() {
     message += `🏢 *FILIAL:* ${data.filial || 'SEM INFORMAÇÃO'}\n`;
     message += `🪪 *FORNECEDOR:* ${data.fornecedor || 'SEM INFORMAÇÃO'}\n`;
     message += `📄 *NOTA FISCAL:* ${data.notaFiscal || 'SEM INFORMAÇÃO'}\n`;
-    message += `🔎 *CÓDIGO:* ${data.codigo || 'SEM INFORMAÇÃO'}\n`;
-    message += `📦 *PRODUTO:* ${data.produto || 'SEM INFORMAÇÃO'}\n`;
-    message += `🍇 *CATEGORIA:* ${data.categoria || 'SEM INFORMAÇÃO'}\n`;
-    message += `🧬 *FAMÍLIA:* ${data.familia || 'SEM INFORMAÇÃO'}\n`;
+    message += ` *PRODUTO:* ${data.produto || 'SEM INFORMAÇÃO'}\n`;
     message += "-----\n";
 
     message += `*-- DADOS DA PESAGEM --*\n`;
@@ -371,7 +368,6 @@ export function CalculosForm() {
     message += `🔄️ *PESO LÍQUIDO TOTAL PROGRAMADO:* ${resultados.pesoLiquidoProgramado?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
     message += `🔄️ *PESO LÍQUIDO POR CX:* ${data.pesoLiquidoPorCaixa?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
     message += `🔄️ *TARA DA CAIXA:* ${data.taraCaixa?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
-    message += `📋 *MODELO DA TABELA:* ${data.modeloTabela || 'SEM INFORMAÇÃO'}\n`;
     message += `🔄️ *QTD. ANALISADA:* ${quantidadeTabelaFinal || 'SEM INFORMAÇÃO'}\n`;
     message += `🔄️ *QTD. BAIXO PESO:* ${data.quantidadebaixopeso || 'SEM INFORMAÇÃO'}\n`;
     message += `🔄️ *PESO BRUTO DA ANÁLISE:* ${data.pesoBrutoAnalise?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
@@ -381,11 +377,14 @@ export function CalculosForm() {
     const allItemsForMessage = [...cycles.flat(), ...currentItems].filter(it => Number(it.value || 0) > 0);
     message += `*-- RESUMO DA PESAGEM --*\n`;
     if (allItemsForMessage.length > 0) {
+        const threshold = (Number(data.pesoLiquidoPorCaixa) || 0) + (Number(data.taraCaixa) || 0);
         for (const it of allItemsForMessage) {
             const kg = Number(it.value || 0);
             const kgStr = Number.isFinite(kg) ? kg.toFixed(2) : '0.00';
             if (it.baixoPeso) {
-                message += `⚖️ ${kgStr} KG = BAIXO PESO 🚩\n`;
+                const diff = Math.max(0, threshold - kg);
+                const diffStr = diff.toFixed(3).replace('.', ',');
+                message += `⚖️ ${kgStr} KG = BAIXO PESO 🚩- ${diffStr} KG\n`;
             } else {
                 message += `⚖️ ${kgStr} KG ✅\n`;
             }
@@ -396,6 +395,8 @@ export function CalculosForm() {
     message += "-----\n";
 
     message += `*-- RESULTADOS --*\n`;
+    const percentualAnaliseBaixoPeso = quantidadeTabelaFinal > 0 ? (((Number(data.quantidadebaixopeso) || 0) / quantidadeTabelaFinal) * 100) : 0;
+    message += `📈 *% DA ANÁLISE DE BAIXO PESO:* ${percentualAnaliseBaixoPeso.toFixed(2)} %\n`;
     message += `📟 *PESO LÍQUIDO REAL DA CARGA:* ${resultados.pesoLiquidoReal?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
     message += `🔴 *PERDA EM KG:* ${resultados.perdaKg?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
     message += `🔴 *PERDA EM CX:* ${resultados.perdaCx?.toFixed(2) || 'SEM INFORMAÇÃO'} CX\n`;
