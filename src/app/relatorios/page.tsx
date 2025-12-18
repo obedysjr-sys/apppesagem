@@ -23,6 +23,7 @@ import { DataTable } from "./data-table";
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { DataTableToolbar } from './data-table-toolbar';
 import { DataTablePagination } from './data-table-pagination';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { SupabaseRegistroPesoRow } from '@/types/supabase-row';
 
@@ -82,7 +83,10 @@ const initialData: RegistroPeso[] = [];
 export default function RelatoriosPage() {
     const [allData, setAllData] = useState<RegistroPeso[]>(initialData);
     // Mostrar todos os registros por padrão; filtro de datas é opcional
-    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+    const [dateRange, setDateRange] = useState<DateRange | undefined>({
+        from: subDays(new Date(), 29),
+        to: new Date(),
+    });
     const STORAGE_KEY = 'relatoriosColumnVisibility';
     const defaultVisibility: VisibilityState = {
         modeloTabela: false,
@@ -171,6 +175,12 @@ export default function RelatoriosPage() {
         };
     }, []);
 
+    const [sorting, setSorting] = useState<SortingState>([
+        { id: 'dataRegistro', desc: true },
+    ])
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+    const [globalFilter, setGlobalFilter] = useState('')
+
     const filteredDataByDate = useMemo(() => {
         if (!dateRange?.from) return allData;
         const startDate = startOfDay(dateRange.from);
@@ -181,10 +191,24 @@ export default function RelatoriosPage() {
         });
     }, [dateRange, allData]);
 
-    const [sorting, setSorting] = useState<SortingState>([
-        { id: 'dataRegistro', desc: true },
-    ])
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+    // Aplicar filtro global aos dados antes de passar para a tabela
+    const filteredDataWithGlobal = useMemo(() => {
+        if (!globalFilter) return filteredDataByDate;
+        const searchLower = globalFilter.toLowerCase();
+        return filteredDataByDate.filter(item => {
+            const searchableFields = [
+                item.filial,
+                item.fornecedor,
+                item.produto,
+                item.categoria,
+                item.notaFiscal,
+                item.codigo,
+                item.familia,
+                item.grupoProduto,
+            ].filter(Boolean).map(f => String(f).toLowerCase());
+            return searchableFields.some(field => field.includes(searchLower));
+        });
+    }, [filteredDataByDate, globalFilter]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() => {
         try {
             const saved = localStorage.getItem(STORAGE_KEY);
@@ -195,7 +219,7 @@ export default function RelatoriosPage() {
     const [rowSelection, setRowSelection] = useState({})
 
     const table = useReactTable({
-        data: filteredDataByDate,
+        data: filteredDataWithGlobal,
         columns,
         state: {
           sorting,
@@ -219,8 +243,43 @@ export default function RelatoriosPage() {
         getSortedRowModel: getSortedRowModel(),
       })
 
+    // Extrair valores únicos dos registros para os selects
+    const uniqueValues = useMemo(() => {
+        const filiais = new Set<string>();
+        const fornecedores = new Set<string>();
+        const produtos = new Set<string>();
+        const categorias = new Set<string>();
+
+        allData.forEach(item => {
+            if (item.filial) filiais.add(item.filial);
+            if (item.fornecedor) fornecedores.add(item.fornecedor);
+            if (item.produto) produtos.add(item.produto);
+            if (item.categoria) categorias.add(item.categoria);
+        });
+
+        return {
+            filiais: Array.from(filiais).sort(),
+            fornecedores: Array.from(fornecedores).sort(),
+            produtos: Array.from(produtos).sort(),
+            categorias: Array.from(categorias).sort(),
+        };
+    }, [allData]);
+
+    const handleTabChange = (value: string) => {
+        const now = new Date();
+        switch (value) {
+            case '7d': setDateRange({ from: subDays(now, 6), to: now }); break;
+            case '30d': setDateRange({ from: subDays(now, 29), to: now }); break;
+            case '90d': setDateRange({ from: subDays(now, 89), to: now }); break;
+            default: setDateRange({ from: subDays(now, 29), to: now });
+        }
+    };
+
     const clearAll = () => {
-        try { table.resetColumnFilters(); } catch {}
+        try { 
+            table.resetColumnFilters();
+            table.setGlobalFilter('');
+        } catch {}
         const now = new Date();
         setDateRange({ from: subDays(now, 29), to: now });
     };
@@ -237,10 +296,13 @@ return (
                 flex flex-col gap-3 w-full max-w-full
                 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between
             ">
-                <DataTableToolbar 
-                    table={table}
-                    className="w-full sm:w-auto max-w-full"
-                />
+                <Tabs defaultValue="30d" className="space-y-4" onValueChange={handleTabChange}>
+                    <TabsList className="flex flex-wrap w-full max-w-full">
+                        <TabsTrigger value="7d">7 Dias</TabsTrigger>
+                        <TabsTrigger value="30d">30 Dias</TabsTrigger>
+                        <TabsTrigger value="90d">90 Dias</TabsTrigger>
+                    </TabsList>
+                </Tabs>
 
                 <DateRangePicker 
                     date={dateRange} 
@@ -251,6 +313,14 @@ return (
                     <Button variant="outline" onClick={clearAll}>Limpar Filtros</Button>
                 </div>
             </div>
+
+            <DataTableToolbar 
+                table={table}
+                uniqueValues={uniqueValues}
+                globalFilter={globalFilter}
+                setGlobalFilter={setGlobalFilter}
+                className="w-full sm:w-auto max-w-full"
+            />
 
             {/* Tabela */}
             <div className="w-full max-w-full overflow-x-auto">

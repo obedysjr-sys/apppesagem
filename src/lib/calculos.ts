@@ -63,7 +63,7 @@ export function calcularResultados(data: Partial<CalculosFormValues>): CalculosR
 
     // 9. MEDIA DE BAIXO PESO P/CX (Fórmula da planilha: ((PESO_BRUTO / QTD_BAIXO_PESO) - PESO_PADRAO) * -1)
     const mediabaixopesoporcaixa = quantidadeBaixoPesoCalculada > 0 ? 
-        (((pesoBrutoAnaliseCalculado / quantidadeBaixoPesoCalculada) - pesoLiquidoPorCaixa) * -1) : 0;
+        (((pesoLiquidoAnalise / quantidadeBaixoPesoCalculada) - pesoLiquidoPorCaixa) * -1) : 0;
 
     // 10. PESO LIQUIDO TOTAL FINAL DA CARGA
     const pesoLiquidoReal = pesoLiquidoProgramado - (mediabaixopesoporcaixa * mediaqtdcaixascombaixopeso); // OK

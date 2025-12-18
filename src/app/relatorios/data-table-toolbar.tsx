@@ -13,17 +13,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { exportToPdf, exportToXlsx, exportToHtml, shareViaWhatsApp } from "@/lib/export"
 import { RegistroPeso } from "@/types"
 import { cn } from "@/lib/utils"
 
+interface UniqueValues {
+  filiais: string[]
+  fornecedores: string[]
+  produtos: string[]
+  categorias: string[]
+}
+
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
+  uniqueValues?: UniqueValues
+  globalFilter?: string
+  setGlobalFilter?: (value: string) => void
   className?: string
 }
 
 export function DataTableToolbar<TData>({
   table,
+  uniqueValues,
+  globalFilter: externalGlobalFilter,
+  setGlobalFilter: externalSetGlobalFilter,
   className,
 }: DataTableToolbarProps<TData>) {
 
@@ -49,68 +63,122 @@ export function DataTableToolbar<TData>({
     }
   }
 
+  const globalFilter = externalGlobalFilter ?? (table.getState().globalFilter as string ?? "");
+  const handleGlobalFilterChange = (value: string) => {
+    if (externalSetGlobalFilter) {
+      externalSetGlobalFilter(value);
+    } else {
+      table.setGlobalFilter(value);
+    }
+  };
+
   return (
-    <div className={cn("flex flex-col md:flex-row md:items-center md:justify-between gap-3", className)}>
-      <div className="flex flex-1 items-center flex-wrap gap-2">
-        <Input
-          placeholder="Filtrar por código..."
-          value={(table.getColumn("codigo")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("codigo")?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-full sm:w-[140px] lg:w-[160px]"
-        />
-        <Input
-          placeholder="Filtrar por filial..."
-          value={(table.getColumn("filial")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("filial")?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-full sm:w-[150px] lg:w-[200px]"
-        />
-        <Input
-          placeholder="Filtrar por produto..."
-          value={(table.getColumn("produto")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("produto")?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-full sm:w-[150px] lg:w-[200px] hidden md:block"
-        />
-        <Input
-          placeholder="Filtrar por categoria..."
-          value={(table.getColumn("categoria")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("categoria")?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-full sm:w-[150px] lg:w-[200px] hidden md:block"
-        />
-        <Input
-          placeholder="Filtrar por fornecedor..."
-          value={(table.getColumn("fornecedor")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("fornecedor")?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-full sm:w-[150px] lg:w-[200px] hidden md:block"
-        />
-        <Input
-          placeholder="Filtrar por família..."
-          value={(table.getColumn("familia")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("familia")?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-full sm:w-[150px] lg:w-[200px] hidden lg:block"
-        />
-        <Input
-          placeholder="Filtrar por grupo produto..."
-          value={(table.getColumn("grupoProduto")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("grupoProduto")?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-full sm:w-[150px] lg:w-[200px] hidden lg:block"
+    <div className={cn("flex flex-col gap-3 w-full", className)}>
+      {/* Campo de Busca Dinâmica */}
+      <div className="w-full">
+        <Input 
+          placeholder="Pesquise qualquer dados, nota, produto, etc..." 
+          value={globalFilter}
+          onChange={(e) => handleGlobalFilterChange(e.target.value)}
+          className="w-full"
         />
       </div>
+
+      {/* Filtros de Seleção */}
+      <div className="flex flex-1 items-center flex-wrap gap-2">
+        {uniqueValues && (
+          <>
+            <Select 
+              value={(table.getColumn("filial")?.getFilterValue() as string) ?? "all"} 
+              onValueChange={(value) => {
+                if (value === "all") {
+                  table.getColumn("filial")?.setFilterValue(undefined);
+                } else {
+                  table.getColumn("filial")?.setFilterValue(value);
+                }
+              }}
+            >
+              <SelectTrigger className="h-8 w-full sm:w-[150px] lg:w-[200px]">
+                <SelectValue placeholder="Filial" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as Filiais</SelectItem>
+                {uniqueValues.filiais.map(filial => (
+                  <SelectItem key={filial} value={filial}>{filial}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select 
+              value={(table.getColumn("fornecedor")?.getFilterValue() as string) ?? "all"} 
+              onValueChange={(value) => {
+                if (value === "all") {
+                  table.getColumn("fornecedor")?.setFilterValue(undefined);
+                } else {
+                  table.getColumn("fornecedor")?.setFilterValue(value);
+                }
+              }}
+            >
+              <SelectTrigger className="h-8 w-full sm:w-[150px] lg:w-[200px] hidden md:block">
+                <SelectValue placeholder="Fornecedor" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os Fornecedores</SelectItem>
+                {uniqueValues.fornecedores.map(fornecedor => (
+                  <SelectItem key={fornecedor} value={fornecedor}>{fornecedor}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select 
+              value={(table.getColumn("produto")?.getFilterValue() as string) ?? "all"} 
+              onValueChange={(value) => {
+                if (value === "all") {
+                  table.getColumn("produto")?.setFilterValue(undefined);
+                } else {
+                  table.getColumn("produto")?.setFilterValue(value);
+                }
+              }}
+            >
+              <SelectTrigger className="h-8 w-full sm:w-[150px] lg:w-[200px] hidden md:block">
+                <SelectValue placeholder="Produto" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os Produtos</SelectItem>
+                {uniqueValues.produtos.map(produto => (
+                  <SelectItem key={produto} value={produto}>{produto}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select 
+              value={(table.getColumn("categoria")?.getFilterValue() as string) ?? "all"} 
+              onValueChange={(value) => {
+                if (value === "all") {
+                  table.getColumn("categoria")?.setFilterValue(undefined);
+                } else {
+                  table.getColumn("categoria")?.setFilterValue(value);
+                }
+              }}
+            >
+              <SelectTrigger className="h-8 w-full sm:w-[150px] lg:w-[200px] hidden md:block">
+                <SelectValue placeholder="Categoria" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as Categorias</SelectItem>
+                {uniqueValues.categorias.map(categoria => (
+                  <SelectItem key={categoria} value={categoria}>{categoria}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </>
+        )}
+      </div>
       <div className="flex items-center space-x-2">
-        <Button variant="outline" size="sm" className="h-8 gap-1" onClick={() => table.resetColumnFilters()}>
+        <Button variant="outline" size="sm" className="h-8 gap-1" onClick={() => {
+          table.resetColumnFilters();
+          handleGlobalFilterChange('');
+        }}>
             <Eraser /> <span className="hidden sm:inline">Limpar Filtros</span>
         </Button>
         <Button variant="outline" size="sm" className="h-8 gap-1" onClick={() => handleExport('pdf')}>

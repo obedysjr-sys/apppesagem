@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KpiCard } from '@/components/dashboard/kpi-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 import { SupabaseRegistroPesoRow } from '@/types/supabase-row';
 
@@ -103,16 +104,36 @@ export default function DashboardPage() {
     const [fornecedorQuery, setFornecedorQuery] = useState('');
     const [produtoQuery, setProdutoQuery] = useState('');
     const [categoriaQuery, setCategoriaQuery] = useState('');
-    const [familiaQuery, setFamiliaQuery] = useState('');
-    const [grupoProdutoQuery, setGrupoProdutoQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+
+    // Extrair valores únicos dos registros para os selects
+    const uniqueValues = useMemo(() => {
+        const filiais = new Set<string>();
+        const fornecedores = new Set<string>();
+        const produtos = new Set<string>();
+        const categorias = new Set<string>();
+
+        records.forEach(item => {
+            if (item.filial) filiais.add(item.filial);
+            if (item.fornecedor) fornecedores.add(item.fornecedor);
+            if (item.produto) produtos.add(item.produto);
+            if (item.categoria) categorias.add(item.categoria);
+        });
+
+        return {
+            filiais: Array.from(filiais).sort(),
+            fornecedores: Array.from(fornecedores).sort(),
+            produtos: Array.from(produtos).sort(),
+            categorias: Array.from(categorias).sort(),
+        };
+    }, [records]);
 
     const clearFilters = () => {
         setFilialQuery('');
         setFornecedorQuery('');
         setProdutoQuery('');
         setCategoriaQuery('');
-        setFamiliaQuery('');
-        setGrupoProdutoQuery('');
+        setSearchQuery('');
         const now = new Date();
         setDateRange({ from: subDays(now, 29), to: now });
     };
@@ -202,20 +223,43 @@ export default function DashboardPage() {
             const itemDate = startOfDay(item.dataRegistro);
             return itemDate >= startDate && itemDate < endDate;
         });
+        
         const matchText = (val: any, q: string) => {
             if (!q) return true;
             const s = String(val ?? '').toLowerCase();
             return s.includes(q.toLowerCase());
         };
+
+        const matchSelect = (val: any, q: string) => {
+            if (!q || q === 'all') return true;
+            return String(val ?? '') === q;
+        };
+
+        // Filtro de busca dinâmica (pesquisa em todos os campos)
+        const matchesSearch = (item: RegistroPeso) => {
+            if (!searchQuery) return true;
+            const searchLower = searchQuery.toLowerCase();
+            const searchableFields = [
+                item.filial,
+                item.fornecedor,
+                item.produto,
+                item.categoria,
+                item.notaFiscal,
+                item.codigo,
+                item.familia,
+                item.grupoProduto,
+            ].filter(Boolean).map(f => String(f).toLowerCase());
+            return searchableFields.some(field => field.includes(searchLower));
+        };
+
         return inRange.filter(item =>
-            matchText(item.filial, filialQuery) &&
-            matchText((item as any).fornecedor, fornecedorQuery) &&
-            matchText((item as any).produto, produtoQuery) &&
-            matchText((item as any).categoria, categoriaQuery) &&
-            matchText((item as any).familia, familiaQuery) &&
-            matchText((item as any).grupo_produto, grupoProdutoQuery)
+            matchSelect(item.filial, filialQuery) &&
+            matchSelect((item as any).fornecedor, fornecedorQuery) &&
+            matchSelect((item as any).produto, produtoQuery) &&
+            matchSelect((item as any).categoria, categoriaQuery) &&
+            matchesSearch(item)
         );
-    }, [dateRange, records, filialQuery, fornecedorQuery, produtoQuery, categoriaQuery, familiaQuery, grupoProdutoQuery]);
+    }, [dateRange, records, filialQuery, fornecedorQuery, produtoQuery, categoriaQuery, searchQuery]);
 
     const kpiData = useMemo(() => {
         const totalRegistros = filteredData.length;
@@ -343,27 +387,67 @@ return (
                 />
             </div>
 
+            {/* Campo de Busca Dinâmica */}
+            <div className="w-full">
+                <Input 
+                    className="w-full" 
+                    placeholder="Pesquise qualquer dados, nota, produto, etc..." 
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)} 
+                />
+            </div>
+
             {/* Filtros */}
             <div className="grid grid-cols-1 gap-2 w-full max-w-full 
-                            sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+                            sm:grid-cols-2 md:grid-cols-4">
 
-                <Input className="w-full min-w-0" placeholder="Filial" value={filialQuery}
-                    onChange={e => setFilialQuery(e.target.value)} />
+                <Select value={filialQuery} onValueChange={setFilialQuery}>
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Filial" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">Todas as Filiais</SelectItem>
+                        {uniqueValues.filiais.map(filial => (
+                            <SelectItem key={filial} value={filial}>{filial}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
 
-                <Input className="w-full min-w-0" placeholder="Fornecedor" value={fornecedorQuery}
-                    onChange={e => setFornecedorQuery(e.target.value)} />
+                <Select value={fornecedorQuery} onValueChange={setFornecedorQuery}>
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Fornecedor" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">Todos os Fornecedores</SelectItem>
+                        {uniqueValues.fornecedores.map(fornecedor => (
+                            <SelectItem key={fornecedor} value={fornecedor}>{fornecedor}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
 
-                <Input className="w-full min-w-0" placeholder="Produto" value={produtoQuery}
-                    onChange={e => setProdutoQuery(e.target.value)} />
+                <Select value={produtoQuery} onValueChange={setProdutoQuery}>
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Produto" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">Todos os Produtos</SelectItem>
+                        {uniqueValues.produtos.map(produto => (
+                            <SelectItem key={produto} value={produto}>{produto}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
 
-                <Input className="w-full min-w-0" placeholder="Categoria" value={categoriaQuery}
-                    onChange={e => setCategoriaQuery(e.target.value)} />
-
-                <Input className="w-full min-w-0" placeholder="Família" value={familiaQuery}
-                    onChange={e => setFamiliaQuery(e.target.value)} />
-
-                <Input className="w-full min-w-0" placeholder="Grupo Produto" value={grupoProdutoQuery}
-                    onChange={e => setGrupoProdutoQuery(e.target.value)} />
+                <Select value={categoriaQuery} onValueChange={setCategoriaQuery}>
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Categoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">Todas as Categorias</SelectItem>
+                        {uniqueValues.categorias.map(categoria => (
+                            <SelectItem key={categoria} value={categoria}>{categoria}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
             </div>
 
             <div className="flex items-center justify-end">
