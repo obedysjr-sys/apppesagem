@@ -421,7 +421,7 @@ return (
                             <ResponsiveContainer width="100%" height={350}>
                                 <BarChart data={chartData.topProdutos} margin={{ left: 5, right: 30, top: 10, bottom: 10 }}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={true} horizontal={true} />
-                                    <XAxis dataKey="name" tick={<CustomXAxisTick />} interval={0} height={110} />
+                                    <XAxis dataKey="name" tick={CustomXAxisTick} interval={0} height={110} />
                                     <YAxis tick={{ fontSize: 10, fontWeight: 'bold' }} />
                                     <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} contentStyle={{ fontSize: 12, fontWeight: 'bold' }} />
                                     <Bar dataKey="perda_kg" name="Perda (KG)" fill="#f59e0b" radius={[4, 4, 0, 0]}>
