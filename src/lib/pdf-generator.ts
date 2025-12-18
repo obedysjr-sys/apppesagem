@@ -81,7 +81,7 @@ export async function generateRegistroPDF(
     const doc = new jsPDF();
     
     // Cor verde corporativa
-    const greenColor = [0, 43, 30]; // #002b1e
+    const greenColor: [number, number, number] = [0, 43, 30]; // #002b1e
     
     // Header com logo
     const logoDataUrl = await getLogoDataUrl();
@@ -117,7 +117,7 @@ export async function generateRegistroPDF(
     let kpiY = 38;
     const kpiCard = (x: number, y: number, w: number, title: string, value: string, isRed?: boolean) => {
         doc.setFillColor(240, 253, 244); // bg-green-50
-        doc.setDrawColor(...greenColor);
+        doc.setDrawColor(greenColor[0], greenColor[1], greenColor[2]);
         doc.roundedRect(x, y, w, 18, 3, 3, 'FD');
         doc.setFontSize(8);
         doc.setTextColor(107, 114, 128);
@@ -127,7 +127,7 @@ export async function generateRegistroPDF(
         if (isRed) {
             doc.setTextColor(239, 68, 68);
         } else {
-            doc.setTextColor(...greenColor);
+            doc.setTextColor(greenColor[0], greenColor[1], greenColor[2]);
         }
         doc.text(normalizeText(value), x + 3, y + 14);
         doc.setFont("helvetica", "normal");
@@ -146,7 +146,7 @@ export async function generateRegistroPDF(
     let yPos = kpiY + 24;
     
     // Informações Principais
-    doc.setFillColor(...greenColor);
+    doc.setFillColor(greenColor[0], greenColor[1], greenColor[2]);
     doc.rect(14, yPos, 182, 8, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(11);
@@ -181,7 +181,7 @@ export async function generateRegistroPDF(
     yPos += 4;
     
     // Dados da Pesagem
-    doc.setFillColor(...greenColor);
+    doc.setFillColor(greenColor[0], greenColor[1], greenColor[2]);
     doc.rect(14, yPos, 182, 8, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(11);
@@ -223,7 +223,7 @@ export async function generateRegistroPDF(
         }
         
         // Título da seção
-        doc.setFillColor(...greenColor); // Azul
+        doc.setFillColor(greenColor[0], greenColor[1], greenColor[2]); // Verde
         doc.rect(14, yPos, 182, 8, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(11);
@@ -258,7 +258,7 @@ export async function generateRegistroPDF(
                 body: pesagensRows,
                 startY: yPos,
                 theme: 'grid',
-                headStyles: { fillColor: [...greenColor], textColor: 255, fontSize: 9, cellPadding: 2 },
+                headStyles: { fillColor: greenColor, textColor: 255, fontSize: 9, cellPadding: 2 },
                 styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
                 columnStyles: {
                     0: { cellWidth: 182 }
@@ -281,7 +281,7 @@ export async function generateRegistroPDF(
     }
     
     // Resultados
-    doc.setFillColor(...greenColor); // Vermelho
+    doc.setFillColor(greenColor[0], greenColor[1], greenColor[2]); // Verde
     doc.rect(14, yPos, 182, 8, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(11);
@@ -337,7 +337,7 @@ export async function generateRegistroPDF(
         doc.addPage();
         
         // Header da seção de evidências
-        doc.setFillColor(...greenColor); // Verde
+        doc.setFillColor(greenColor[0], greenColor[1], greenColor[2]); // Verde
         doc.rect(0, 0, 210, 25, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(16);
@@ -347,7 +347,7 @@ export async function generateRegistroPDF(
         let yPosEv = 35;
         
         // Título do registro
-        doc.setFillColor(...greenColor);
+        doc.setFillColor(greenColor[0], greenColor[1], greenColor[2]);
         doc.rect(10, yPosEv - 5, 190, 8, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(10);

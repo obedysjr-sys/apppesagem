@@ -228,9 +228,9 @@ export function EditRegistroDialog({ open, onOpenChange, registro }: EditRegistr
                                             </FormControl>
                                             <SelectContent>
                                                 {filiaisOpcoes.map((f) => (
-                                                    <SelectItem key={f.id} value={f.nome}>{f.nome}</SelectItem>
+                                                    <SelectItem key={f} value={f}>{f}</SelectItem>
                                                 ))}
-                                                {!filiaisOpcoes.some(f => f.nome === field.value) && field.value && 
+                                                {!filiaisOpcoes.some(f => f === field.value) && field.value && 
                                                   <SelectItem key={`custom-${field.value}`} value={field.value}>{field.value}</SelectItem>
                                                 }
                                             </SelectContent>

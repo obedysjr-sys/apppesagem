@@ -8,16 +8,6 @@ import { compressImage, isValidImageFile, formatFileSize } from '@/lib/image-com
 import { toast } from 'sonner';
 import { Evidencia } from '@/types/evidencias';
 
-export interface Evidencia {
-  id: string;
-  fileName: string;
-  fileId: string;
-  webViewLink: string;
-  webContentLink: string;
-  fileSize: number;
-  uploadedAt: Date;
-}
-
 interface UploadEvidenciasProps {
   registroId?: string;
   evidencias?: Evidencia[];
