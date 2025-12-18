@@ -2,10 +2,14 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { format } from "date-fns"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, Paperclip } from "lucide-react"
+import { useState } from "react"
 
 import { RegistroPeso } from "@/types"
 import { Button } from "@/components/ui/button"
+
+import { DataTableRowActions } from "./data-table-row-actions"
+import { VisualizarEvidenciasModal } from "@/components/evidencias/visualizar-evidencias-modal"
 
 export const columns: ColumnDef<RegistroPeso>[] = [
   {
@@ -111,5 +115,64 @@ export const columns: ColumnDef<RegistroPeso>[] = [
   {
     accessorKey: "grupoProduto",
     header: "Grupo Produto",
+  },
+  {
+    id: "evidencias",
+    header: "Anexos",
+    cell: ({ row }) => {
+      const EvidenciasCell = () => {
+        const [modalOpen, setModalOpen] = useState(false);
+        const [evidencias, setEvidencias] = useState<any[]>([]);
+        const [loading, setLoading] = useState(false);
+        
+        const loadEvidencias = async () => {
+          setLoading(true);
+          try {
+            const { supabase } = await import('@/lib/supabase');
+            const { data, error } = await supabase
+              .from('evidencias')
+              .select('*')
+              .eq('registro_id', row.original.id);
+            
+            if (error) throw error;
+            setEvidencias(data || []);
+            setModalOpen(true);
+          } catch (error) {
+            console.error('Erro ao carregar evidências:', error);
+          } finally {
+            setLoading(false);
+          }
+        };
+        
+        // Verificar se tem evidências (assumindo que existe uma propriedade)
+        const hasEvidencias = (row.original as any).evidenciasCount > 0 || true; // Sempre mostrar por enquanto
+        
+        return (
+          <>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={loadEvidencias}
+              disabled={loading}
+              className="h-8 w-8 p-0"
+            >
+              <Paperclip className="h-4 w-4" />
+            </Button>
+            
+            <VisualizarEvidenciasModal
+              evidencias={evidencias}
+              open={modalOpen}
+              onOpenChange={setModalOpen}
+            />
+          </>
+        );
+      };
+      
+      return <EvidenciasCell />;
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ]

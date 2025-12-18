@@ -14,8 +14,10 @@ import { KpiCard } from '@/components/dashboard/kpi-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 
+import { SupabaseRegistroPesoRow } from '@/types/supabase-row';
+
 // Carregar registros reais do Supabase
-function parseSQLDate(dateStr: any): Date {
+function parseSQLDate(dateStr: string | Date | null | undefined): Date {
     if (!dateStr) return new Date();
     if (dateStr instanceof Date) return dateStr;
     if (typeof dateStr === 'string') {
@@ -30,13 +32,18 @@ function parseSQLDate(dateStr: any): Date {
     return new Date();
 }
 
-function mapRowToRegistroPeso(row: any): RegistroPeso {
+function mapRowToRegistroPeso(row: SupabaseRegistroPesoRow): RegistroPeso {
     return {
-        id: row.id,
+        id: String(row.id),
         dataRegistro: parseSQLDate(row.data_registro),
         filial: row.filial,
         fornecedor: row.fornecedor ?? undefined,
         notaFiscal: row.nota_fiscal ?? undefined,
+        produto: row.produto ?? row.descricao ?? undefined,
+        categoria: row.categoria ?? undefined,
+        familia: row.familia ?? undefined,
+        grupoProduto: row.grupo_produto ?? undefined,
+        codigo: row.codigo ?? row.cod_produto ?? undefined,
         modeloTabela: row.modelo_tabela,
         quantidadeRecebida: Number(row.quantidade_recebida ?? 0),
         pesoLiquidoPorCaixa: Number(row.peso_liquido_por_caixa ?? 0),
@@ -62,6 +69,29 @@ function mapRowToRegistroPeso(row: any): RegistroPeso {
 const initialData: RegistroPeso[] = [];
 
 const COLORS = ['#10b981', '#f59e0b', '#3b82f6', '#ef4444', '#8b5cf6'];
+
+interface CustomAxisTickProps {
+    x: number;
+    y: number;
+    payload: {
+        value: string;
+    };
+}
+
+const CustomXAxisTick = ({ x, y, payload }: CustomAxisTickProps) => {
+    const words = payload.value.split(' ');
+    return (
+        <g transform={`translate(${x},${y})`}>
+            <text x={0} y={0} dy={16} textAnchor="middle" fill="#666" fontSize={10} fontWeight="bold">
+                {words.map((word: string, index: number) => (
+                    <tspan x={0} dy={index === 0 ? 0 : 12} key={index}>
+                        {word}
+                    </tspan>
+                ))}
+            </text>
+        </g>
+    );
+};
 
 export default function DashboardPage() {
     const [records, setRecords] = useState<RegistroPeso[]>(initialData);
@@ -241,11 +271,39 @@ export default function DashboardPage() {
             .sort((a,b) => b.perda_kg - a.perda_kg)
             .slice(0, 5);
 
+        // Perda por Fornecedor (Top 10)
+        const lossByFornecedor = filteredData.reduce((acc, item: any) => {
+            const key = item.fornecedor || 'SEM FORNECEDOR';
+            if (!acc[key]) acc[key] = { name: key, perda_kg: 0 };
+            acc[key].perda_kg += item.perdaKg || 0;
+            return acc;
+        }, {} as Record<string, { name: string, perda_kg: number }>);
+        const topFornecedores = Object.values(lossByFornecedor)
+            .sort((a,b) => b.perda_kg - a.perda_kg)
+            .slice(0, 10);
+
+        // Perda por Produto (Top 10)
+        const lossByProduto = filteredData.reduce((acc, item: any) => {
+            const key = item.produto || 'SEM PRODUTO';
+            if (!acc[key]) acc[key] = { name: key, perda_kg: 0 };
+            acc[key].perda_kg += item.perdaKg || 0;
+            return acc;
+        }, {} as Record<string, { name: string, perda_kg: number }>);
+        const topProdutos = Object.values(lossByProduto)
+            .sort((a,b) => b.perda_kg - a.perda_kg)
+            .slice(0, 10)
+            .map(item => ({
+                ...item,
+                name: item.name.split(' ').filter(w => w !== '-').slice(0, 3).join(' ')
+            }));
+
         return {
             dailyLoss: Object.values(dailyLoss).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
             lossByBranch: Object.values(lossByBranch),
             topCategories,
             topBranches,
+            topFornecedores,
+            topProdutos
         }
     }, [filteredData]);
 
@@ -328,10 +386,10 @@ return (
                             <ResponsiveContainer width="100%" height={350}>
                                 <LineChart data={chartData.dailyLoss}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="date" tickFormatter={(str) => format(new Date(str), 'dd/MM')} tick={{ fontSize: 11 }} />
-                                    <YAxis tick={{ fontSize: 11 }} />
-                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} contentStyle={{ fontSize: 12 }} />
-                                    <Legend wrapperStyle={{ fontSize: 12 }} />
+                                    <XAxis dataKey="date" tickFormatter={(str) => format(new Date(str), 'dd/MM')} tick={{ fontSize: 11, fontWeight: 'bold' }} />
+                                    <YAxis tick={{ fontSize: 11, fontWeight: 'bold' }} />
+                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} contentStyle={{ fontSize: 12, fontWeight: 'bold' }} />
+                                    <Legend wrapperStyle={{ fontSize: 12, fontWeight: 'bold' }} />
                                     <Line type="monotone" dataKey="perda_kg" name="Perda em KG" stroke="var(--color-primary)" strokeWidth={2} />
                                 </LineChart>
                             </ResponsiveContainer>
@@ -339,35 +397,37 @@ return (
                     </Card>
                     <Card className="lg:col-span-3">
                         <CardHeader>
-                            <CardTitle>Participação das Filiais no Volume</CardTitle>
+                            <CardTitle>Top 10 Fornecedor x Perda (Kg)</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <ResponsiveContainer width="100%" height={350}>
-                                <PieChart>
-                                    <Pie
-                                        data={chartData.lossByBranch}
-                                        dataKey="volume"
-                                        nameKey="name"
-                                        cx="50%"
-                                        cy="50%"
-                                        outerRadius={120}
-                                        labelLine={false}
-                                        label={(props: any) => {
-                                            const { name, percent, x, y } = props;
-                                            return (
-                                                <text x={x} y={y} fontSize={11} textAnchor="middle" fill="#64748b">
-                                                    {`${String(name).split(' ')[1]}: ${(percent * 100).toFixed(0)}%`}
-                                                </text>
-                                            );
-                                        }}
-                                    >
-                                        {chartData.lossByBranch.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip formatter={(value: number) => `${value.toLocaleString('pt-BR')} caixas`} contentStyle={{ fontSize: 12 }} />
-                                    <Legend wrapperStyle={{ fontSize: 12 }} />
-                                </PieChart>
+                                <BarChart layout="vertical" data={chartData.topFornecedores} margin={{ left: 5, right: 30, top: 10, bottom: 10 }}>
+                                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
+                                    <XAxis type="number" hide />
+                                    <YAxis dataKey="name" type="category" width={90} tick={{ fontSize: 10, fontWeight: 'bold' }} />
+                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} contentStyle={{ fontSize: 12, fontWeight: 'bold' }} />
+                                    <Bar dataKey="perda_kg" name="Perda (KG)" fill="#ef4444" radius={[0, 4, 4, 0]}>
+                                        <LabelList dataKey="perda_kg" position="right" formatter={(val: number) => val.toFixed(0)} style={{ fontSize: 10, fill: '#666', fontWeight: 'bold' }} />
+                                    </Bar>
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+                    <Card className="md:col-span-2 lg:col-span-7">
+                        <CardHeader>
+                            <CardTitle>Top 10 Produtos x Perda (Kg)</CardTitle>
+                        </CardHeader>
+                        <CardContent className="pl-2">
+                            <ResponsiveContainer width="100%" height={350}>
+                                <BarChart data={chartData.topProdutos} margin={{ left: 5, right: 30, top: 10, bottom: 10 }}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={true} horizontal={true} />
+                                    <XAxis dataKey="name" tick={<CustomXAxisTick />} interval={0} height={110} />
+                                    <YAxis tick={{ fontSize: 10, fontWeight: 'bold' }} />
+                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} contentStyle={{ fontSize: 12, fontWeight: 'bold' }} />
+                                    <Bar dataKey="perda_kg" name="Perda (KG)" fill="#f59e0b" radius={[4, 4, 0, 0]}>
+                                        <LabelList dataKey="perda_kg" position="top" formatter={(val: number) => val.toFixed(0)} style={{ fontSize: 10, fill: '#666', fontWeight: 'bold' }} />
+                                    </Bar>
+                                </BarChart>
                             </ResponsiveContainer>
                         </CardContent>
                     </Card>
@@ -383,12 +443,12 @@ return (
                             <ResponsiveContainer width="100%" height={350}>
                                 <BarChart data={chartData.topCategories}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                                    <YAxis tick={{ fontSize: 11 }} />
-                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} contentStyle={{ fontSize: 12 }} />
-                                    <Legend wrapperStyle={{ fontSize: 12 }} />
+                                    <XAxis dataKey="name" tick={{ fontSize: 11, fontWeight: 'bold' }} />
+                                    <YAxis tick={{ fontSize: 11, fontWeight: 'bold' }} />
+                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} contentStyle={{ fontSize: 12, fontWeight: 'bold' }} />
+                                    <Legend wrapperStyle={{ fontSize: 12, fontWeight: 'bold' }} />
                                     <Bar dataKey="perda_kg" name="Perda (KG)" fill="var(--color-primary)">
-                                        <LabelList dataKey="perda_kg" position="top" formatter={(val: number) => Number(val).toFixed(2)} />
+                                        <LabelList dataKey="perda_kg" position="top" formatter={(val: number) => Number(val).toFixed(2)} style={{ fontWeight: 'bold' }} />
                                     </Bar>
                                 </BarChart>
                             </ResponsiveContainer>
@@ -402,12 +462,12 @@ return (
                             <ResponsiveContainer width="100%" height={350}>
                                 <BarChart data={chartData.topBranches}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                                    <YAxis tick={{ fontSize: 11 }} />
-                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} contentStyle={{ fontSize: 12 }} />
-                                    <Legend wrapperStyle={{ fontSize: 12 }} />
+                                    <XAxis dataKey="name" tick={{ fontSize: 11, fontWeight: 'bold' }} />
+                                    <YAxis tick={{ fontSize: 11, fontWeight: 'bold' }} />
+                                    <Tooltip formatter={(value: number) => `${value.toFixed(2)} kg`} contentStyle={{ fontSize: 12, fontWeight: 'bold' }} />
+                                    <Legend wrapperStyle={{ fontSize: 12, fontWeight: 'bold' }} />
                                     <Bar dataKey="perda_kg" name="Perda (KG)" fill="var(--color-primary)">
-                                        <LabelList dataKey="perda_kg" position="top" formatter={(val: number) => Number(val).toFixed(2)} />
+                                        <LabelList dataKey="perda_kg" position="top" formatter={(val: number) => Number(val).toFixed(2)} style={{ fontWeight: 'bold' }} />
                                     </Bar>
                                 </BarChart>
                             </ResponsiveContainer>

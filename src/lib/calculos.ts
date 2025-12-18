@@ -52,8 +52,8 @@ export function calcularResultados(data: Partial<CalculosFormValues>): CalculosR
     // 5. Diferença entre o Peso Líquido Real da Análise - o peso ideal da análise
     const pesoLiquidoRealAnalise = pesoLiquidoAnalise - pesoLiquidoIdealAnalise; // OK --------
 
-    // 6. Média de baixo peso por caixa analisada
-    const mediaPesoBaixoPorCaixa = quantidadeRecebida > 0 ? quantidadeBaixoPesoCalculada : 0;
+    // 6. Média de baixo peso por caixa analisada (peso médio das caixas com baixo peso)
+    const mediaPesoBaixoPorCaixa = quantidadeBaixoPesoCalculada > 0 ? (pesoLiquidoAnalise / quantidadeBaixoPesoCalculada) : 0;
 
     // 7. % baixo peso em caixas analisadas da amostra (% DE CXS COM BAIXO PESO/TOTAL SKU) (mostrar esse valor em %)
     const percentualqtdcaixascombaixopeso = quantidadeTabela > 0 ? (quantidadeBaixoPesoCalculada / quantidadeTabela) : 0; // OK
@@ -61,8 +61,9 @@ export function calcularResultados(data: Partial<CalculosFormValues>): CalculosR
     // 8. Média de caixas com baixo peso da carga total (MEDIA TOTAL DE CXS C/BAIXO PESO)
     const mediaqtdcaixascombaixopeso = percentualqtdcaixascombaixopeso * quantidadeRecebida; // OK
 
-    // 9. MEDIA DE BAIXO PESO P/CX
-    const mediabaixopesoporcaixa = quantidadeRecebida > 0 ? ((quantidadeBaixoPesoCalculada * pesoLiquidoPorCaixa) - pesoLiquidoAnalise) / quantidadeBaixoPesoCalculada : 0; // OK
+    // 9. MEDIA DE BAIXO PESO P/CX (Fórmula da planilha: ((PESO_BRUTO / QTD_BAIXO_PESO) - PESO_PADRAO) * -1)
+    const mediabaixopesoporcaixa = quantidadeBaixoPesoCalculada > 0 ? 
+        (((pesoBrutoAnaliseCalculado / quantidadeBaixoPesoCalculada) - pesoLiquidoPorCaixa) * -1) : 0;
 
     // 10. PESO LIQUIDO TOTAL FINAL DA CARGA
     const pesoLiquidoReal = pesoLiquidoProgramado - (mediabaixopesoporcaixa * mediaqtdcaixascombaixopeso); // OK

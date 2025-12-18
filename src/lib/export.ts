@@ -156,11 +156,77 @@ export const exportToXlsx = async (data: RegistroPeso[], fileName: string) => {
     XLSX.writeFile(workbook, `${fileName}.xlsx`);
 };
 
+// Helper para carregar imagem como base64
+async function loadImageAsBase64(url: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                reject(new Error('Failed to get canvas context'));
+                return;
+            }
+            
+            ctx.drawImage(img, 0, 0);
+            const dataURL = canvas.toDataURL('image/jpeg', 0.6);
+            resolve(dataURL);
+        };
+        
+        img.onerror = () => reject(new Error('Failed to load image'));
+        img.src = url;
+    });
+}
+
 // Função para exportar dados para PDF profissional
 export const exportToPdf = async (data: RegistroPeso[], title: string) => {
     const doc = new jsPDF();
 
-    // Totais
+    // Buscar evidências e pesagens de todos os registros
+    let todasEvidencias: { [key: string]: any[] } = {};
+    let todasPesagens: { [key: string]: any } = {};
+    
+    try {
+        const { supabase, hasSupabaseEnv } = await import('@/lib/supabase');
+        if (hasSupabaseEnv) {
+            const registroIds = data.map(r => r.id);
+            
+            // Buscar evidências
+            const { data: evidenciasData } = await supabase
+                .from('evidencias')
+                .select('*')
+                .in('registro_id', registroIds);
+            
+            if (evidenciasData) {
+                evidenciasData.forEach(ev => {
+                    const regId = ev.registro_id;
+                    if (!todasEvidencias[regId]) todasEvidencias[regId] = [];
+                    todasEvidencias[regId].push(ev);
+                });
+            }
+            
+            // Buscar pesagens
+            const { data: pesagensData } = await supabase
+                .from('pesagem')
+                .select('*')
+                .in('record_id', registroIds);
+            
+            if (pesagensData) {
+                pesagensData.forEach((p: any) => {
+                    todasPesagens[p.record_id] = p;
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+    }
+
+    // Totais gerais
     const totalRegistros = data.length;
     const totalPerdaKg = data.reduce((sum, item) => sum + item.perdaKg, 0);
     const totalPerdaCx = data.reduce((sum, item) => sum + item.perdaCx, 0);
@@ -171,43 +237,110 @@ export const exportToPdf = async (data: RegistroPeso[], title: string) => {
           return sum + perc;
         }, 0) / totalRegistros
       : 0;
+    
+    // Novos totais das pesagens
+    let totalDigitado = 0;
+    let totalBaixoPeso = 0;
+    let qtdBaixoPeso = 0;
+    
+    Object.values(todasPesagens).forEach((p: any) => {
+        totalDigitado += Number(p.total_digitado || p['total digitado'] || p.totalDigitado || 0);
+        totalBaixoPeso += Number(p.total_baixo_peso || p['total baixo peso'] || p.totalBaixoPeso || 0);
+        qtdBaixoPeso += Number(p.qtd_baixo_peso || p['qtd baixo peso'] || p.qtdBaixoPeso || 0);
+    });
 
     // Header
-    // Tenta carregar a logo em base64 e adiciona ao PDF.
     const logoDataUrl = await getLogoDataUrl();
     if (logoDataUrl) {
-        try { doc.addImage(logoDataUrl, 'PNG', 14, 12, 20, 20); } catch {}
+        try { doc.addImage(logoDataUrl, 'PNG', 14, 10, 20, 20); } catch {}
     }
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(20);
-    doc.text("CHECKPESO - GDM", 40, 22);
+    doc.setFontSize(18);
+    doc.text(normalizeText("CHECKPESO - GDM"), 40, 18);
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(12);
-    doc.text(`Relatório de Pesagem - ${title}`, 40, 29);
-    doc.setDrawColor(22, 163, 74); // Cor primária
-    doc.line(14, 38, 196, 38);
+    doc.setFontSize(11);
+    doc.text(normalizeText(`Relatorio de Pesagem - ${title}`), 40, 25);
+    
+    // Extrair informações de filtros dos dados
+    const filiais = [...new Set(data.map(d => d.filial).filter(Boolean))];
+    const fornecedores = [...new Set(data.map(d => d.fornecedor).filter(Boolean))];
+    const notasFiscais = [...new Set(data.map(d => d.notaFiscal).filter(Boolean))];
+    const dataInicio = data.length > 0 ? new Date(Math.min(...data.map(d => new Date(d.dataRegistro).getTime()))) : null;
+    const dataFim = data.length > 0 ? new Date(Math.max(...data.map(d => new Date(d.dataRegistro).getTime()))) : null;
+    
+    // Informações de filtros (lado direito)
+    let infoY = 10;
+    doc.setFontSize(8);
+    doc.setTextColor(100);
+    doc.setFont("helvetica", "normal");
+    
+    if (filiais.length > 0) {
+        const filiaisText = filiais.length === 1 
+            ? normalizeText(filiais[0]) 
+            : normalizeText(`${filiais.length} filiais`);
+        doc.text(`Filial: ${filiaisText}`, 196, infoY, { align: 'right' });
+        infoY += 5;
+    }
+    
+    if (fornecedores.length > 0) {
+        const fornText = fornecedores.length === 1 
+            ? normalizeText(fornecedores[0]).substring(0, 25) 
+            : normalizeText(`${fornecedores.length} fornecedores`);
+        doc.text(`Fornecedor: ${fornText}`, 196, infoY, { align: 'right' });
+        infoY += 5;
+    }
+    
+    if (notasFiscais.length > 0) {
+        const nfText = notasFiscais.length === 1 
+            ? normalizeText(notasFiscais[0]) 
+            : normalizeText(`${notasFiscais.length} NFs`);
+        doc.text(`NF: ${nfText}`, 196, infoY, { align: 'right' });
+        infoY += 5;
+    }
+    
+    if (dataInicio && dataFim) {
+        const periodoText = dataInicio.getTime() === dataFim.getTime()
+            ? format(dataInicio, 'dd/MM/yyyy')
+            : `${format(dataInicio, 'dd/MM/yy')} a ${format(dataFim, 'dd/MM/yy')}`;
+        doc.text(normalizeText(`Periodo: ${periodoText}`), 196, infoY, { align: 'right' });
+    }
+    
+    doc.setDrawColor(0, 43, 30); // verde corporativo
+    doc.line(14, 32, 196, 32);
 
-    // KPI Cards
-    const kpiY = 45;
-    const kpiCard = (x: number, w: number, title: string, value: string) => {
+    // KPI Cards (7 cards em 2 linhas - verde corporativo #002b1e)
+    let kpiY = 38;
+    const kpiCard = (x: number, y: number, w: number, title: string, value: string, color?: string) => {
         doc.setFillColor(240, 253, 244); // bg-green-50
-        doc.setDrawColor(22, 163, 74);
-        doc.roundedRect(x, kpiY, w, 20, 3, 3, 'FD');
-        doc.setFontSize(10);
-        doc.setTextColor(107, 114, 128); // text-gray-500
-        doc.text(title, x + 5, kpiY + 7);
-        doc.setFontSize(14);
+        doc.setDrawColor(0, 43, 30); // verde corporativo
+        doc.roundedRect(x, y, w, 18, 3, 3, 'FD');
+        doc.setFontSize(8);
+        doc.setTextColor(107, 114, 128);
+        doc.text(normalizeText(title), x + 3, y + 6);
+        doc.setFontSize(12);
         doc.setFont("helvetica", "bold");
-        doc.setTextColor(0, 0, 0);
-        doc.text(value, x + 5, kpiY + 15);
+        if (color === 'red') {
+            doc.setTextColor(239, 68, 68);
+        } else {
+            doc.setTextColor(0, 43, 30); // verde corporativo
+        }
+        doc.text(normalizeText(value), x + 3, y + 14);
         doc.setFont("helvetica", "normal");
     };
-    kpiCard(14, 42, "Total de Registros", totalRegistros.toString());
-    kpiCard(60, 42, "Perda Total (CX)", `${totalPerdaCx.toFixed(2)} CX`);
-    kpiCard(106, 42, "Perda Total (KG)", `${totalPerdaKg.toFixed(2)} KG`);
-    kpiCard(152, 44, "Perda Média", `${mediaPerdaPercentual.toFixed(2)}%`);
+    
+    // Primeira linha (4 cards)
+    kpiCard(14, kpiY, 44, "Total de Registros", totalRegistros.toString());
+    kpiCard(62, kpiY, 44, "Perda Total (CX)", `${totalPerdaCx.toFixed(2)} CX`, 'red');
+    kpiCard(110, kpiY, 44, "Perda Total (KG)", `${totalPerdaKg.toFixed(2)} KG`, 'red');
+    kpiCard(158, kpiY, 38, "Perda Media", `${mediaPerdaPercentual.toFixed(2)}%`);
+    
+    // Segunda linha (3 cards - dados das pesagens)
+    kpiY += 22;
+    kpiCard(14, kpiY, 60, "Total Digitado", `${totalDigitado.toFixed(2)} KG`);
+    kpiCard(78, kpiY, 60, "Total Baixo Peso", `${totalBaixoPeso.toFixed(2)} KG`, 'red');
+    kpiCard(142, kpiY, 54, "Qtd. Baixo Peso", `${qtdBaixoPeso} CXS`, 'red');
 
-    // Tabela
+    // Tabela Principal
     const tableColumn = [
         "Data",
         "Filial",
@@ -224,38 +357,311 @@ export const exportToPdf = async (data: RegistroPeso[], title: string) => {
     ];
     const tableRows: (string | number)[][] = data.map(item => [
         format(item.dataRegistro, 'dd/MM/yy'),
-        normalizeText(item.filial).substring(0, 15),
-        normalizeText(item.categoria)?.substring(0, 12),
-        normalizeText(item.produto)?.substring(0, 18),
+        normalizeText(item.filial || '').substring(0, 15),
+        normalizeText(item.categoria || '').substring(0, 12),
+        normalizeText(item.produto || '').substring(0, 18),
         item.quantidadeRecebida,
         Number(item.pesoLiquidoProgramado?.toFixed?.(2) ?? (item.pesoLiquidoProgramado ?? 0)),
         item.pesoLiquidoAnalise.toFixed(2),
         item.pesoLiquidoReal.toFixed(2),
         item.perdaKg.toFixed(2),
         item.perdaCx.toFixed(2),
-        normalizeText(item.fornecedor)?.substring(0, 10),
-        normalizeText(item.notaFiscal),
+        normalizeText(item.fornecedor || '').substring(0, 10),
+        normalizeText(item.notaFiscal || ''),
     ]);
+
+    let currentY = kpiY + 24;
 
     autoTable(doc, {
         head: [tableColumn],
         body: tableRows,
-        startY: kpiY + 28,
+        startY: currentY,
         theme: 'grid',
-        headStyles: { fillColor: [22, 163, 74], textColor: 255 },
-        styles: { fontSize: 8, cellPadding: 2 },
+        headStyles: { fillColor: [0, 43, 30], textColor: 255, fontSize: 7, cellPadding: 1.5 }, // verde corporativo
+        styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
         columnStyles: {
             0: { cellWidth: 16 },
-            3: { cellWidth: 28 },
-            8: { textColor: [239, 68, 68] }, // Coluna Perda KG em vermelho
+            2: { cellWidth: 20 },
+            3: { cellWidth: 25 },
+            8: { textColor: [239, 68, 68] },
         },
         didDrawPage: (data) => {
-            doc.setFontSize(10);
-            doc.text(`Página ${data.pageNumber}`, data.settings.margin.left, doc.internal.pageSize.height - 10);
+            doc.setFontSize(8);
+            doc.setTextColor(100);
+            doc.text(normalizeText(`Pagina ${data.pageNumber}`), 14, doc.internal.pageSize.height - 10);
         }
     });
+    
+    currentY = (doc as any).lastAutoTable.finalY + 8;
+    
+    // TABELA 1: Pesagens das Caixas
+    if (Object.keys(todasPesagens).length > 0) {
+        // Verificar se precisa nova página
+        if (currentY > 235) {
+            doc.addPage();
+            currentY = 20;
+        }
+        
+        // Título da seção
+        doc.setFillColor(52, 152, 219); // Azul
+        doc.rect(14, currentY, 182, 8, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text(normalizeText('PESAGENS DAS CAIXAS'), 105, currentY + 5.5, { align: 'center' });
+        currentY += 10;
+        
+        const pesagensRows: (string | number)[][] = [];
+        
+        data.forEach(item => {
+            const pesagem = todasPesagens[item.id];
+            if (!pesagem) return;
+            
+            // Extrair valores dos campos (campo_1 até campo_50)
+            const valores: number[] = [];
+            for (let i = 1; i <= 50; i++) {
+                const key1 = `campo_${i}`;
+                const key2 = `campo ${i}`;
+                const val = Number(pesagem[key1] ?? pesagem[key2] ?? 0);
+                if (val > 0) valores.push(val); // Desconsiderar zerados
+            }
+            
+            if (valores.length === 0) return;
+            
+            // Criar linha com: Categoria, Pesagens (até 10 por linha), Fornecedor, NF
+            const categoria = normalizeText(item.categoria || 'N/A').substring(0, 15);
+            const fornecedor = normalizeText(item.fornecedor || 'N/A').substring(0, 12);
+            const nf = normalizeText(item.notaFiscal || 'N/A').substring(0, 10);
+            
+            // Dividir valores em grupos de 8 para não ultrapassar largura
+            const gruposValores = [];
+            for (let i = 0; i < valores.length; i += 8) {
+                gruposValores.push(valores.slice(i, i + 8));
+            }
+            
+            gruposValores.forEach((grupo, idx) => {
+                const pesagensStr = grupo.map(v => v.toFixed(2)).join(', ');
+                pesagensRows.push([
+                    idx === 0 ? categoria : '',
+                    pesagensStr,
+                    idx === 0 ? fornecedor : '',
+                    idx === 0 ? nf : ''
+                ]);
+            });
+        });
+        
+        if (pesagensRows.length > 0) {
+            autoTable(doc, {
+                head: [[
+                    normalizeText('Categoria'),
+                    normalizeText('Pesagens (KG)'),
+                    normalizeText('Fornecedor'),
+                    normalizeText('NF')
+                ]],
+                body: pesagensRows,
+                startY: currentY,
+                theme: 'grid',
+                headStyles: { fillColor: [52, 152, 219], textColor: 255, fontSize: 8, cellPadding: 2 },
+                styles: { fontSize: 7, cellPadding: 2, overflow: 'linebreak' },
+                columnStyles: {
+                    0: { cellWidth: 30 },
+                    1: { cellWidth: 100 },
+                    2: { cellWidth: 30 },
+                    3: { cellWidth: 22 }
+        },
+        didDrawPage: (data) => {
+                    doc.setFontSize(8);
+                    doc.setTextColor(100);
+                    doc.text(normalizeText(`Pagina ${data.pageNumber}`), 14, doc.internal.pageSize.height - 10);
+                }
+            });
+            
+            currentY = (doc as any).lastAutoTable.finalY + 8;
+        }
+    }
+    
+    // TABELA 2: Detalhes por Categoria
+    if (data.length > 0) {
+        // Verificar se precisa nova página
+        if (currentY > 235) {
+            doc.addPage();
+            currentY = 20;
+        }
+        
+        // Título da seção
+        doc.setFillColor(155, 89, 182); // Roxo
+        doc.rect(14, currentY, 182, 8, 'F');
+        doc.setTextColor(255, 255, 255);
+            doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text(normalizeText('DETALHES POR CATEGORIA'), 105, currentY + 5.5, { align: 'center' });
+        currentY += 10;
+        
+        const detalhesRows: (string | number)[][] = data.map(item => {
+            const percentualBaixoPeso = ((item.percentualqtdcaixascombaixopeso ?? 0) * 100).toFixed(2);
+            const mediaBaixoPorCx = (item.mediabaixopesoporcaixa ?? 0).toFixed(3);
+            
+            return [
+                normalizeText(item.categoria || 'N/A').substring(0, 18),
+                item.taraCaixa.toFixed(2),
+                item.pesoLiquidoPorCaixa.toFixed(2),
+                percentualBaixoPeso,
+                mediaBaixoPorCx,
+                normalizeText(item.fornecedor || 'N/A').substring(0, 15),
+                normalizeText(item.notaFiscal || 'N/A').substring(0, 12)
+            ];
+        });
+        
+        autoTable(doc, {
+            head: [[
+                normalizeText('Categoria'),
+                normalizeText('Tara (KG)'),
+                normalizeText('Peso Liq. Prod. (KG)'),
+                normalizeText('% Baixo Peso'),
+                normalizeText('Media Baixo/CX'),
+                normalizeText('Fornecedor'),
+                normalizeText('NF')
+            ]],
+            body: detalhesRows,
+            startY: currentY,
+            theme: 'grid',
+            headStyles: { fillColor: [155, 89, 182], textColor: 255, fontSize: 7, cellPadding: 1.5 },
+            styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
+            columnStyles: {
+                0: { cellWidth: 35 },
+                1: { cellWidth: 20 },
+                2: { cellWidth: 25 },
+                3: { cellWidth: 22 },
+                4: { cellWidth: 24 },
+                5: { cellWidth: 32 },
+                6: { cellWidth: 24 }
+            },
+            didDrawPage: (data) => {
+                doc.setFontSize(8);
+                doc.setTextColor(100);
+                doc.text(normalizeText(`Pagina ${data.pageNumber}`), 14, doc.internal.pageSize.height - 10);
+            }
+        });
+        
+        currentY = (doc as any).lastAutoTable.finalY + 10;
+    }
+    
+    // Adicionar evidências se houver
+    const totalEvidencias = Object.values(todasEvidencias).flat().length;
+    if (totalEvidencias > 0) {
+        doc.addPage();
+        
+        // Header da seção de evidências
+        doc.setFillColor(39, 174, 96); // Verde
+        doc.rect(0, 0, 210, 25, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text(normalizeText(`EVIDENCIAS (${totalEvidencias} ANEXO${totalEvidencias > 1 ? 'S' : ''})`), 105, 15, { align: 'center' });
+        
+        let yPos = 35;
+        
+        // Para cada registro que tem evidências
+        for (const registro of data) {
+            const evidencias = todasEvidencias[registro.id] || [];
+            if (evidencias.length === 0) continue;
+            
+            // Verificar se precisa de nova página
+            if (yPos > 250) {
+                doc.addPage();
+                yPos = 20;
+            }
+            
+            // Título do registro
+            doc.setFillColor(52, 73, 94);
+            doc.rect(10, yPos - 5, 190, 8, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            const registroInfo = normalizeText(`${format(registro.dataRegistro, 'dd/MM/yyyy')} - ${registro.filial || 'N/A'} - ${registro.produto || 'N/A'} (${evidencias.length} foto${evidencias.length > 1 ? 's' : ''})`);
+            doc.text(registroInfo, 15, yPos);
+            yPos += 12;
+            
+            // Grade 3x3 para imagens
+            const imgWidth = 58;
+            const imgHeight = 58;
+            const margin = 5;
+            const startX = 12;
+            let currentX = startX;
+            let currentY = yPos;
+            let imagesInRow = 0;
+            
+            for (let i = 0; i < evidencias.length; i++) {
+                const evidencia = evidencias[i];
+                const imageUrl = evidencia.web_content_link || evidencia.webContentLink || evidencia.publicUrl;
+                
+                if (!imageUrl) continue;
+                
+                // Verificar se precisa de nova página
+                if (currentY + imgHeight > 270) {
+                    doc.addPage();
+                    currentY = 20;
+                    currentX = startX;
+                    imagesInRow = 0;
+                }
+                
+                try {
+                    const imgData = await loadImageAsBase64(imageUrl);
+                    
+                    // Desenhar borda
+                    doc.setDrawColor(52, 73, 94);
+                    doc.setLineWidth(0.5);
+                    doc.rect(currentX, currentY, imgWidth, imgHeight);
+                    
+                    // Adicionar imagem
+                    const padding = 2;
+                    doc.addImage(
+                        imgData,
+                        'JPEG',
+                        currentX + padding,
+                        currentY + padding,
+                        imgWidth - (padding * 2),
+                        imgHeight - (padding * 2)
+                    );
+                    
+                    // Número da foto
+                    doc.setFillColor(0, 0, 0);
+                    doc.circle(currentX + 8, currentY + 8, 5, 'F');
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFontSize(8);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text(`${i + 1}`, currentX + 8, currentY + 10, { align: 'center' });
+                    
+                } catch (error) {
+                    console.error('Erro ao carregar imagem:', error);
+                    // Placeholder de erro
+                    doc.setFillColor(240, 240, 240);
+                    doc.rect(currentX, currentY, imgWidth, imgHeight, 'F');
+                    doc.setDrawColor(239, 68, 68);
+                    doc.rect(currentX, currentY, imgWidth, imgHeight);
+                    doc.setTextColor(239, 68, 68);
+                    doc.setFontSize(7);
+                    doc.text(normalizeText('Erro ao'), currentX + imgWidth / 2, currentY + imgHeight / 2 - 2, { align: 'center' });
+                    doc.text(normalizeText('carregar'), currentX + imgWidth / 2, currentY + imgHeight / 2 + 2, { align: 'center' });
+                }
+                
+                imagesInRow++;
+                
+                if (imagesInRow >= 3) {
+                    currentX = startX;
+                    currentY += imgHeight + margin;
+                    imagesInRow = 0;
+                } else {
+                    currentX += imgWidth + margin;
+                }
+            }
+            
+            // Espaço após o último registro
+            yPos = currentY + (imagesInRow > 0 ? imgHeight + margin + 10 : 10);
+        }
+    }
 
-    doc.save(`Relatorio_CheckPeso_${title}.pdf`);
+    doc.save(normalizeText(`Relatorio_CheckPeso_${title}.pdf`));
 };
 
 // Função para gerar HTML

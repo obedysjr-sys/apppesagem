@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
@@ -22,8 +24,10 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { DataTableToolbar } from './data-table-toolbar';
 import { DataTablePagination } from './data-table-pagination';
 
+import { SupabaseRegistroPesoRow } from '@/types/supabase-row';
+
 // Carregamento de dados reais do Supabase
-function parseSQLDate(dateStr: any): Date {
+function parseSQLDate(dateStr: string | Date | null | undefined): Date {
     if (!dateStr) return new Date();
     if (dateStr instanceof Date) return dateStr;
     if (typeof dateStr === 'string') {
@@ -37,9 +41,9 @@ function parseSQLDate(dateStr: any): Date {
     return new Date();
 }
 
-function mapRowToRegistroPeso(row: any): RegistroPeso {
+function mapRowToRegistroPeso(row: SupabaseRegistroPesoRow & { observacoes?: string | null }): RegistroPeso & { observacoes?: string } {
     return {
-        id: row.id,
+        id: String(row.id),
         dataRegistro: parseSQLDate(row.data_registro),
         filial: row.filial,
         fornecedor: row.fornecedor ?? undefined,
@@ -64,11 +68,12 @@ function mapRowToRegistroPeso(row: any): RegistroPeso {
         mediaqtdcaixascombaixopeso: Number(row.media_qtd_caixas_com_baixo_peso ?? 0),
         mediabaixopesoporcaixa: Number(row.media_baixo_peso_por_cx ?? 0),
         // Campos opcionais de produto
-        codigo: row.cod_produto ?? undefined,
+        codigo: row.codigo ?? row.cod_produto ?? undefined,
         produto: row.produto ?? row.descricao ?? undefined,
         categoria: row.categoria ?? undefined,
         familia: row.familia ?? undefined,
         grupoProduto: row.grupo_produto ?? undefined,
+        observacoes: row.observacoes ?? undefined,
     };
 }
 
@@ -102,7 +107,7 @@ export default function RelatoriosPage() {
                 if (!hasSupabaseEnv) return;
                 const { data, error } = await supabase
                     .from('registros_peso')
-                    .select('*')
+                    .select('*, observacoes')
                     .order('data_registro', { ascending: false });
                 if (error) {
                     console.warn('Erro ao carregar registros_peso:', error);

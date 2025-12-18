@@ -22,11 +22,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ResultCard } from '@/components/calculos/result-card';
 import { CalendarIcon, HelpCircle, Save, Trash2, Camera } from 'lucide-react';
+import { UploadEvidencias } from '@/components/evidencias/upload-evidencias';
+import { Evidencia } from '@/types/evidencias';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogAction, AlertDialogCancel } from '@/components/ui/alert-dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 
+import { useFiliais } from '@/hooks/use-filiais';
+
 export function CalculosForm() {
+    const { filiais: filiaisOpcoes, loading: loadingFiliais } = useFiliais();
+    const [isSubmitting, setIsSubmitting] = useState(false);
     // Data atual com fuso de Salvador (Bahia)
     const getBahiaTodayDate = () => {
         const now = new Date();
@@ -84,6 +90,7 @@ export function CalculosForm() {
     const [currentItems, setCurrentItems] = useState<{ raw: string; value: number; baixoPeso: boolean }[]>(makeItems());
     const [cycles, setCycles] = useState<{ raw: string; value: number; baixoPeso: boolean }[][]>([]);
     const [confirmOpen, setConfirmOpen] = useState(false);
+    const [evidencias, setEvidencias] = useState<Evidencia[]>([]);
 
     const parseNumber = (s: string): number => {
         const raw = s.trim();
@@ -189,6 +196,9 @@ export function CalculosForm() {
     }, [watchedValues.codigo]);
 
     async function onSubmit(data: CalculosFormValues) {
+        if (isSubmitting) return; // Previne duplicação
+        setIsSubmitting(true);
+        
         // Persistência no Supabase
         try {
             const { supabase, hasSupabaseEnv } = await import('../../lib/supabase');
@@ -239,6 +249,42 @@ export function CalculosForm() {
                 if (error) throw error;
 
                 const recordId = String(inserted?.id ?? '');
+
+                // Salvar evidências se houver
+                if (evidencias.length > 0 && recordId) {
+                    try {
+                        // Obter user ID para RLS
+                        const { data: { user } } = await supabase.auth.getUser();
+                        
+                        const evidenciasPayload = evidencias.map(ev => ({
+                            registro_id: recordId,
+                            file_id: ev.fileId,
+                            file_name: ev.fileName,
+                            web_view_link: ev.webViewLink,
+                            web_content_link: ev.webContentLink,
+                            file_size: ev.fileSize,
+                            uploaded_by: user?.id || null,
+                        }));
+
+                        const { error: evidenciasError } = await supabase
+                            .from('evidencias')
+                            .insert(evidenciasPayload);
+
+                        if (evidenciasError) {
+                            console.error('Erro ao salvar evidências:', evidenciasError);
+                            toast.warning('Evidências não foram salvas', {
+                                description: 'O registro foi salvo, mas houve erro ao vincular as evidências.',
+                            });
+                        } else {
+                            console.log('Evidências salvas com sucesso:', evidenciasPayload.length);
+                        }
+                    } catch (e) {
+                        console.error('Falha ao salvar evidências:', e);
+                        toast.warning('Erro ao salvar evidências', {
+                            description: 'O registro foi salvo, mas as evidências não foram vinculadas.',
+                        });
+                    }
+                }
 
                 if (allItems.length > 0 && recordId) {
                     const values = allItems.map(it => Number(it.value || 0));
@@ -344,88 +390,89 @@ export function CalculosForm() {
             toast.success('Registro salvo com sucesso!', {
                 description: 'Os dados foram enviados para o banco de dados.',
             });
+
+            // Montar mensagem linha por linha
+            let message = "";
+
+            message += "📟🍍*RELATÓRIO DO RECEBIMENTO*🍍📟\n\n";
+
+            message += `🗓️ *DATA:* ${format(data.dataRegistro, 'dd/MM/yyyy')}\n`;
+            message += `🏢 *FILIAL:* ${data.filial || 'SEM INFORMAÇÃO'}\n`;
+            message += `🪪 *FORNECEDOR:* ${data.fornecedor || 'SEM INFORMAÇÃO'}\n`;
+            message += `📄 *NOTA FISCAL:* ${data.notaFiscal || 'SEM INFORMAÇÃO'}\n`;
+            message += ` *PRODUTO:* ${data.produto || 'SEM INFORMAÇÃO'}\n`;
+            message += "-----\n";
+
+            message += `*-- DADOS DA PESAGEM --*\n`;
+            message += `🔄️ *QTD. TOTAL RECEBIDA:* ${data.quantidadeRecebida || 'SEM INFORMAÇÃO'} CX\n`;
+            message += `🔄️ *PESO LÍQUIDO TOTAL PROGRAMADO:* ${resultados.pesoLiquidoProgramado?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
+            message += `🔄️ *PESO LÍQUIDO POR CX:* ${data.pesoLiquidoPorCaixa?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
+            message += `🔄️ *TARA DA CAIXA:* ${data.taraCaixa?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
+            message += `🔄️ *QTD. ANALISADA:* ${quantidadeTabelaFinal || 'SEM INFORMAÇÃO'}\n`;
+            message += `🔄️ *QTD. BAIXO PESO:* ${data.quantidadebaixopeso || 'SEM INFORMAÇÃO'}\n`;
+            message += `🔄️ *PESO BRUTO DA ANÁLISE:* ${data.pesoBrutoAnalise?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
+            message += `🔄️ *PESO LÍQUIDO DA ANÁLISE:* ${resultados.pesoLiquidoAnalise?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
+            message += "-----\n";
+            // Resumo da Pesagem
+            const allItemsForMessage = [...cycles.flat(), ...currentItems].filter(it => Number(it.value || 0) > 0);
+            message += `*-- RESUMO DA PESAGEM --*\n`;
+            if (allItemsForMessage.length > 0) {
+                const threshold = (Number(data.pesoLiquidoPorCaixa) || 0) + (Number(data.taraCaixa) || 0);
+                for (const it of allItemsForMessage) {
+                    const kg = Number(it.value || 0);
+                    const kgStr = Number.isFinite(kg) ? kg.toFixed(2) : '0.00';
+                    if (it.baixoPeso) {
+                        const diff = Math.max(0, threshold - kg);
+                        const diffStr = diff.toFixed(3).replace('.', ',');
+                        message += `⚖️ ${kgStr} KG = BAIXO PESO 🚩- ${diffStr} KG\n`;
+                    } else {
+                        message += `⚖️ ${kgStr} KG ✅\n`;
+                    }
+                }
+            } else {
+                message += `Sem campos de pesagem.\n`;
+            }
+            message += "-----\n";
+
+            message += `*-- RESULTADOS --*\n`;
+            const percentualAnaliseBaixoPeso = quantidadeTabelaFinal > 0 ? (((Number(data.quantidadebaixopeso) || 0) / quantidadeTabelaFinal) * 100) : 0;
+            message += `📈 *% DA ANÁLISE DE BAIXO PESO:* ${percentualAnaliseBaixoPeso.toFixed(2)} %\n`;
+            message += `📟 *PESO LÍQUIDO REAL DA CARGA:* ${resultados.pesoLiquidoReal?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
+            message += `🔴 *PERDA EM KG:* ${resultados.perdaKg?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
+            message += `🔴 *PERDA EM CX:* ${resultados.perdaCx?.toFixed(2) || 'SEM INFORMAÇÃO'} CX\n`;
+            message += `💲 *% PERDA DA CARGA:* ${resultados.perdaPercentual.toFixed(2) || 'SEM INFORMAÇÃO'} %\n`;
+            message += "-----\n";
+
+            message += `💬 *OBSERVAÇÕES:* ${(data.observacoes || '').toUpperCase() || 'SEM INFORMAÇÃO'}\n\n`;
+
+            message += "📟🥝APP CHECKPESO - GDM🍎📟";
+
+            // Codificar a mensagem para WhatsApp
+            const mensagemCodificada = encodeURIComponent(message);
+
+            // Gerar link WhatsApp
+            const link = `https://api.whatsapp.com/send?text=${mensagemCodificada}`;
+
+            // Abre o WhatsApp
+            window.open(link, "_blank");
+
+            // Limpa dados para evitar duplicidade após salvar
+            form.reset();
+            setRawInputs({ pesoLiquidoPorCaixa: '', pesoBrutoAnalise: '', taraCaixa: '' });
+            setQtdTabelaOverride(null);
+            setQtdTabelaOpen(false);
+            setQtdTabelaRaw('');
+            setCurrentItems(makeItems());
+            setCycles([]);
         } catch (err) {
             console.error(err);
             toast.error('Falha ao salvar o registro.', {
                 description: 'Verifique a conexão e tente novamente.',
             });
+        } finally {
+            setIsSubmitting(false);
         }
-
-        // Montar mensagem linha por linha
-        let message = "";
-
-    message += "📟🍍*RELATÓRIO DO RECEBIMENTO*🍍📟\n\n";
-
-    message += `🗓️ *DATA:* ${format(data.dataRegistro, 'dd/MM/yyyy')}\n`;
-    message += `🏢 *FILIAL:* ${data.filial || 'SEM INFORMAÇÃO'}\n`;
-    message += `🪪 *FORNECEDOR:* ${data.fornecedor || 'SEM INFORMAÇÃO'}\n`;
-    message += `📄 *NOTA FISCAL:* ${data.notaFiscal || 'SEM INFORMAÇÃO'}\n`;
-    message += ` *PRODUTO:* ${data.produto || 'SEM INFORMAÇÃO'}\n`;
-    message += "-----\n";
-
-    message += `*-- DADOS DA PESAGEM --*\n`;
-    message += `🔄️ *QTD. TOTAL RECEBIDA:* ${data.quantidadeRecebida || 'SEM INFORMAÇÃO'} CX\n`;
-    message += `🔄️ *PESO LÍQUIDO TOTAL PROGRAMADO:* ${resultados.pesoLiquidoProgramado?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
-    message += `🔄️ *PESO LÍQUIDO POR CX:* ${data.pesoLiquidoPorCaixa?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
-    message += `🔄️ *TARA DA CAIXA:* ${data.taraCaixa?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
-    message += `🔄️ *QTD. ANALISADA:* ${quantidadeTabelaFinal || 'SEM INFORMAÇÃO'}\n`;
-    message += `🔄️ *QTD. BAIXO PESO:* ${data.quantidadebaixopeso || 'SEM INFORMAÇÃO'}\n`;
-    message += `🔄️ *PESO BRUTO DA ANÁLISE:* ${data.pesoBrutoAnalise?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
-    message += `🔄️ *PESO LÍQUIDO DA ANÁLISE:* ${resultados.pesoLiquidoAnalise?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
-    message += "-----\n";
-    // Resumo da Pesagem
-    const allItemsForMessage = [...cycles.flat(), ...currentItems].filter(it => Number(it.value || 0) > 0);
-    message += `*-- RESUMO DA PESAGEM --*\n`;
-    if (allItemsForMessage.length > 0) {
-        const threshold = (Number(data.pesoLiquidoPorCaixa) || 0) + (Number(data.taraCaixa) || 0);
-        for (const it of allItemsForMessage) {
-            const kg = Number(it.value || 0);
-            const kgStr = Number.isFinite(kg) ? kg.toFixed(2) : '0.00';
-            if (it.baixoPeso) {
-                const diff = Math.max(0, threshold - kg);
-                const diffStr = diff.toFixed(3).replace('.', ',');
-                message += `⚖️ ${kgStr} KG = BAIXO PESO 🚩- ${diffStr} KG\n`;
-            } else {
-                message += `⚖️ ${kgStr} KG ✅\n`;
-            }
-        }
-    } else {
-        message += `Sem campos de pesagem.\n`;
     }
-    message += "-----\n";
-
-    message += `*-- RESULTADOS --*\n`;
-    const percentualAnaliseBaixoPeso = quantidadeTabelaFinal > 0 ? (((Number(data.quantidadebaixopeso) || 0) / quantidadeTabelaFinal) * 100) : 0;
-    message += `📈 *% DA ANÁLISE DE BAIXO PESO:* ${percentualAnaliseBaixoPeso.toFixed(2)} %\n`;
-    message += `📟 *PESO LÍQUIDO REAL DA CARGA:* ${resultados.pesoLiquidoReal?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
-    message += `🔴 *PERDA EM KG:* ${resultados.perdaKg?.toFixed(2) || 'SEM INFORMAÇÃO'} KG\n`;
-    message += `🔴 *PERDA EM CX:* ${resultados.perdaCx?.toFixed(2) || 'SEM INFORMAÇÃO'} CX\n`;
-    message += `💲 *% PERDA DA CARGA:* ${resultados.perdaPercentual.toFixed(2) || 'SEM INFORMAÇÃO'} %\n`;
-    message += "-----\n";
-
-        message += `💬 *OBSERVAÇÕES:* ${(data.observacoes || '').toUpperCase() || 'SEM INFORMAÇÃO'}\n\n`;
-
-        message += "📟🥝APP CHECKPESO - GDM🍎📟";
-
-
-// Codificar a mensagem para WhatsApp
-const mensagemCodificada = encodeURIComponent(message);
-
-// Gerar link WhatsApp
-const link = `https://api.whatsapp.com/send?text=${mensagemCodificada}`;
-
-    // Abre o WhatsApp
-    window.open(link, "_blank");
-
-    // Limpa dados para evitar duplicidade após salvar
-    form.reset();
-    setRawInputs({ pesoLiquidoPorCaixa: '', pesoBrutoAnalise: '', taraCaixa: '' });
-    setQtdTabelaOverride(null);
-    setQtdTabelaOpen(false);
-    setQtdTabelaRaw('');
-    setCurrentItems(makeItems());
-    setCycles([]);
-        }
     
     const getSeverity = (perda: number): 'ok' | 'attention' | 'critical' => {
         if (isNaN(perda) || perda < 3) return 'ok';
@@ -502,11 +549,21 @@ const link = `https://api.whatsapp.com/send?text=${mensagemCodificada}`;
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    <SelectItem value="TRIELO CD SIMÕES FILHO BA">TRIELO CD SIMÕES FILHO BA</SelectItem>
-                                                    <SelectItem value="TRIELO ITAITINGA CE">TRIELO ITAITINGA CE</SelectItem>
-                                                    <SelectItem value="TRIELO RECIFE PE">TRIELO RECIFE PE</SelectItem>
-                                                    <SelectItem value="TRIELO CD PAULISTA PE">TRIELO CD PAULISTA PE</SelectItem>
-                                                    <SelectItem value="TRIELO CEASA BA">TRIELO CEASA BA</SelectItem>
+                                                    {loadingFiliais ? (
+                                                        <SelectItem value="loading" disabled>Carregando filiais...</SelectItem>
+                                                    ) : filiaisOpcoes.length > 0 ? (
+                                                        filiaisOpcoes.map((filial) => (
+                                                            <SelectItem key={filial} value={filial}>{filial}</SelectItem>
+                                                        ))
+                                                    ) : (
+                                                        <>
+                                                            <SelectItem value="TRIELO CD SIMÕES FILHO BA">TRIELO CD SIMÕES FILHO BA</SelectItem>
+                                                            <SelectItem value="TRIELO ITAITINGA CE">TRIELO ITAITINGA CE</SelectItem>
+                                                            <SelectItem value="TRIELO RECIFE PE">TRIELO RECIFE PE</SelectItem>
+                                                            <SelectItem value="TRIELO CD PAULISTA PE">TRIELO CD PAULISTA PE</SelectItem>
+                                                            <SelectItem value="TRIELO CEASA BA">TRIELO CEASA BA</SelectItem>
+                                                        </>
+                                                    )}
                                                 </SelectContent>
                                             </Select>
                                             <FormMessage />
@@ -707,6 +764,14 @@ const link = `https://api.whatsapp.com/send?text=${mensagemCodificada}`;
                                   )}
                                 />
                             </CardContent>
+                            <div className="px-3 pb-3">
+                                <UploadEvidencias
+                                    evidencias={evidencias}
+                                    onEvidenciasChange={setEvidencias}
+                                    maxFiles={40}
+                                    disabled={isSubmitting}
+                                />
+                            </div>
                             <CardFooter className="p-3 pt-0 flex flex-col sm:flex-row justify-end gap-2 sm:gap-1.5">
                                 <Button
                                     type="button"
@@ -716,12 +781,14 @@ const link = `https://api.whatsapp.com/send?text=${mensagemCodificada}`;
                                     onClick={() => {
                                         form.reset();
                                         setRawInputs({ pesoLiquidoPorCaixa: '', pesoBrutoAnalise: '', taraCaixa: '' });
+                                        setEvidencias([]);
                                     }}
                                 >
                                     <Trash2 /> Limpar Dados
                                 </Button>
-                                <Button type="submit" size="sm" className="h-9 px-2 text-xs w-full sm:w-auto"><Save /> Salvar Registro</Button>
-                                <Button type="button" size="sm" className="h-9 px-2 text-xs bg-orange-500 hover:bg-orange-600 text-white w-full sm:w-auto"><Camera className="mr-2 h-4 w-4" /> Anexar Evidências</Button>
+                                <Button type="submit" size="sm" className="h-9 px-2 text-xs w-full sm:w-auto" disabled={isSubmitting}>
+                                    <Save /> {isSubmitting ? 'Salvando...' : 'Salvar Registro'}
+                                </Button>
                             </CardFooter>
                         </Card>
                     </div>

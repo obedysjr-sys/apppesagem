@@ -1,308 +1,633 @@
-# [CHECKPESO - GDM]
+# 📊 CheckPeso - GDM
 
-Aplicativo web para registro, análise e gestão de pesagem de cargas com integração a Supabase e Google Sheets. Este README foi preparado em tom profissional e didático para orientar desenvolvimento, operação e evolução do projeto.
+**Sistema de Gestão e Controle de Pesagem para Recebimento de Cargas**
 
 ---
 
-## Título do projeto
-- [CHECKPESO - GDM]
+## 📖 Sobre o Projeto
 
-## Descrição geral
-- Objetivo: [REALIZAR CALCULO DE BAIXO PESO NAS CARGAS RECEBIDAS, COM REGISTROS DOS DADOS PARA ANÁLISE E GESTÃO]
-- Público-alvo: [COORPORATIVO]
-- O sistema registra cálculos de pesagem, salva no banco, e envia para Google Sheets para rastreabilidade e análises, com filtros e relatórios gerenciais.
+CheckPeso é um sistema completo de gestão e controle de pesagem desenvolvido para o **Grupo Docemel** (GDM), com foco no recebimento e análise de cargas de produtos perecíveis. O sistema implementa a **norma ABNT 5429-S2** para amostragem e cálculo de perdas, oferecendo uma solução profissional e automatizada para controle de qualidade.
 
-## Funcionalidades principais
-- Registro de pesagem com cálculo automático dos indicadores.
-- Lookup opcional de produto por código (Supabase) preenchendo campos relacionados.
-- Envio dos registros para Supabase e Google Sheets (Edge Function + fallback Apps Script).
-- Filtros por `Filial`, `Fornecedor`, `Produto`, `Categoria`, `Família`, `Grupo Produto`.
-- Relatórios com busca, paginação e exportações.
-- Integração com WhatsApp: geração de mensagem resumida do recebimento.
-- Suporte a tema escuro/claro com UI consistente.
+### Principais Funcionalidades
 
-## Demonstração
-- Insira prints ou GIFs nas pastas `docs/` ou `public/`.
-- Sugestão:
-  - Tela de Cálculos (formulário + resultados).
-  - Dashboard (filtros + últimos registros).
-  - Relatórios (tabela + filtros).
+✅ **Gestão de Recebimento**
+- Registro completo de cargas recebidas
+- Cálculos automáticos baseados em ABNT 5429-S2
+- Validação de peso e qualidade
+- Controle de baixo peso por caixa
 
-> Onde inserir: `docs/demo-*.png` ou `docs/demo-*.gif`.
+✅ **Análise e Cálculos**
+- Tabelas S4 de amostragem automática
+- Cálculo de perdas (KG, CX, %)
+- Análise de baixo peso detalhada
+- Estatísticas em tempo real
 
-## Tecnologias utilizadas
-- Frontend: React, TypeScript, Vite
-- UI: Shadcn UI, Tailwind (ou utilitários CSS do projeto), Lucide Icons
-- State & Forms: React Hook Form, Zod
-- Data & Utils: Date-fns, XLSX (export), Fetch API
-- Backend: Supabase (Database + Edge Functions)
-- Integrações: Google Sheets (API e Apps Script)
-- Deploy: [LOCAL DO DEPLOY]
-- Repositório GitHub: [URL DO REPOSITÓRIO]
+✅ **Evidências Fotográficas**
+- Upload de múltiplas imagens
+- Compressão automática
+- Armazenamento no Supabase Storage
+- Visualização e download (individual/ZIP)
 
-## Arquitetura do projeto
-- Camada de apresentação com componentes reutilizáveis (inputs, tabela, toolbar).
-- Camada de domínio para cálculos e normalização de dados.
-- Persistência em Supabase (`registros_peso`) e integração paralela com Google Sheets.
-- Edge Function `append-sheet` para autenticação com Google e escrita direta na planilha.
-- Fallback para Apps Script (Web App) caso a função de borda falhe.
+✅ **Relatórios Profissionais**
+- PDF completo com dados e evidências
+- Exportação para Excel (XLSX)
+- Exportação para HTML
+- Envio automático por email
+
+✅ **Integração Google Sheets**
+- Sincronização automática de dados
+- Append de registros sem duplicação
+- Controle de cabeçalhos dinâmicos
+
+---
+
+## 🚀 Tecnologias Utilizadas
+
+### Frontend
+- **React 19** - Framework UI
+- **TypeScript** - Linguagem tipada
+- **Vite** - Build tool
+- **Tailwind CSS** - Estilização
+- **Shadcn/UI** - Componentes
+- **React Hook Form** - Formulários
+- **Zod** - Validação de schemas
+- **React Router** - Roteamento
+- **Date-fns** - Manipulação de datas
+
+### Backend & Cloud
+- **Supabase** - Backend-as-a-Service
+  - PostgreSQL Database
+  - Row Level Security (RLS)
+  - Storage (evidências)
+  - Edge Functions (Deno)
+- **Vercel** - Hosting & Deploy
+- **Resend** - Serviço de email
+
+### Geração de Documentos
+- **jsPDF** - Geração de PDF
+- **jspdf-autotable** - Tabelas em PDF
+- **ExcelJS** - Geração de Excel
+- **JSZip** - Compressão de arquivos
+
+### Integração
+- **Google Apps Script** - Integração com Sheets
+- **Google Sheets API** - Sincronização de dados
+
+---
+
+## 📁 Estrutura do Projeto
 
 ```
-[Cliente Web] ──(Supabase JS)──► [Supabase DB]
-       │
-       ├─(invoke append-sheet)──► [Supabase Edge Function] ─► [Google Sheets API]
-       │
-       └─(fallback HTTP)────────► [Apps Script Web App] ─────► [Google Sheets]
+checkpeso/
+├── public/                    # Arquivos públicos
+│   ├── logo.png              # Logo da empresa
+│   ├── background.png        # Background do app
+│   ├── manifest.webmanifest  # PWA manifest
+│   └── sw.js                 # Service Worker
+│
+├── src/
+│   ├── app/                  # Páginas da aplicação
+│   │   ├── calculos/        # Página de cálculos de pesagem
+│   │   │   ├── calculos-form.tsx
+│   │   │   └── page.tsx
+│   │   ├── configuracoes/   # Gerenciamento de produtos e regras
+│   │   │   ├── columns.tsx
+│   │   │   ├── page.tsx
+│   │   │   ├── product-dialog.tsx
+│   │   │   ├── rule-dialog.tsx
+│   │   │   └── tabela-editor.tsx
+│   │   ├── dashboard/       # Dashboard principal
+│   │   │   └── page.tsx
+│   │   ├── login/           # Autenticação
+│   │   │   └── page.tsx
+│   │   └── relatorios/      # Relatórios e listagens
+│   │       ├── columns.tsx
+│   │       ├── data-table.tsx
+│   │       ├── data-table-pagination.tsx
+│   │       ├── data-table-toolbar.tsx
+│   │       ├── data-table-row-actions.tsx
+│   │       ├── delete-registro-dialog.tsx
+│   │       ├── edit-registro-dialog.tsx
+│   │       ├── send-email-dialog.tsx
+│   │       ├── share-whatsapp-dialog.tsx
+│   │       ├── pesagem-hover.tsx
+│   │       ├── pesagem-modal.tsx
+│   │       └── page.tsx
+│   │
+│   ├── components/          # Componentes reutilizáveis
+│   │   ├── calculos/
+│   │   │   └── result-card.tsx
+│   │   ├── dashboard/
+│   │   │   └── kpi-card.tsx
+│   │   ├── evidencias/
+│   │   │   ├── upload-evidencias.tsx
+│   │   │   └── visualizar-evidencias-modal.tsx
+│   │   ├── layout/          # Layout da aplicação
+│   │   │   ├── app-layout.tsx
+│   │   │   ├── header.tsx
+│   │   │   ├── page-content.tsx
+│   │   │   ├── page-wrapper.tsx
+│   │   │   ├── sidebar.tsx
+│   │   │   └── theme-toggle.tsx
+│   │   ├── providers/       # Context providers
+│   │   │   └── theme-provider.tsx
+│   │   └── ui/              # Componentes Shadcn/UI
+│   │       └── [40+ componentes UI]
+│   │
+│   ├── hooks/               # Custom hooks
+│   │   ├── use-auth.ts     # Hook de autenticação
+│   │   ├── use-filiais.ts  # Hook de filiais
+│   │   └── use-toast.ts    # Hook de notificações
+│   │
+│   ├── lib/                 # Bibliotecas e utilitários
+│   │   ├── calculos.ts     # Lógica de cálculos (ABNT 5429-S2)
+│   │   ├── config.ts       # Configurações gerais
+│   │   ├── export.ts       # Exportação de relatórios (PDF/Excel/HTML)
+│   │   ├── image-compression.ts  # Compressão de imagens
+│   │   ├── pdf-generator.ts      # Geração de PDF individual
+│   │   ├── supabase.ts     # Cliente Supabase
+│   │   ├── tabelas-mock.ts # Dados mock para desenvolvimento
+│   │   ├── tabelaS4.ts     # Tabela S4 de amostragem
+│   │   ├── utils.ts        # Utilitários gerais
+│   │   └── whatsapp-message.ts   # Mensagens WhatsApp
+│   │
+│   ├── types/               # TypeScript types
+│   │   ├── evidencias.ts   # Tipos de evidências
+│   │   ├── index.ts        # Tipos principais
+│   │   └── supabase-row.ts # Tipos do Supabase
+│   │
+│   ├── App.tsx              # Componente raiz
+│   ├── main.tsx             # Entry point
+│   └── index.css            # Estilos globais
+│
+├── supabase/
+│   ├── functions/           # Edge Functions (Deno)
+│   │   ├── append-sheet/   # Integração Google Sheets
+│   │   │   └── index.ts
+│   │   ├── send-email/     # Envio de emails via Resend
+│   │   │   └── index.ts
+│   │   └── upload-evidencias/  # Upload de evidências
+│   │       └── index.ts
+│   └── .temp/              # Cache temporário Supabase CLI
+│
+├── sql/                     # Scripts SQL
+│   ├── EXECUTAR_ESTE.sql   # Script principal RLS
+│   ├── add_evidencias_table.sql  # Criação tabela evidências
+│   └── rls_registros_peso.sql    # RLS registros peso
+│
+├── scripts/                 # Scripts Node.js
+│   ├── import-produtos-from-csv.mjs  # Importar produtos
+│   └── sync-headers-and-append.mjs   # Sync Google Sheets
+│
+├── apps-script/             # Google Apps Script
+│   └── append-sheet.gs     # Script append de dados
+│
+├── docs/                    # Documentação técnica
+│   ├── CONFIGURAR_EMAIL_RESEND.md    # Setup email
+│   ├── CORRECAO_CALCULOS.md          # Documentação cálculos
+│   ├── MELHORIAS_EMAIL_PDF.md        # PDF individual
+│   ├── PDF_RELATORIO_FINALIZADO.md   # PDF relatório
+│   ├── RELATORIO_PDF_MELHORADO.md    # Histórico melhorias
+│   ├── FUNCIONALIDADES_EVIDENCIAS_V2.md  # Sistema evidências
+│   ├── RESOLVER_RLS.md               # Troubleshooting RLS
+│   └── CORRECAO_EMAIL_FORMAT.md      # Correções email
+│
+├── .gitignore
+├── components.json          # Configuração Shadcn/UI
+├── eslint.config.js
+├── netlify.toml
+├── package.json
+├── postcss.config.js
+├── tailwind.config.js
+├── tsconfig.json
+├── tsconfig.app.json
+├── tsconfig.node.json
+├── vercel.json              # Configuração Vercel
+├── vite.config.ts
+└── README.md
 ```
 
-## Como rodar o projeto
-1. Pré-requisitos
-   - Node.js 18+
-   - NPM 9+ ou PNPM/Yarn
-   - Acesso a um projeto Supabase
-   - Planilha Google Sheets (com aba e cabeçalhos conforme seção abaixo)
-2. Instalação
-   ```bash
-   npm install
+---
+
+## 🛠️ Instalação e Configuração
+
+### Pré-requisitos
+
+- Node.js 18+ 
+- npm ou yarn
+- Conta Supabase (gratuita)
+- Conta Resend (para emails)
+- Conta Vercel (para deploy)
+
+### 1. Clone o Repositório
+
+```bash
+git clone https://github.com/seu-usuario/checkpeso.git
+cd checkpeso
+```
+
+### 2. Instale as Dependências
+
+```bash
+npm install
+```
+
+### 3. Configure as Variáveis de Ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+# Supabase
+VITE_SUPABASE_URL=https://seu-projeto.supabase.co
+VITE_SUPABASE_ANON_KEY=sua-anon-key
+
+# Google Sheets (opcional)
+VITE_GOOGLE_SHEET_ID=seu-sheet-id
+```
+
+### 4. Configure o Supabase
+
+#### 4.1. Crie as Tabelas
+
+Execute os scripts SQL na seguinte ordem:
+
+1. `sql/add_evidencias_table.sql` - Cria tabela de evidências
+2. `sql/rls_registros_peso.sql` - Configura RLS para registros
+3. `sql/EXECUTAR_ESTE.sql` - Configura RLS para evidências
+
+#### 4.2. Configure o Storage
+
+1. Acesse o Supabase Dashboard
+2. Vá em **Storage** → **New Bucket**
+3. Nome: `evidencias`
+4. Público: ❌ (privado)
+5. Allowed MIME types: `image/*`
+
+#### 4.3. Configure as Edge Functions
+
+```bash
+# Instale Supabase CLI
+npm install -g supabase
+
+# Login no Supabase
+npx supabase login
+
+# Link com seu projeto
+npx supabase link --project-ref seu-project-ref
+
+# Deploy das funções
+npx supabase functions deploy append-sheet --no-verify-jwt
+npx supabase functions deploy send-email --no-verify-jwt
+npx supabase functions deploy upload-evidencias --no-verify-jwt
+```
+
+#### 4.4. Configure os Secrets da Edge Function
+
+```bash
+# Resend API Key (para emails)
+npx supabase secrets set RESEND_API_KEY=re_sua_api_key
+
+# Email de envio (domínio verificado no Resend)
+npx supabase secrets set RESEND_FROM_EMAIL=noreply@seudominio.com.br
+
+# Redeploy após configurar secrets
+npx supabase functions deploy send-email --no-verify-jwt
+```
+
+### 5. Inicie o Servidor de Desenvolvimento
+
+```bash
+npm start
+```
+
+Acesse: http://localhost:5173
+
+---
+
+## 📧 Configuração de Email (Resend)
+
+Para enviar relatórios por email, configure o Resend:
+
+1. **Crie uma conta**: https://resend.com
+2. **Verifique seu domínio**: Adicione registros DNS (TXT, MX, CNAME)
+3. **Crie uma API Key**: Com permissão de envio
+4. **Configure os Secrets** no Supabase (passo 4.4)
+
+📖 **Documentação Completa**: `CONFIGURAR_EMAIL_RESEND.md`
+
+---
+
+## 🎨 Funcionalidades Detalhadas
+
+### 1. Cálculos de Pesagem (ABNT 5429-S2)
+
+O sistema implementa a norma ABNT 5429-S2 para amostragem de lotes:
+
+- **Tabela S4**: Determina quantidade de caixas para análise
+- **Cálculo de Baixo Peso**: Identifica caixas fora do padrão
+- **Perdas Calculadas**:
+  - Perda em KG
+  - Perda em CX
+  - Percentual de perda
+  - Média de baixo peso por caixa
+
+**Fórmulas Implementadas**:
+
+```typescript
+// % de Caixas com Baixo Peso
+percentualBaixoPeso = (qtdBaixoPeso / qtdTabela) * 100
+
+// Média Total de Caixas com Baixo Peso
+mediaTotalBaixoPeso = percentualBaixoPeso * qtdTotalRecebida
+
+// Média de Baixo Peso por Caixa
+mediaBaixoPesoPorCX = ((pesoBruto / qtdBaixoPeso) - pesoPadrao) * -1
+
+// Perda Total KG
+perdaTotalKG = mediaBaixoPesoPorCX * mediaTotalBaixoPeso
+
+// Perda Total CX
+perdaTotalCX = perdaTotalKG / pesoPadrao
+```
+
+📖 **Documentação**: `CORRECAO_CALCULOS.md`
+
+### 2. Sistema de Evidências
+
+- **Upload**: Até 50 imagens por registro
+- **Compressão**: Automática (< 800KB)
+- **Armazenamento**: Supabase Storage
+- **Visualização**: Modal com zoom
+- **Download**: Individual ou ZIP
+
+📖 **Documentação**: `FUNCIONALIDADES_EVIDENCIAS_V2.md`
+
+### 3. Relatórios PDF
+
+Dois tipos de PDF profissionais:
+
+#### PDF Individual (Email)
+- Header com logo
+- KPI cards verdes (#002b1e)
+- Informações completas do registro
+- Tabela de pesagens das caixas
+- Resultados detalhados
+- Evidências em grade 3x3
+
+#### PDF Relatório (Múltiplos)
+- Mesmo design do PDF individual
+- Tabela com todos os registros
+- Tabela de pesagens consolidada
+- Detalhes por categoria
+- Evidências agrupadas por registro
+
+📖 **Documentação**: `MELHORIAS_EMAIL_PDF.md`, `PDF_RELATORIO_FINALIZADO.md`
+
+### 4. Integração Google Sheets
+
+Sincronização automática de dados:
+
+- Append sem duplicação
+- Controle de cabeçalhos
+- Validação de dados
+- Error handling robusto
+
+📖 **Script**: `apps-script/append-sheet.gs`
+
+---
+
+## 🌐 Deploy
+
+### Deploy na Vercel
+
+1. **Conecte o Repositório**:
+   - Acesse https://vercel.com
+   - New Project → Import Git Repository
+
+2. **Configure as Variáveis de Ambiente**:
    ```
-3. Ambiente
-   - Crie `.env.local` com as variáveis (ver seção “Variáveis de ambiente”).
-4. Desenvolvimento
-   ```bash
-   npm run dev
-   # Servidor local em `http://localhost:5173`
+   VITE_SUPABASE_URL
+   VITE_SUPABASE_ANON_KEY
+   VITE_GOOGLE_SHEET_ID (opcional)
    ```
-5. Build
+
+3. **Build Command**:
    ```bash
    npm run build
-   npm run preview
    ```
-6. Edge Function (Supabase)
-   - Configure as secrets no projeto Supabase (ver seção “Variáveis de ambiente”).
-   - Faça deploy da função:
-     ```bash
-     supabase functions deploy append-sheet
-     ```
 
-## Variáveis de ambiente necessárias
-- Frontend (`.env.local`):
-  ```env
-  VITE_SUPABASE_URL=_Informação a ser adicionada_
-  VITE_SUPABASE_ANON_KEY=_Informação a ser adicionada_
-  
-  # Google Sheets
-  VITE_SHEETS_SPREADSHEET_ID=_Informação a ser adicionada_
-  VITE_SHEETS_RANGE=Registros!A:Z
-  
-  # Fallback opcional para Apps Script
-  VITE_APPS_SCRIPT_URL=_Informação a ser adicionada_
-  ```
-- Supabase (Secrets da Edge Function `append-sheet`):
-  - `GOOGLE_SERVICE_ACCOUNT_EMAIL`: email da service account Google
-  - `GOOGLE_PRIVATE_KEY`: chave privada da service account (formato PEM, com `\n` para novas linhas)
-  - `ALLOWED_ORIGINS`: lista de origens permitidas separadas por vírgula (ex.: `https://*.vercel.app,http://localhost:5173`)
+4. **Output Directory**:
+   ```
+   dist
+   ```
 
-## Estrutura de pastas do projeto
-```
-.
-├─ apps-script/
-│  └─ append-sheet.gs
-├─ public/
-│  ├─ logo.png
-│  ├─ manifest.webmanifest
-│  └─ sw.js
-├─ scripts/
-│  ├─ import-produtos-from-csv.mjs
-│  └─ sync-headers-and-append.mjs
-├─ src/
-│  ├─ app/
-│  │  ├─ dashboard/page.tsx
-│  │  ├─ relatorios/page.tsx
-│  │  └─ calculos/calculos-form.tsx
-│  ├─ components/
-│  │  └─ ui/input.tsx
-│  ├─ lib/
-│  │  ├─ config.ts
-│  │  ├─ supabase.ts
-│  │  ├─ calculos.ts
-│  │  └─ tabelaS4.ts
-│  └─ types/index.ts
-├─ supabase/
-│  └─ functions/append-sheet/
-├─ package.json
-└─ README.md
-```
+5. **Deploy**:
+   - Clique em "Deploy"
+   - Aguarde o build
+   - Acesse a URL gerada
 
-## Como fazer build e deploy
-- Build do frontend:
-  ```bash
-  npm run build
-  ```
-- Deploy do frontend: [LOCAL DO DEPLOY]
-- Edge Function `append-sheet`:
-  ```bash
-  # Login e link do projeto (se necessário)
-  supabase login
-  supabase link --project-ref _Informação a ser adicionada_
-
-  # Deploy da função
-  supabase functions deploy append-sheet
-  ```
-- Secrets na Supabase:
-  ```bash
-  supabase secrets set \
-    GOOGLE_SERVICE_ACCOUNT_EMAIL="_Informação a ser adicionada_" \
-    GOOGLE_PRIVATE_KEY="_Informação a ser adicionada_" \
-    ALLOWED_ORIGINS="http://localhost:5173,https://*.vercel.app"
-  ```
-
-## Integrações externas
-- API: Supabase Functions (`append-sheet`) para autenticar no Google e escrever na planilha.
-- Google Sheets: escrita via API e via Apps Script (fallback).
-- Supabase: banco de dados (Postgres), client-side SDK, canais em tempo real.
-- Firebase: _Informação a ser adicionada_ (se aplicável).
-
-### Cabeçalhos do Google Sheets
-A primeira linha da aba da planilha deve bater exatamente com os nomes abaixo:
-```
-data_registro, filial, fornecedor, nota_fiscal, modelo_tabela, quantidade_recebida,
-peso_liquido_por_caixa, quantidade_tabela, quantidade_baixo_peso, peso_bruto_analise, tara_caixa,
-peso_liquido_programado, peso_liquido_analise, peso_liquido_real, perda_kg, perda_cx, perda_percentual,
-observacoes, cod_produto, produto, categoria, familia, grupo_produto
-```
-- Para automatizar, publique o `apps-script/append-sheet.gs` como Web App e chame com body:
-  ```json
-  {
-    "action": "sync_headers",
-    "spreadsheetId": "_Informação a ser adicionada_",
-    "range": "Registros!A:Z"
-  }
-  ```
-
-## Banco de dados
-### Tabelas
-- `registros_peso`
-  - `data_registro` (date/string)
-  - `filial` (string)
-  - `fornecedor` (string, opcional)
-  - `nota_fiscal` (string, opcional)
-  - `modelo_tabela` (string)
-  - `quantidade_recebida` (number)
-  - `peso_liquido_por_caixa` (number)
-  - `quantidade_tabela` (number)
-  - `quantidade_baixo_peso` (number)
-  - `peso_bruto_analise` (number)
-  - `tara_caixa` (number)
-  - `peso_liquido_programado` (number)
-  - `peso_liquido_analise` (number)
-  - `peso_liquido_real` (number)
-  - `perda_kg` (number)
-  - `perda_cx` (number)
-  - `perda_percentual` (number)
-  - `observacoes` (string, opcional)
-  - `cod_produto` (string, opcional)
-  - `produto` (string, opcional)
-  - `categoria` (string, opcional)
-  - `familia` (string, opcional)
-  - `grupo_produto` (string, opcional)
-- `produtos`
-  - `cod_produto` (string, PK/UK)
-  - `descricao` (string)
-  - `unid` (number) — usado para preencher “Peso Líq. por Caixa (KG)”
-  - `categoria` (string)
-  - `familia` (string)
-  - `grupo_produto` (string)
-
-### Relacionamentos
-- `registros_peso.cod_produto` referencia `produtos.cod_produto` (lookup na aplicação).
-
-## Checklist de pré-requisitos
-- Node e NPM instalados.
-- Projeto Supabase criado com tabelas `registros_peso` e `produtos`.
-- Variáveis do `.env.local` definidas.
-- Secrets da função `append-sheet` configuradas na Supabase.
-- Planilha Google com aba e cabeçalhos padronizados.
-
-## Melhorias futuras
-- Importação em massa de produtos a partir de CSV.
-- Painel de gráficos de perdas por período/fornecedor.
-- Auditoria e histórico de alterações em registros.
-- Testes automatizados (unitários e e2e).
-- Internacionalização.
-
-## Contribuição
-1. Faça um fork do repositório.
-2. Crie uma branch de feature: `feat/nome-feature`.
-3. Abra PR descrevendo claramente mudanças e impactos.
-4. Mantenha o padrão de código e estilo do projeto.
-
-## Licença
-- _Informação a ser adicionada_
+📖 **Guia Completo**: `DEPLOY_VERCEL.md` (a ser criado)
 
 ---
 
-### Exemplos de uso
-#### Criação de registro (cliente)
-```javascript
-// Exemplo simplificado de envio
-const payload = {
-  data_registro: '01/10/2025',
-  filial: 'Matriz',
-  fornecedor: 'Fornecedor X',
-  modelo_tabela: 'S4',
-  quantidade_recebida: 100,
-  peso_liquido_por_caixa: 13.5,
-  // ...demais campos
-};
+## 🔒 Segurança
 
-// Supabase DB
-await supabase.from('registros_peso').insert(payload);
+### Row Level Security (RLS)
 
-// Edge Function
-const body = {
-  spreadsheetId: import.meta.env.VITE_SHEETS_SPREADSHEET_ID,
-  range: import.meta.env.VITE_SHEETS_RANGE,
-  action: 'append',
-  record: payload,
-};
-await supabase.functions.invoke('append-sheet', { body });
+Todas as tabelas têm RLS habilitado:
+
+- **Registros**: Usuário só acessa seus próprios registros
+- **Evidências**: Vinculadas ao usuário que fez upload
+- **Produtos**: Acesso compartilhado por organização
+
+### Storage Security
+
+- Bucket privado
+- Acesso via autenticação
+- URLs assinadas (signed URLs)
+- Expiração automática
+
+📖 **Troubleshooting**: `RESOLVER_RLS.md`
+
+---
+
+## 📊 Tecnologias de Análise
+
+### Dashboard KPIs
+
+- Total de registros
+- Perda total (KG e CX)
+- Perda média (%)
+- Total digitado
+- Total baixo peso
+- Quantidade baixo peso
+
+### Filtros Avançados
+
+- Por filial
+- Por fornecedor
+- Por nota fiscal
+- Por período (data)
+- Por categoria/produto
+
+---
+
+## 🔧 Scripts Disponíveis
+
+```bash
+# Desenvolvimento
+npm start                # Inicia servidor dev (Vite)
+npm run dev              # Alias para start
+
+# Build
+npm run build            # Build de produção
+
+# Linting
+npm run lint             # Executa ESLint
+
+# Preview
+npm run preview          # Preview do build
+
+# Testes
+npm run test:e2e         # Testa registro completo
+npm run test:sync        # Testa sync Google Sheets
+
+# Importação
+npm run import:produtos  # Importa produtos de CSV
 ```
 
-#### Variáveis de ambiente (frontend)
-```env
-VITE_SUPABASE_URL=https://example.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1Ni...
-VITE_SHEETS_SPREADSHEET_ID=1AbCdefGhIJKlmNOPqRstUVwxyz
-VITE_SHEETS_RANGE=Registros!A:Z
-VITE_APPS_SCRIPT_URL=https://script.google.com/macros/s/AKfycbx.../exec
+---
+
+## 📚 Documentação Técnica
+
+### Arquitetura
+
+- **Frontend**: React SPA com React Router
+- **Backend**: Supabase (PostgreSQL + Edge Functions)
+- **Storage**: Supabase Storage
+- **Email**: Resend API
+- **Deploy**: Vercel (Edge Network)
+
+### Fluxo de Dados
+
+```
+1. Usuário preenche formulário
+   ↓
+2. Cálculos executados (lib/calculos.ts)
+   ↓
+3. Imagens comprimidas (lib/image-compression.ts)
+   ↓
+4. Upload para Supabase Storage (functions/upload-evidencias)
+   ↓
+5. Registro salvo no PostgreSQL
+   ↓
+6. (Opcional) Sync com Google Sheets (functions/append-sheet)
+   ↓
+7. PDF gerado (lib/pdf-generator.ts ou lib/export.ts)
+   ↓
+8. Email enviado (functions/send-email)
 ```
 
-#### SQL (exemplo de criação de tabela)
-```sql
-create table if not exists public.registros_peso (
-  id bigint generated always as identity primary key,
-  data_registro date not null,
-  filial text not null,
-  fornecedor text,
-  nota_fiscal text,
-  modelo_tabela text not null,
-  quantidade_recebida numeric not null,
-  peso_liquido_por_caixa numeric,
-  quantidade_tabela numeric,
-  quantidade_baixo_peso numeric,
-  peso_bruto_analise numeric,
-  tara_caixa numeric,
-  peso_liquido_programado numeric,
-  peso_liquido_analise numeric,
-  peso_liquido_real numeric,
-  perda_kg numeric,
-  perda_cx numeric,
-  perda_percentual numeric,
-  observacoes text,
-  cod_produto text,
-  produto text,
-  categoria text,
-  familia text,
-  grupo_produto text
-);
+### Modelos de Dados
+
+#### RegistroPeso
+```typescript
+interface RegistroPeso {
+  id: number;
+  dataRegistro: Date;
+  filial: string;
+  fornecedor: string;
+  notaFiscal: string;
+  produto: string;
+  codigo: string;
+  categoria: string;
+  familia: string;
+  grupoProduto: string;
+  quantidadeRecebida: number;
+  pesoLiquidoPorCaixa: number;
+  taraCaixa: number;
+  quantidadeTabela: number;
+  quantidadebaixopeso: number;
+  pesoBrutoAnalise: number;
+  pesoLiquidoAnalise: number;
+  pesoLiquidoProgramado: number;
+  pesoLiquidoReal: number;
+  perdaKg: number;
+  perdaCx: number;
+  perdaPercentual: number;
+  // ... outros campos calculados
+}
 ```
+
+#### Evidencia
+```typescript
+interface Evidencia {
+  id: number;
+  registro_id: number;
+  file_path: string;
+  file_name: string;
+  file_size: number;
+  mime_type: string;
+  uploaded_by: string;
+  created_at: Date;
+}
+```
+
+---
+
+## 🤝 Contribuindo
+
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+---
+
+## 📄 Licença
+
+Este projeto é propriedade do **Grupo Docemel** (GDM).
+
+---
+
+## 👥 Contato
+
+**Grupo Docemel** - Sistema CheckPeso  
+Email: suporte@gdm.com.br  
+Site: https://checkpeso.gdm.com.br
+
+---
+
+## 📝 Changelog
+
+### v2.0.0 (Atual)
+- ✅ Sistema de evidências com Supabase Storage
+- ✅ PDFs profissionais com evidências
+- ✅ Envio de emails via Resend
+- ✅ Correção de cálculos (ABNT 5429-S2)
+- ✅ Cor verde corporativa (#002b1e)
+- ✅ Limpeza de arquivos obsoletos
+
+### v1.1.0
+- ✅ Tela de caixas com baixo peso
+- ✅ Melhorias visuais
+
+### v1.0.0
+- ✅ Sistema básico de pesagem
+- ✅ Dashboard e relatórios
+- ✅ Integração Google Sheets
+
+---
+
+## 🙏 Agradecimentos
+
+- **Grupo Docemel (GDM)** - Cliente e patrocinador
+- **Supabase** - Backend-as-a-Service
+- **Vercel** - Hosting e deploy
+- **Resend** - Serviço de email
+- **Shadcn/UI** - Componentes UI
+
+---
+
+**Desenvolvido com 💚 para o Grupo Docemel (GDM)**
