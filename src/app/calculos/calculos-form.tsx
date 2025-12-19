@@ -327,22 +327,24 @@ export function CalculosForm() {
                                 });
 
                                 const evidenciasEnviadas = (await Promise.all(uploadPromises)).filter(
-                                    (e): e is Evidencia => e !== null
+                                    (e: Evidencia | null): e is Evidencia => e !== null
                                 );
 
                                 // Combinar evidências já enviadas com as novas
                                 const todasEvidencias = [...evidenciasJaEnviadas, ...evidenciasEnviadas];
 
-                                // Salvar todas as evidências no banco
-                                const evidenciasPayload = todasEvidencias.map(ev => ({
-                                    registro_id: recordId,
-                                    file_id: ev.fileId!,
-                                    file_name: ev.fileName,
-                                    web_view_link: ev.webViewLink || '',
-                                    web_content_link: ev.webContentLink || '',
-                                    file_size: ev.fileSize,
-                                    uploaded_by: user?.id || null,
-                                }));
+                                // Salvar todas as evidências no banco (apenas as que possuem fileId)
+                                const evidenciasPayload = todasEvidencias
+                                    .filter((ev): ev is Evidencia => ev !== null && ev.fileId !== undefined)
+                                    .map(ev => ({
+                                        registro_id: recordId,
+                                        file_id: ev.fileId!,
+                                        file_name: ev.fileName,
+                                        web_view_link: ev.webViewLink || '',
+                                        web_content_link: ev.webContentLink || '',
+                                        file_size: ev.fileSize,
+                                        uploaded_by: user?.id || null,
+                                    }));
 
                                 const { error: evidenciasError } = await supabase
                                     .from('evidencias')
