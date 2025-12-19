@@ -16,33 +16,44 @@ export async function compressImage(
   options: CompressionOptions = {}
 ): Promise<File> {
   const {
-    maxSizeMB = 0.5, // Máximo 500KB
-    maxWidthOrHeight = 1920, // Máximo 1920px (Full HD)
+    maxSizeMB = 0.3, // Reduzido para 300KB (melhor compressão)
+    maxWidthOrHeight = 1600, // Reduzido para 1600px (mantém qualidade visual)
     useWebWorker = true,
     fileType = 'image/jpeg'
   } = options;
 
   try {
-    // Opções de compressão otimizadas para qualidade
+    // Opções de compressão otimizadas para melhor compressão sem perder qualidade perceptível
     const compressionOptions = {
       maxSizeMB,
       maxWidthOrHeight,
       useWebWorker,
       fileType,
-      initialQuality: 0.92, // Alta qualidade inicial
+      initialQuality: 0.88, // Qualidade otimizada (88% mantém boa qualidade visual)
       alwaysKeepResolution: false, // Permite redimensionar se necessário
+      exifOrientation: 1, // Remove EXIF para reduzir tamanho
     };
 
-    const compressedFile = await imageCompression(file, compressionOptions);
+    let compressedFile = await imageCompression(file, compressionOptions);
     
-    // Se ainda estiver muito grande, comprime mais agressivamente
+    // Se ainda estiver muito grande, comprime mais agressivamente em etapas
     if (compressedFile.size > maxSizeMB * 1024 * 1024) {
-      const moreCompressed = await imageCompression(file, {
+      // Tentativa 1: Reduzir qualidade para 80%
+      compressedFile = await imageCompression(file, {
         ...compressionOptions,
-        initialQuality: 0.85,
-        maxSizeMB: maxSizeMB * 0.8,
+        initialQuality: 0.80,
+        maxSizeMB: maxSizeMB * 0.9,
       });
-      return moreCompressed;
+      
+      // Tentativa 2: Se ainda estiver grande, reduzir mais
+      if (compressedFile.size > maxSizeMB * 1024 * 1024) {
+        compressedFile = await imageCompression(file, {
+          ...compressionOptions,
+          initialQuality: 0.75,
+          maxSizeMB: maxSizeMB * 0.7,
+          maxWidthOrHeight: 1400, // Reduzir resolução se necessário
+        });
+      }
     }
 
     return compressedFile;

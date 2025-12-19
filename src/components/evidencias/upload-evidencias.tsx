@@ -45,99 +45,58 @@ export function UploadEvidencias({
       return;
     }
 
-    // Mostrar preview antes de comprimir
+    // Mostrar preview antes de processar
     setPreviewFiles(prev => [...prev, ...files]);
 
-    // Comprimir e fazer upload
+    // Processar arquivos (comprimir e converter para base64, mas NÃO fazer upload ainda)
     try {
       setUploading(true);
-      const uploadPromises = files.map(async (file) => {
-        try {
-          // Comprimir imagem
+      const novasEvidencias = await Promise.all(
+        files.map(async (file) => {
+          try {
+          // Comprimir imagem com otimizações melhoradas
           const compressedFile = await compressImage(file, {
-            maxSizeMB: 0.5,
-            maxWidthOrHeight: 1920,
+            maxSizeMB: 0.3, // 300KB máximo (melhor compressão)
+            maxWidthOrHeight: 1600, // 1600px (mantém qualidade visual)
           });
 
-          // Converter para base64
-          const base64 = await new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              const result = reader.result as string;
-              resolve(result);
+            // Converter para base64
+            const base64 = await new Promise<string>((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                const result = reader.result as string;
+                resolve(result);
+              };
+              reader.onerror = reject;
+              reader.readAsDataURL(compressedFile);
+            });
+
+            // Criar evidência temporária (sem upload ainda)
+            const novaEvidencia: Evidencia = {
+              id: `temp_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+              fileName: compressedFile.name,
+              fileSize: compressedFile.size,
+              fileData: base64, // Armazenar base64 para upload posterior
+              file: compressedFile, // Armazenar arquivo original
             };
-            reader.onerror = reject;
-            reader.readAsDataURL(compressedFile);
-          });
 
-          // Fazer upload via Edge Function usando Supabase SDK
-          const { supabase, hasSupabaseEnv } = await import('@/lib/supabase');
-
-          if (!hasSupabaseEnv) {
-            throw new Error('Configuração do Supabase não encontrada');
+            return novaEvidencia;
+          } catch (error) {
+            console.error('Erro ao processar arquivo:', error);
+            toast.error(`Erro ao processar ${file.name}: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+            return null;
           }
+        })
+      );
 
-          const { data: uploadResult, error: uploadError } = await supabase.functions.invoke(
-            'upload-evidencias',
-            {
-              body: {
-                fileName: compressedFile.name,
-                fileData: base64,
-                registroId,
-              },
-            }
-          );
-
-          console.log('Upload Response:', { uploadResult, uploadError });
-
-          if (uploadError) {
-            console.error('Upload Error Details:', uploadError);
-            // Tentar obter mais detalhes do erro
-            const errorMessage = uploadError.message || 
-              (uploadError.context?.msg) || 
-              `Erro ao fazer upload: ${JSON.stringify(uploadError)}`;
-            throw new Error(errorMessage);
-          }
-
-          if (!uploadResult) {
-            throw new Error('Resposta vazia da função');
-          }
-
-          if (!uploadResult.success) {
-            console.error('Upload Result Error:', uploadResult);
-            const errorMsg = uploadResult.error || 
-              uploadResult.details || 
-              uploadResult.message || 
-              'Erro ao fazer upload';
-            throw new Error(errorMsg);
-          }
-
-          const novaEvidencia: Evidencia = {
-            id: uploadResult.fileId,
-            fileName: compressedFile.name,
-            fileId: uploadResult.fileId,
-            webViewLink: uploadResult.webViewLink,
-            webContentLink: uploadResult.webContentLink,
-            fileSize: compressedFile.size,
-            uploadedAt: new Date(),
-          };
-
-          return novaEvidencia;
-        } catch (error) {
-          console.error('Erro ao fazer upload:', error);
-          toast.error(`Erro ao fazer upload de ${file.name}: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
-          return null;
-        }
-      });
-
-      const novasEvidencias = (await Promise.all(uploadPromises)).filter(
+      const evidenciasValidas = novasEvidencias.filter(
         (e): e is Evidencia => e !== null
       );
 
-      if (novasEvidencias.length > 0) {
-        const todasEvidencias = [...evidencias, ...novasEvidencias];
+      if (evidenciasValidas.length > 0) {
+        const todasEvidencias = [...evidencias, ...evidenciasValidas];
         onEvidenciasChange?.(todasEvidencias);
-        toast.success(`${novasEvidencias.length} imagem(ns) enviada(s) com sucesso!`);
+        toast.success(`${evidenciasValidas.length} imagem(ns) adicionada(s). Elas serão enviadas ao salvar o registro.`);
       }
 
       // Limpar preview
@@ -173,7 +132,7 @@ export function UploadEvidencias({
           Anexar Evidências
         </CardTitle>
         <CardDescription>
-          Adicione imagens da pesagem. As imagens serão comprimidas automaticamente e salvas no Google Drive.
+          Adicione imagens da pesagem. As imagens serão comprimidas automaticamente e enviadas ao salvar o registro.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -239,16 +198,22 @@ export function UploadEvidencias({
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => window.open(evidencia.webViewLink, '_blank')}
-                      title="Visualizar no Google Drive"
-                    >
-                      <ImageIcon className="h-4 w-4" />
-                    </Button>
+                    {evidencia.webViewLink ? (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => window.open(evidencia.webViewLink, '_blank')}
+                        title="Visualizar no Google Drive"
+                      >
+                        <ImageIcon className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <span className="text-xs text-muted-foreground px-2" title="Aguardando upload ao salvar">
+                        Pendente
+                      </span>
+                    )}
                     {!disabled && (
                       <Button
                         type="button"

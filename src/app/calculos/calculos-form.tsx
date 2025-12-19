@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
@@ -72,18 +72,41 @@ export function CalculosForm() {
         taraCaixa: '',
     });
 
-    const watchedValues = form.watch();
+    // Otimizar: watch apenas os campos necessários para cálculos (reduz re-renders)
+    const quantidadeRecebida = form.watch('quantidadeRecebida');
+    const pesoLiquidoPorCaixa = form.watch('pesoLiquidoPorCaixa');
+    const pesoBrutoAnalise = form.watch('pesoBrutoAnalise');
+    const taraCaixa = form.watch('taraCaixa');
+    const quantidadebaixopeso = form.watch('quantidadebaixopeso');
+    const modeloTabela = form.watch('modeloTabela');
 
     // Overrides e modal de edição de quantidade da tabela
     const [qtdTabelaOverride, setQtdTabelaOverride] = useState<number | null>(null);
     const [qtdTabelaOpen, setQtdTabelaOpen] = useState(false);
     const [qtdTabelaRaw, setQtdTabelaRaw] = useState('');
 
-    // DERIVED STATE: Calculate directly on each render
-    const quantidadeTabela = getQuantidadeDaTabela(watchedValues.quantidadeRecebida || 0);
+    // DERIVED STATE: Calcular apenas quando valores relevantes mudarem (useMemo)
+    const quantidadeTabela = useMemo(() => 
+        getQuantidadeDaTabela(quantidadeRecebida || 0), 
+        [quantidadeRecebida]
+    );
     const quantidadeTabelaFinal = qtdTabelaOverride ?? quantidadeTabela;
-    const tabelaInfo = getTabelaSRangeInfo(watchedValues.quantidadeRecebida || 0);
-    const resultados = calcularResultados({ ...(watchedValues as any), quantidadeTabelaOverride: quantidadeTabelaFinal } as any);
+    const tabelaInfo = useMemo(() => 
+        getTabelaSRangeInfo(quantidadeRecebida || 0), 
+        [quantidadeRecebida]
+    );
+    const resultados = useMemo(() => 
+        calcularResultados({ 
+            quantidadeRecebida: quantidadeRecebida || 0,
+            pesoLiquidoPorCaixa: pesoLiquidoPorCaixa || 0,
+            pesoBrutoAnalise: pesoBrutoAnalise || 0,
+            taraCaixa: taraCaixa || 0,
+            quantidadebaixopeso: quantidadebaixopeso || 0,
+            modeloTabela: modeloTabela || 'S4',
+            quantidadeTabelaOverride: quantidadeTabelaFinal 
+        } as any), 
+        [quantidadeRecebida, pesoLiquidoPorCaixa, pesoBrutoAnalise, taraCaixa, quantidadebaixopeso, modeloTabela, quantidadeTabelaFinal]
+    );
 
     const [isPesagemOpen, setPesagemOpen] = useState(false);
     const makeItems = () => Array.from({ length: 20 }, () => ({ raw: '', value: 0, baixoPeso: false }));
@@ -188,12 +211,13 @@ export function CalculosForm() {
 
     // Aciona lookup sempre que o campo código muda (debounce leve)
     // Isso garante o preenchimento mesmo que o usuário não saia do campo.
+    const codigo = form.watch('codigo');
     useEffect(() => {
-        const codigoAtual = watchedValues.codigo ?? '';
+        const codigoAtual = codigo ?? '';
         if (!codigoAtual || codigoAtual.length < 3) return;
         const timer = setTimeout(() => lookupProdutoPorCodigo(codigoAtual), 300);
         return () => clearTimeout(timer);
-    }, [watchedValues.codigo]);
+    }, [codigo]);
 
     async function onSubmit(data: CalculosFormValues) {
         if (isSubmitting) return; // Previne duplicação
@@ -250,40 +274,119 @@ export function CalculosForm() {
 
                 const recordId = String(inserted?.id ?? '');
 
-                // Salvar evidências se houver
+                // Fazer upload e salvar evidências em background (não bloquear salvamento)
                 if (evidencias.length > 0 && recordId) {
-                    try {
-                        // Obter user ID para RLS
-                        const { data: { user } } = await supabase.auth.getUser();
-                        
-                        const evidenciasPayload = evidencias.map(ev => ({
-                            registro_id: recordId,
-                            file_id: ev.fileId,
-                            file_name: ev.fileName,
-                            web_view_link: ev.webViewLink,
-                            web_content_link: ev.webContentLink,
-                            file_size: ev.fileSize,
-                            uploaded_by: user?.id || null,
-                        }));
+                    // Executar upload em background (não aguardar)
+                    (async () => {
+                        try {
+                            // Obter user ID para RLS
+                            const { data: { user } } = await supabase.auth.getUser();
+                            
+                            // Separar evidências já enviadas das que precisam ser enviadas
+                            const evidenciasParaUpload = evidencias.filter(ev => ev.fileData && !ev.fileId);
+                            const evidenciasJaEnviadas = evidencias.filter(ev => ev.fileId);
 
-                        const { error: evidenciasError } = await supabase
-                            .from('evidencias')
-                            .insert(evidenciasPayload);
+                            // Fazer upload das evidências pendentes em paralelo
+                            if (evidenciasParaUpload.length > 0) {
+                                toast.info(`Enviando ${evidenciasParaUpload.length} imagem(ns) em background...`);
+                                
+                                const uploadPromises = evidenciasParaUpload.map(async (ev) => {
+                                    try {
+                                        const { data: uploadResult, error: uploadError } = await supabase.functions.invoke(
+                                            'upload-evidencias',
+                                            {
+                                                body: {
+                                                    fileName: ev.fileName,
+                                                    fileData: ev.fileData,
+                                                    registroId: recordId,
+                                                },
+                                            }
+                                        );
 
-                        if (evidenciasError) {
-                            console.error('Erro ao salvar evidências:', evidenciasError);
-                            toast.warning('Evidências não foram salvas', {
-                                description: 'O registro foi salvo, mas houve erro ao vincular as evidências.',
+                                        if (uploadError) {
+                                            console.error('Upload Error:', uploadError);
+                                            throw new Error(uploadError.message || 'Erro ao fazer upload');
+                                        }
+
+                                        if (!uploadResult || !uploadResult.success) {
+                                            const errorMsg = uploadResult?.error || uploadResult?.details || 'Erro ao fazer upload';
+                                            throw new Error(errorMsg);
+                                        }
+
+                                        return {
+                                            ...ev,
+                                            fileId: uploadResult.fileId,
+                                            webViewLink: uploadResult.webViewLink,
+                                            webContentLink: uploadResult.webContentLink,
+                                        };
+                                    } catch (error) {
+                                        console.error('Erro ao fazer upload de evidência:', error);
+                                        toast.error(`Erro ao enviar ${ev.fileName}: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+                                        return null;
+                                    }
+                                });
+
+                                const evidenciasEnviadas = (await Promise.all(uploadPromises)).filter(
+                                    (e): e is Evidencia => e !== null
+                                );
+
+                                // Combinar evidências já enviadas com as novas
+                                const todasEvidencias = [...evidenciasJaEnviadas, ...evidenciasEnviadas];
+
+                                // Salvar todas as evidências no banco
+                                const evidenciasPayload = todasEvidencias.map(ev => ({
+                                    registro_id: recordId,
+                                    file_id: ev.fileId!,
+                                    file_name: ev.fileName,
+                                    web_view_link: ev.webViewLink || '',
+                                    web_content_link: ev.webContentLink || '',
+                                    file_size: ev.fileSize,
+                                    uploaded_by: user?.id || null,
+                                }));
+
+                                const { error: evidenciasError } = await supabase
+                                    .from('evidencias')
+                                    .insert(evidenciasPayload);
+
+                                if (evidenciasError) {
+                                    console.error('Erro ao salvar evidências:', evidenciasError);
+                                    toast.warning('Evidências não foram salvas', {
+                                        description: 'O registro foi salvo, mas houve erro ao vincular as evidências.',
+                                    });
+                                } else {
+                                    console.log('Evidências salvas com sucesso:', evidenciasPayload.length);
+                                    toast.success(`${evidenciasEnviadas.length} imagem(ns) enviada(s) e salva(s) com sucesso!`);
+                                }
+                            } else if (evidenciasJaEnviadas.length > 0) {
+                                // Se todas já foram enviadas, apenas salvar no banco
+                                const evidenciasPayload = evidenciasJaEnviadas.map(ev => ({
+                                    registro_id: recordId,
+                                    file_id: ev.fileId!,
+                                    file_name: ev.fileName,
+                                    web_view_link: ev.webViewLink || '',
+                                    web_content_link: ev.webContentLink || '',
+                                    file_size: ev.fileSize,
+                                    uploaded_by: user?.id || null,
+                                }));
+
+                                const { error: evidenciasError } = await supabase
+                                    .from('evidencias')
+                                    .insert(evidenciasPayload);
+
+                                if (evidenciasError) {
+                                    console.error('Erro ao salvar evidências:', evidenciasError);
+                                    toast.warning('Evidências não foram salvas', {
+                                        description: 'O registro foi salvo, mas houve erro ao vincular as evidências.',
+                                    });
+                                }
+                            }
+                        } catch (e) {
+                            console.error('Falha ao salvar evidências:', e);
+                            toast.warning('Erro ao salvar evidências', {
+                                description: 'O registro foi salvo, mas as evidências não foram vinculadas.',
                             });
-                        } else {
-                            console.log('Evidências salvas com sucesso:', evidenciasPayload.length);
                         }
-                    } catch (e) {
-                        console.error('Falha ao salvar evidências:', e);
-                        toast.warning('Erro ao salvar evidências', {
-                            description: 'O registro foi salvo, mas as evidências não foram vinculadas.',
-                        });
-                    }
+                    })();
                 }
 
                 if (allItems.length > 0 && recordId) {

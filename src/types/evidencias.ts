@@ -1,11 +1,14 @@
 export interface Evidencia {
   id: string;
   fileName: string;
-  fileId: string;
-  webViewLink: string;
-  webContentLink: string;
+  fileId?: string; // Opcional até ser feito o upload
+  webViewLink?: string; // Opcional até ser feito o upload
+  webContentLink?: string; // Opcional até ser feito o upload
   fileSize: number;
-  uploadedAt: Date;
+  uploadedAt?: Date; // Opcional até ser feito o upload
+  // Campos temporários para upload pendente
+  fileData?: string; // Base64 do arquivo
+  file?: File; // Arquivo original
 }
 
 export interface EvidenciaDB {
