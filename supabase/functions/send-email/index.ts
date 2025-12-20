@@ -2,6 +2,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 interface EmailRequest {
   to: string[];
+  cc?: string[];  // Opcional - Cópia
   subject: string;
   html: string;
   pdfBase64?: string;  // Opcional
@@ -68,7 +69,7 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const { to, subject, html, pdfBase64, pdfFileName }: EmailRequest = requestBody;
+    const { to, cc, subject, html, pdfBase64, pdfFileName }: EmailRequest = requestBody;
 
     if (!to || !Array.isArray(to) || to.length === 0) {
       return new Response(
@@ -84,9 +85,16 @@ Deno.serve(async (req: Request) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const validEmails = to.filter(email => emailRegex.test(email));
     
-    if (validEmails.length === 0) {
+    // Validar emails de cópia (cc) se fornecidos
+    let validCcEmails: string[] = [];
+    if (cc && Array.isArray(cc) && cc.length > 0) {
+      validCcEmails = cc.filter(email => emailRegex.test(email));
+      console.log('Emails CC válidos:', validCcEmails);
+    }
+    
+    if (validEmails.length === 0 && validCcEmails.length === 0) {
       return new Response(
-        JSON.stringify({ error: 'Nenhum email válido fornecido' }),
+        JSON.stringify({ error: 'Nenhum email válido fornecido (to ou cc)' }),
         { 
           status: 400, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -94,7 +102,7 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    console.log('Emails válidos:', validEmails);
+    console.log('Emails TO válidos:', validEmails);
 
     // Configuração do Resend
     const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
@@ -129,6 +137,12 @@ Deno.serve(async (req: Request) => {
       subject: subject || 'Relatório de Recebimento',
       html: html || '<p>Relatório em anexo.</p>',
     };
+
+    // Adicionar CC se houver emails válidos
+    if (validCcEmails.length > 0) {
+      emailPayload.cc = validCcEmails;
+      console.log('CC adicionado ao payload:', validCcEmails.length, 'emails');
+    }
 
     // Adicionar anexo apenas se PDF foi fornecido
     if (pdfBase64 && pdfFileName) {
@@ -212,11 +226,14 @@ Deno.serve(async (req: Request) => {
     const resendData = await resendResponse.json();
     console.log('Email enviado com sucesso:', resendData.id);
     
+    const totalRecipients = validEmails.length + validCcEmails.length;
+    
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: `Email enviado com sucesso para ${validEmails.length} destinatário(s)`,
+        message: `Email enviado com sucesso para ${totalRecipients} destinatário(s) (${validEmails.length} TO + ${validCcEmails.length} CC)`,
         recipients: validEmails,
+        ccRecipients: validCcEmails,
         resendId: resendData.id
       }),
       { 
