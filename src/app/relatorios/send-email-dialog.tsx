@@ -27,8 +27,6 @@ const EMAILS_FILIAIS = {
         'francisco.lima@frutasdocemel.com.br',
         'leticia.pontes@frutasdocemel.com.br',
         'contasapagar@frutasdocemel.com.br',
-        'expedicaoce@frutasdocemel.com.br',
-        'custos@frutasdocemel.com.br',
         'adm.salvador@frutasdocemel.com.br'
     ],
     BA_CEASA: [
@@ -38,12 +36,10 @@ const EMAILS_FILIAIS = {
         'isis.araujo@frutasdocemel.com.br',
         'gleber.jesus@frutasdocemel.com.br',
         'qualidade.ba@frutasdocemel.com.br',
-        'viviane.dantas@frutasdocemel.com.br',
         'aline.sampaio@frutasdocemel.com.br',
         'leticia.pontes@frutasdocemel.com.br',
         'jessica.louvores@frutasdocemel.com.br',
         'contasapagar@frutasdocemel.com.br',
-        'custos@frutasdocemel.com.br'
     ],
     PAULISTA_PE: [
         'recebimentocdpaulista@frutasdocemel.com.br',
@@ -52,8 +48,6 @@ const EMAILS_FILIAIS = {
         'leticia.pontes@frutasdocemel.com.br',
         'contasapagar@frutasdocemel.com.br',
         'agnaldo.junior@frutasdocemel.com.br',
-        'custos@frutasdocemel.com.br',
-        'estoque.cdpe@frutasdocemel.com.br',
         'adm.salvador@frutasdocemel.com.br'
     ],
     MAMANGUAPE_BARAUNA: [
@@ -64,7 +58,6 @@ const EMAILS_FILIAIS = {
         'contasapagar@frutasdocemel.com.br',
         'expedicao@frutasdocemel.com.br',
         'rivaldo.lopes@frutasdocemel.com.br',
-        'custos@frutasdocemel.com.br',
         'guilherme.goncalves@frutasdocemel.com.br',
         'adm.salvador@frutasdocemel.com.br'
     ]
