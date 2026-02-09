@@ -26,6 +26,7 @@ const EMAILS_FILIAIS = {
         'rosane.sales@frutasdocemel.com.br',
         'francisco.lima@frutasdocemel.com.br',
         'leticia.pontes@frutasdocemel.com.br',
+        'jose.jonas@frutasdocemel.com.br',
         'contasapagar@frutasdocemel.com.br',
         'adm.salvador@frutasdocemel.com.br'
     ],
